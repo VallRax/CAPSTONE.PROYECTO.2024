@@ -1,0 +1,73 @@
+<app-header title="Registro "></app-header>
+<ion-content >
+  
+    <div class="d-flex-center">
+        
+        <form [formGroup]="form" class="auth-form" (ngSubmit)="submit()" (keypress.enter)="submit()">
+
+            <app-logo></app-logo>
+
+            <!--Nombre-->
+
+            <app-custom-input 
+            autocomplete="name"
+            icon="person-outline"
+            [control]="form.controls.name"
+            type="text"
+            label="Nombre"
+            ></app-custom-input>
+
+            <div class="validators" *ngIf="form.controls.name.errors && form.controls.name.touched">
+
+                <div *ngIf="form.controls.name.errors?. ['requerid']" >El correo es requerido</div>
+                <div *ngIf="form.controls.name.errors?. ['minlenght']" >El nombre debe tener al menos 4 caracteres</div>
+            </div>
+
+            <!--Email-->
+
+            <app-custom-input 
+            autocomplete="email"
+            icon="mail-outline"
+            [control]="form.controls.email"
+            type="email"
+            label="Correo"
+            ></app-custom-input>
+
+            <div class="validators" *ngIf="form.controls.email.errors && form.controls.email.touched">
+
+                <div *ngIf="form.controls.email.errors?. ['requerid']" >El correo es requerido</div>
+                <div *ngIf="form.controls.email.errors?. ['email']" >Ingrese un correo valido</div>
+            </div>
+        
+            <!--Contraseña-->
+                
+               <app-custom-input 
+               [control]="form.controls.password"
+               icon="lock-closed-outline"
+               type="password"
+               label="Contraseña"
+                
+               icon="lock-closed-outline"
+               ></app-custom-input>
+
+               <div class="validators" *ngIf="form.controls.password.errors && form.controls.password.touched">
+                <div *ngIf="form.controls.password.errors?. ['requerid']" >La contraseña es requerida</div>
+            </div>
+
+          
+
+            <ion-button  expand="block"  shape="round" class="submit" type="submit" [disabled]="form.invalid">
+              Registro
+              <ion-icon slot="end" name="person-add-outline"></ion-icon>
+            </ion-button>      
+                
+            </form>
+        
+
+    </div>
+
+    
+
+
+
+</ion-content>
