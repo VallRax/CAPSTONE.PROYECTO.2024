@@ -60,7 +60,7 @@ export class AuthPage implements OnInit {
       await loading.present();
 
       let path = `users/${uid}`;
-      delete this.form.value.password;
+    
 
       this.firebaseSvc.getDocument(path).then((user: User) => {
         
@@ -70,11 +70,11 @@ export class AuthPage implements OnInit {
        this.form.reset();
 
        this.utilsSvc.presentToast({
-        message: `Te damos la Bienvenida ${user.name}`,
-        duration: 2500,
+        message: `Te damos la bienvenida ${user.name}`,
+        duration: 1500,
         color:'primary',
         position: 'middle',
-        icon: 'alert-circle-outline'
+        icon: 'person-circle-outline'
       })
         
       }).catch(error => {

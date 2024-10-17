@@ -30,12 +30,12 @@ export class UtilsService {
   }
 
   // Guarda un elemento en local storage
-  saveInLocalStorage(key: string, value: any){
+  saveInLocalStorage(key: string, value: any) {
     return localStorage.setItem(key, JSON.stringify(value));
   }
 
   //Obtiene un elemento del localStorage
-  getFromLocalStorage(key: string){
+  getFromLocalStorage(key: string) {
     return JSON.parse(localStorage.getItem(key));
   }
 
