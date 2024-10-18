@@ -46,9 +46,9 @@ export class SignUpPage implements OnInit {
         console.log(error);
 
         this.utilsSvc.presentToast({
-          message: error.message,
+          message: `Correo no valido, intentelo nuevamente`,
           duration: 2500,
-          color:'primary',
+          color:'warning',
           position: 'middle',
           icon: 'alert-circle-outline'
         })
@@ -73,7 +73,7 @@ export class SignUpPage implements OnInit {
         
        this.utilsSvc.saveInLocalStorage('user', this.form.value)
 
-       this.utilsSvc.routerLink('/main/home')
+       this.utilsSvc.routerLink('/auth')
        this.form.reset();
         
       }).catch(error => {
