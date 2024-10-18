@@ -3,6 +3,7 @@ import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { library, playCircle, radio, search } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -19,12 +20,16 @@ export class HomePage implements OnInit {
   ngOnInit() {
   }
 
+  Profile() {
+    this.router.navigate(['/profile']);  // Navegar a la página de perfil
+  }
+
 
   signOut() {
     this.firebaseSvc.signOut();
   }
 
-  constructor() {
+  constructor(private router: Router) {
     /**
      * Any icons you want to use in your application
      * can be registered in app.component.ts and then
