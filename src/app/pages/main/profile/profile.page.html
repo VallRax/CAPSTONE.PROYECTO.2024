@@ -1,13 +1,25 @@
-<ion-header [translucent]="true">
+<ion-header >
   <ion-toolbar>
     <ion-title>profile</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">profile</ion-title>
-    </ion-toolbar>
-  </ion-header>
+
+
+
+  <ion-tabs>
+    <ion-tab-bar slot="bottom">
+      <ion-tab-button (click)="Profile()">
+        <ion-icon name="Person-outline"></ion-icon>
+        Perfil
+      </ion-tab-button>
+      <ion-tab-button (click)="signOut()" tab="exit-outline" >
+        <ion-icon name="exit-outline"></ion-icon>
+        Cerrar Sesion
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+
+ 
 </ion-content>

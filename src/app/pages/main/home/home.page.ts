@@ -24,6 +24,10 @@ export class HomePage implements OnInit {
     this.router.navigate(['/profile']);  // Navegar a la página de perfil
   }
 
+  home(){
+    this.router.navigate(['/home']);
+  }
+
 
   signOut() {
     this.firebaseSvc.signOut();

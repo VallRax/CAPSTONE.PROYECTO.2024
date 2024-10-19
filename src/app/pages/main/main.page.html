@@ -4,6 +4,11 @@
   </ion-toolbar>
 </ion-header>
 
+
+<ion-buttons>
+  <ion-back-button *ngIf="backButton"   [defaultHref]="backButton"></ion-back-button>
+</ion-buttons>
+
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
