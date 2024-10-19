@@ -1,10 +1,10 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { UtilsService } from 'src/app/services/utils.service';
 import { library, playCircle, radio, search } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { Router } from '@angular/router';
-
+import { NavController } from '@ionic/angular';
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -12,12 +12,43 @@ import { Router } from '@angular/router';
 })
 export class HomePage implements OnInit {
 
+  
 
+
+ 
+
+  selectedCategory: string = 'Belleza y estética';  // Categoría por defecto
 
   firebaseSvc = inject(FirebaseService);
   utilsSvc = inject(UtilsService);
+  navCtrl = inject(NavController);  // Inyecta NavController
 
   ngOnInit() {
+  }
+
+  // Función para seleccionar una categoría
+  selectCategory(category: string) {
+    this.selectedCategory = category;
+  }
+
+  goToServiceName() {
+    this.navCtrl.navigateForward('/service-name');
+  }
+
+  goToDescription() {
+    this.navCtrl.navigateForward('/service-description');
+  }
+
+  goToCategory() {
+    this.navCtrl.navigateForward('/service-category');
+  }
+
+  goToContact() {
+    this.navCtrl.navigateForward('/service-contact');
+  }
+
+  goToLocation() {
+    this.navCtrl.navigateForward('/service-location');
   }
 
   Profile() {

@@ -1,0 +1,29 @@
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
+    margin-bottom: 15px;
+  }
+
+  ion-item {
+    --background: #f4f4f4; /* Color de fondo de cada rectángulo */
+    --border-radius: 10px; /* Bordes redondeados */
+    margin: 10px 0; /* Separación entre los ítems */
+  }
+  
+  ion-label h2 {
+    font-weight: bold; /* Título en negrita */
+  }
+  
+  ion-label p {
+    color: gray; /* Color del texto secundario */
+  }
