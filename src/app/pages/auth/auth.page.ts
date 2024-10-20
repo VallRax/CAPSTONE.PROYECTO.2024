@@ -39,9 +39,9 @@ export class AuthPage implements OnInit {
         console.log(error);
 
         this.utilsSvc.presentToast({
-          message: error.message,
+          message: `Correo o usuario incorrecto, intentelo de nuevamente o reestablezca su contraseña.`,
           duration: 2500,
-          color:'primary',
+          color:'warning',
           position: 'middle',
           icon: 'alert-circle-outline'
         })
@@ -72,7 +72,7 @@ export class AuthPage implements OnInit {
        this.utilsSvc.presentToast({
         message: `Te damos la bienvenida ${user.name}`,
         duration: 1500,
-        color:'primary',
+        color:'success',
         position: 'middle',
         icon: 'person-circle-outline'
       })

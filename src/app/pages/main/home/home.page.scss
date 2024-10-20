@@ -1,0 +1,29 @@
+.category-btn {
+    --border-radius: 10px;
+    --padding-start: 10px;
+    --padding-end: 10px;
+    text-align: center;
+    font-size: 12px;
+    height: 50px;
+  }
+  
+  .selected-category {
+    background-color: #F18D8D;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 20px 0;
+    margin: 15px 0;
+  }
+  
+  ion-card {
+    --border-radius: 12px;
+    margin-bottom: 12px;
+  }
+
+  ion-content {
+    --padding-bottom: 60px;  /* Ajustar el espacio inferior si es necesario */
+  }
+

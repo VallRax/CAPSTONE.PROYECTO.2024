@@ -1,13 +1,66 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>home</ion-title>
+    <ion-title>ServiList</ion-title>
+
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">home</ion-title>
-    </ion-toolbar>
-  </ion-header>
+
+  <!-- Barra de navegación inferior -->
+  <ion-tabs>
+    <ion-tab-bar slot="bottom">
+      <ion-tab-button (click)="home()">
+        <ion-icon name="home-outline"></ion-icon>
+        <ion-label>Inicio</ion-label>
+      </ion-tab-button>
+  
+      <ion-tab-button (click)="Profile()">
+        <ion-icon name="person-outline"></ion-icon>
+        <ion-label>Perfil</ion-label>
+      </ion-tab-button>
+  
+      <ion-tab-button (click)="signOut()">
+        <ion-icon name="exit-outline"></ion-icon>
+        <ion-label>Cerrar Sesión</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+
+  
+
+  <ion-list lines="none">
+
+    <ion-card>
+      <ion-item button detail (click)="goToServiceName()">
+        <ion-label>
+          <h2>Nombre de servicio</h2>
+          <p>Amor y Mascotas VET</p>
+        </ion-label>
+      </ion-item>
+    </ion-card>
+    <ion-card>
+      <ion-item button detail (click)="goToServiceName()">
+        <ion-label>
+          <h2>Nombre de servicio</h2>
+          <p>Amor y Mascotas VET</p>
+        </ion-label>
+      </ion-item>
+    </ion-card>
+    <ion-card>
+      <ion-item button detail (click)="goToServiceName()">
+        <ion-label>
+          <h2>Nombre de servicio</h2>
+          <p>Amor y Mascotas VET</p>
+        </ion-label>
+      </ion-item>
+    </ion-card>
+
+  </ion-list>
+
+
+  
+
+
+
 </ion-content>
