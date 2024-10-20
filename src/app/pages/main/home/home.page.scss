@@ -65,3 +65,25 @@
   text-align: center; /* Centrar el contenido de la sección */
   margin-top: 2px; /* Espacio adicional entre la imagen y la categoría si es necesario */
 }
+
+.square-card {
+  width: 80px; /* Ancho del cuadrado */
+  height: 80px; /* Alto del cuadrado */
+  margin: 0 auto; /* Centrar el card */
+  display: flex; /* Usar flexbox */
+  flex-direction: column; /* Colocar contenido en columna */
+  justify-content: flex-end; /* Alinear el contenido al final */
+  align-items: center; /* Centrar horizontalmente el contenido */
+}
+
+.card-content {
+  display: flex; /* Usar flexbox para el contenido */
+  flex-direction: column; /* Colocar texto en columna */
+  align-items: center; /* Centrar horizontalmente el texto */
+}
+
+.card-text {
+  width: 80px; /* Ancho del texto igual al cuadrado */
+  text-align: center; /* Centrar el texto */
+  margin-bottom: 5px; /* Espacio entre el card y el texto */
+}
