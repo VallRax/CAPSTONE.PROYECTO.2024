@@ -1,0 +1,83 @@
+ion-content {
+  position: relative; /* Asegura que el video esté en relación a este contenedor */
+  overflow: hidden; /* Evita que el video exceda los límites */
+}
+
+.background-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Asegura que el video cubra toda el área sin distorsionar */
+  z-index: -1; /* Coloca el video detrás de otros elementos */
+}
+
+.logo-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.app-logo {
+  width: 120px; /* Ajusta el tamaño del logotipo */
+  height: 120px; /* Asegura que tenga un alto igual al ancho */
+  border-radius: 50%; /* Convierte el logotipo en un círculo */
+  object-fit: cover; /* Asegura que la imagen se ajuste bien dentro del círculo */
+}
+
+.image-container {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente si es necesario */
+  margin-top: 20px; /* Espaciado adicional si lo deseas */
+}
+
+.app-image {
+  width: 300px; /* Ajusta el tamaño de la imagen */
+  height: auto; /* Mantiene la proporción de la imagen */
+  max-width: 100%; /* Asegura que no exceda el tamaño del contenedor */
+}
+
+.app-title {
+  font-family: 'Archivo Black', sans-serif; /* Fuente personalizada */
+  font-size: 2.5rem; /* Tamaño grande del título */
+  font-weight: bold;
+  color: white;
+  margin-top: 20px;
+  width: 100%;
+  text-align: center; /* Centra el texto */
+}
+
+
+
+.button-container {
+  position: absolute;
+  bottom: 40px; /* Ajusta este valor para la distancia desde el fondo */
+  left: 50%;
+  transform: translateX(-50%); /* Centra el botón horizontalmente */
+  width: 100%; /* Asegura que el contenedor del botón ocupe todo el ancho */
+  display: flex;
+  justify-content: center;
+}
+
+.start-button {
+  width: 80%; /* Botón responsivo */
+  max-width: 300px; /* Limita el ancho máximo del botón */
+  background-color: white;
+  color: #ffffff; /* Letras azules */
+  border-radius: 20px; /* Bordes redondeados */
+  font-size: 1.2rem;
+  text-transform: uppercase;
+}
+
+@media (min-width: 768px) {
+  .app-title {
+    font-size: 3rem; /* Aumenta el tamaño del título en pantallas grandes */
+  }
+
+  .start-button {
+    font-size: 1.5rem;
+  }
+}
