@@ -1,14 +1,7 @@
-<ion-header >
-  <ion-toolbar>
-    <ion-title>Mi Perfil</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-header [title]="'Perfil'" [showBackButton]="true"></app-header>
 
 <ion-content [fullscreen]="true">
-  <ion-infinite-scroll>
 
-  <h2>Información de la cuenta</h2>
-  
 
   <ion-tabs>
     <ion-tab-bar slot="bottom">
@@ -23,64 +16,69 @@
     </ion-tab-bar>
   </ion-tabs>
 
-  <div class="profile-container">
-    <img [src]="profileImage" class="profile-image" alt="Imagen de perfil"/>
-    
-    <!-- Input de tipo file oculto -->
-    <input type="file" #fileInput hidden (change)="onFileSelected($event)" accept="image/*" />
+  <div class="info-container">
+    <h2>Información de la cuenta</h2>
 
-    <!-- Botón para cambiar la foto -->
-    <ion-button (click)="triggerFileInput()">Cambiar foto </ion-button>
+    <div class="profile-container">
+      <img [src]="profileImage ? profileImage : 'assets/default-profile.png'" class="profile-image" alt="Imagen de perfil"/>
+      
+      <!-- Input de tipo file oculto -->
+      <input type="file" #fileInput hidden (change)="onFileSelected($event)" accept="image/*" />
+
+      <!-- Botón para cambiar la foto -->
+      <ion-button class="custom-button" (click)="triggerFileInput()">Cambiar Foto</ion-button>
+    </div>
+
+    <h2>Información básica</h2>
+
+      <!-- Lista de información con redirecciones -->
+    <ion-list lines="none">
+
+      <!-- Nombre de Servicio -->
+      <ion-item button detail (click)="goToServiceName()">
+        <ion-label>
+          <h2>Nombre de servicio</h2>
+          <p>Amor y Mascotas VET</p>
+        </ion-label>
+      </ion-item>
+
+      <!-- Descripción del Servicio -->
+      <ion-item button detail (click)="goToDescription()">
+        <ion-label>
+          <h2>Descripción del servicio</h2>
+          <p>Somos un centro de mascotas...</p>
+        </ion-label>
+      </ion-item>
+
+      <!-- Categoría del Servicio -->
+      <ion-item button detail (click)="goToCategory()">
+        <ion-label>
+          <h2>Categoría del servicio</h2>
+          <p>Veterinario</p>
+        </ion-label>
+      </ion-item>
+
+      <!-- Número de Contacto -->
+      <ion-item button detail (click)="goToContact()">
+        <ion-label>
+          <h2>Número de contacto</h2>
+          <p>+56937005091</p>
+        </ion-label>
+      </ion-item>
+
+      <!-- Ubicación -->
+      <ion-item button detail (click)="goToLocation()">
+        <ion-label>
+          <h2>Ubicación</h2>
+          <p>Providencia</p>
+        </ion-label>
+      </ion-item>
+
+    </ion-list>
   </div>
 
-  <h2>Información básica</h2>
 
-    <!-- Lista de información con redirecciones -->
-  <ion-list lines="none">
-
-    <!-- Nombre de Servicio -->
-    <ion-item button detail (click)="goToServiceName()">
-      <ion-label>
-        <h2>Nombre de servicio</h2>
-        <p>Amor y Mascotas VET</p>
-      </ion-label>
-    </ion-item>
-
-    <!-- Descripción del Servicio -->
-    <ion-item button detail (click)="goToDescription()">
-      <ion-label>
-        <h2>Descripción del servicio</h2>
-        <p>Somos un centro de mascotas...</p>
-      </ion-label>
-    </ion-item>
-
-    <!-- Categoría del Servicio -->
-    <ion-item button detail (click)="goToCategory()">
-      <ion-label>
-        <h2>Categoría del servicio</h2>
-        <p>Veterinario</p>
-      </ion-label>
-    </ion-item>
-
-    <!-- Número de Contacto -->
-    <ion-item button detail (click)="goToContact()">
-      <ion-label>
-        <h2>Número de contacto</h2>
-        <p>+56937005091</p>
-      </ion-label>
-    </ion-item>
-
-    <!-- Ubicación -->
-    <ion-item button detail (click)="goToLocation()">
-      <ion-label>
-        <h2>Ubicación</h2>
-        <p>Providencia</p>
-      </ion-label>
-    </ion-item>
-
-  </ion-list>
-
-  
-
-</ion-infinite-scroll>
 </ion-content>
+
+  <!-- Contenido de la página -->
+  <app-bottom-nav></app-bottom-nav> <!-- Añadir la barra de navegación inferior -->
