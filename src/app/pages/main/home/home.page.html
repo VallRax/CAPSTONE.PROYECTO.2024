@@ -6,9 +6,6 @@
 
 </ion-header>
 
-
-
-
 <ion-content [fullscreen]="true">
 
   <div class="category-bar" >
@@ -26,30 +23,6 @@
   <div class="image-section">
     <img src="https://picsum.photos/2010/300" alt="Imagen descriptiva">
   </div>
-
-
-
-  <!-- Barra de navegación inferior -->
-  <ion-tabs>
-    <ion-tab-bar slot="bottom">
-      <ion-tab-button (click)="home()">
-        <ion-icon name="home-outline"></ion-icon>
-        <ion-label>Inicio</ion-label>
-      </ion-tab-button>
-  
-      <ion-tab-button (click)="Profile()">
-        <ion-icon name="person-outline"></ion-icon>
-        <ion-label>Perfil</ion-label>
-      </ion-tab-button>
-  
-      <ion-tab-button (click)="signOut()">
-        <ion-icon name="exit-outline"></ion-icon>
-        <ion-label>Cerrar Sesión</ion-label>
-      </ion-tab-button>
-    </ion-tab-bar>
-  </ion-tabs>
-
-  
 
   <ion-list lines="none">
 
@@ -89,9 +62,7 @@
 
   </ion-list>
 
-
-  
-
-
-
 </ion-content>
+
+  <!-- Contenido de la página -->
+  <app-bottom-nav></app-bottom-nav> <!-- Añadir la barra de navegación inferior -->
