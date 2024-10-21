@@ -1,53 +1,57 @@
 import { Component, ElementRef, inject, Input, OnInit, ViewChild } from '@angular/core';
-import { FirebaseService } from 'src/app/services/firebase.service';
-import { UtilsService } from 'src/app/services/utils.service';
-import { library, playCircle, radio, search } from 'ionicons/icons';
-import { addIcons } from 'ionicons';
+import { FirebaseService } from 'src/app/services/firebase.service'; // Servicio de Firebase
+import { UtilsService } from 'src/app/services/utils.service'; // Servicio de utilidades
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
+import { getAuth } from 'firebase/auth'; // Para autenticación de Firebase
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Para subir imágenes a Firebase Storage
+import { doc, getFirestore, getDoc, setDoc } from 'firebase/firestore'; // Firestore para la base de datos
+
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
 })
 export class ProfilePage implements OnInit {
-
-  profileImage: string = 'assets/default-profile.png';  // Ruta de la imagen por defecto
-
-   // Acceso al input de tipo file mediante @ViewChild
-   @ViewChild('fileInput', { static: false }) fileInput: ElementRef;
+  profileImage: string = 'assets/default-profile.png';  // Imagen por defecto
+  userData: any = {}; // Datos del usuario
+  @ViewChild('fileInput', { static: false }) fileInput: ElementRef;
   firebaseSvc = inject(FirebaseService);
   utilsSvc = inject(UtilsService);
+  auth = getAuth(); // Obtenemos la autenticación
+  storage = getStorage(); // Accedemos a Firebase Storage
+  db = getFirestore(); // Accedemos a Firestore
 
-  @Input() backButton!: string; 
-  navCtrl = inject(NavController);  // Inyecta NavController
+  constructor(private router: Router, private navCtrl: NavController) { }
 
-  constructor(private router: Router) { }
-  
-  // Esta función se dispara al hacer clic en el botón para abrir el input de tipo file
+  // Método para cargar la información del usuario desde Firebase
+  async loadUserData() {
+    const user = this.auth.currentUser;
+    if (user) {
+      const userDoc = doc(this.db, 'users', user.uid);
+      const userSnap = await getDoc(userDoc);
+      if (userSnap.exists()) {
+        this.userData = userSnap.data();  // Asignar los datos obtenidos al objeto userData
+      }
+    }
+  }
+
+  // Abrir el selector de archivos
   triggerFileInput() {
     this.fileInput.nativeElement.click();
   }
 
-   // Esta función se dispara cuando el usuario selecciona un archivo
-   onFileSelected(event: Event) {
+  // Subir la nueva imagen de perfil a Firebase Storage y actualizar el perfil del usuario
+  async onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.profileImage = reader.result as string;  // Asignar la imagen seleccionada al perfil
-      };
-      reader.readAsDataURL(file);  // Leer la imagen seleccionada como base64
-    }
   }
 
-
+  // Navegación
   Profile() {
-    this.router.navigate(['/profile']);  // Navegar a la página de perfil
+    this.router.navigate(['/profile']);
   }
 
-  home(){
+  home() {
     this.router.navigate(['/main/home']);
   }
 
@@ -71,13 +75,8 @@ export class ProfilePage implements OnInit {
     this.navCtrl.navigateForward('/service-location');
   }
 
- 
-
+  // Cargar los datos del usuario al inicializar
   ngOnInit() {
-    const savedImage = localStorage.getItem('profileImage');  // Intentar obtener la imagen del almacenamiento local
-    if (savedImage) {
-      this.profileImage = savedImage;  // Si hay una imagen guardada, se establece como imagen de perfil
-    }
+    this.loadUserData();  // Cargar datos del usuario desde Firebase
   }
-
 }

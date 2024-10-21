@@ -31,46 +31,37 @@
 
     <h2>Información básica</h2>
 
-      <!-- Lista de información con redirecciones -->
     <ion-list lines="none">
 
-      <!-- Nombre de Servicio -->
-      <ion-item button detail (click)="goToServiceName()">
+      <!-- Nombre de Usuario -->
+      <ion-item>
         <ion-label>
-          <h2>Nombre de servicio</h2>
-          <p>Amor y Mascotas VET</p>
+          <h2>Nombre</h2>
+          <p>{{ userData?.name }}</p>
         </ion-label>
       </ion-item>
 
-      <!-- Descripción del Servicio -->
-      <ion-item button detail (click)="goToDescription()">
+      <!-- Correo Electrónico -->
+      <ion-item>
         <ion-label>
-          <h2>Descripción del servicio</h2>
-          <p>Somos un centro de mascotas...</p>
-        </ion-label>
-      </ion-item>
-
-      <!-- Categoría del Servicio -->
-      <ion-item button detail (click)="goToCategory()">
-        <ion-label>
-          <h2>Categoría del servicio</h2>
-          <p>Veterinario</p>
+          <h2>Correo Electrónico</h2>
+          <p>{{ userData?.email }}</p>
         </ion-label>
       </ion-item>
 
       <!-- Número de Contacto -->
-      <ion-item button detail (click)="goToContact()">
+      <ion-item>
         <ion-label>
           <h2>Número de contacto</h2>
-          <p>+56937005091</p>
+          <p>{{ userData?.phone }}</p>
         </ion-label>
       </ion-item>
 
       <!-- Ubicación -->
-      <ion-item button detail (click)="goToLocation()">
+      <ion-item>
         <ion-label>
           <h2>Ubicación</h2>
-          <p>Providencia</p>
+          <p>{{ userData?.location }}</p>
         </ion-label>
       </ion-item>
 
