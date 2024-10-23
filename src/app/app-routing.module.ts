@@ -4,24 +4,27 @@ import { NoAuthGuard } from './guards/no-auth.guard';
 import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
-  
   {
     path: '',
-    redirectTo: 'auth',
+    redirectTo: 'welcome', // Cambia a la ruta de bienvenida para que sea la primera página que se muestre
     pathMatch: 'full'
   },
   {
+    path: 'welcome',
+    loadChildren: () => import('./pages/main/welcome/welcome.module').then(m => m.WelcomePageModule)
+  },
+  {
     path: 'auth',
-    loadChildren: () => import('./pages/auth/auth.module').then( m => m.AuthPageModule), canActivate:[NoAuthGuard]
+    loadChildren: () => import('./pages/auth/auth.module').then(m => m.AuthPageModule), canActivate: [NoAuthGuard]
   },
   {
     path: 'main',
-    loadChildren: () => import('./pages/main/main.module').then( m => m.MainPageModule), canActivate:[AuthGuard]
+    loadChildren: () => import('./pages/main/main.module').then(m => m.MainPageModule), canActivate: [AuthGuard]
   },
   {
     path: 'profile',
-    loadChildren: () => import('./pages/main/profile/profile.module').then(m => m.ProfilePageModule), canActivate:[AuthGuard]
-  },
+    loadChildren: () => import('./pages/main/profile/profile.module').then(m => m.ProfilePageModule), canActivate: [AuthGuard]
+  }
 ];
 
 @NgModule({

@@ -1,0 +1,74 @@
+.welcome-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Colocar el contenido en la parte inferior */
+  align-items: center;
+  height: 100vh; /* Asegurarse de que ocupe toda la pantalla */
+  background: linear-gradient(135deg, #FF5722, #FF7043); /* Fondo degradado */
+  background-size: cover;
+  background-position: center; /* Centrar el degradado */
+  --background-color: #FF5722;
+  color: white;
+  text-align: center;
+  padding: 0;
+  position: relative;
+  overflow: hidden; /* Para asegurar que el contenido no se salga del área visible */
+}
+
+.background-overlay {
+  display: flex;
+  background-color: #FF5722;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end; /* Coloca los elementos en la parte inferior */
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 1; /* Asegura que los elementos estén por encima del fondo */
+}
+
+/* Para la imagen de las personas */
+.people-image {
+  position: absolute;
+  bottom: -10; /* Coloca la imagen en la parte inferior */
+  left: 50%;
+  transform: translateX(-50%); /* Centra la imagen horizontalmente */
+  width: 100%; /* Ajustar el tamaño según sea necesario */
+  max-width: 600px; /* Tamaño máximo de la imagen */
+  z-index: 0; /* Coloca la imagen detrás del texto y botón */
+  pointer-events: none; /* Evita que la imagen interfiera con la interacción */
+}
+
+.welcome-title {
+  font-size: 36px;
+  font-weight: bold;
+  color: white;
+  z-index: 2; /* Asegurar que el título esté delante de la imagen */
+  margin-bottom: 50px; /* Espacio para separar el título de la imagen */
+}
+
+.gradient-box {
+  background: rgb(255,87,34);
+  background: linear-gradient(180deg, rgba(255,87,34,0) 0%, rgba(255,87,34,1) 100%);
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 2; /* Asegurar que esté por delante de la imagen */
+  border-top-left-radius: 20px; /* Añadir un poco de estilo si se desea */
+  border-top-right-radius: 20px;
+}
+
+.start-button {
+  --background: white;
+  --color: #FF5722; /* Naranja para el texto del botón */
+  --border-radius: 25px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  width: 80%;
+  max-width: 250px;
+  z-index: 2; /* Asegurar que el botón esté delante de la imagen */
+  margin-bottom: 40px; /* Espacio debajo del botón */
+}
