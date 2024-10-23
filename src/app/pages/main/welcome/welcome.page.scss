@@ -39,14 +39,6 @@
   pointer-events: none; /* Evita que la imagen interfiera con la interacción */
 }
 
-.welcome-title {
-  font-size: 36px;
-  font-weight: bold;
-  color: white;
-  z-index: 2; /* Asegurar que el título esté delante de la imagen */
-  margin-bottom: 50px; /* Espacio para separar el título de la imagen */
-}
-
 .gradient-box {
   background: rgb(255,87,34);
   background: linear-gradient(180deg, rgba(255,87,34,0) 0%, rgba(255,87,34,1) 100%);
@@ -71,4 +63,42 @@
   max-width: 250px;
   z-index: 2; /* Asegurar que el botón esté delante de la imagen */
   margin-bottom: 40px; /* Espacio debajo del botón */
+}
+
+/* Estilo para el círculo del logo */
+.logo-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: white; /* Fondo blanco para el logo */
+  display: flex;
+  align-items: center;
+  z-index: 2; /* Asegurar que esté por delante de la imagen */
+  justify-content: center;
+  margin-bottom: 20px; /* Espacio debajo del círculo */
+}
+
+/* Estilo para el círculo del logo */
+.logo-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: white; /* Fondo blanco para el logo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px; /* Espacio debajo del círculo */
+  z-index: 2;
+  position: absolute;
+  top: 10%;
+}
+
+.welcome-title {
+  font-size: 36px;
+  font-weight: bold;
+  color: white;
+  z-index: 2; /* Asegurar que el título esté delante de la imagen */
+  margin-bottom: 30px; /* Reducir el espacio para acercar el título */
+  position: absolute;
+  top: 20%;
 }
