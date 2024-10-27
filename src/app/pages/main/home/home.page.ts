@@ -1,76 +1,56 @@
-import { Component, ElementRef, inject, Input, OnInit, ViewChild } from '@angular/core';
-import { FirebaseService } from 'src/app/services/firebase.service';
-import { UtilsService } from 'src/app/services/utils.service';
-import { library, playCircle, radio, search } from 'ionicons/icons';
-import { addIcons } from 'ionicons';
-import { Router } from '@angular/router';
-import { NavController } from '@ionic/angular';
+import { Component, OnInit } from '@angular/core';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
+  categories = [
+    { name: 'Belleza', icon: 'cut-outline' },
+    { name: 'Veterinaria', icon: 'paw-outline' },
+    { name: 'Salud', icon: 'medkit-outline' },
+    { name: 'Fitness', icon: 'barbell-outline' },
+    
+    { name: 'Otros', icon: 'ellipsis-horizontal-outline' },
+  ];
 
-  
+  serviceImages = [
+    { src: 'https://picsum.photos/600/400?random=1' },
+    { src: 'https://picsum.photos/600/400?random=2' },
+    { src: 'https://picsum.photos/600/400?random=3' },
+  ];
 
+  services = [
+    {
+      name: 'Spa Relajación Total',
+      address: 'Calle El Bosque Norte 345, Las Condes, Santiago',
+      image: 'https://picsum.photos/80',
+      rating: '4.8 (120+)',
+    },
+    {
+      name: 'Gimnasio Elite',
+      address: 'Avenida Providencia 2150, Santiago',
+      image: 'https://picsum.photos/80',
+      rating: '4.7 (90+)',
+    },
+    {
+      name: 'Clínica Dental Sonrisas',
+      address: 'Paseo Ahumada 360, Santiago',
+      image: 'https://picsum.photos/80',
+      rating: '4.5 (60+)',
+    },
+  ];
 
- 
+  constructor() {}
 
-  selectedCategory: string = 'Belleza y estética';  // Categoría por defecto
+  ngOnInit() {}
 
-  firebaseSvc = inject(FirebaseService);
-  utilsSvc = inject(UtilsService);
-  navCtrl = inject(NavController);  // Inyecta NavController
-
-  ngOnInit() {
+  selectCategory(category: any) {
+    console.log(`Selected Category: ${category.name}`);
   }
 
-  // Función para seleccionar una categoría
-  selectCategory(category: string) {
-    this.selectedCategory = category;
+  goToServiceName(service: any) {
+    console.log(`Selected Service: ${service.name}`);
   }
-
-  goToServiceName() {
-    this.navCtrl.navigateForward('/service-name');
-  }
-
-  goToDescription() {
-    this.navCtrl.navigateForward('/service-description');
-  }
-
-  goToCategory() {
-    this.navCtrl.navigateForward('/service-category');
-  }
-
-  goToContact() {
-    this.navCtrl.navigateForward('/service-contact');
-  }
-
-  goToLocation() {
-    this.navCtrl.navigateForward('/service-location');
-  }
-
-  Profile() {
-    this.router.navigate(['/profile']);  // Navegar a la página de perfil
-  }
-
-  home(){
-    this.router.navigate(['/home']);
-  }
-
-
-  signOut() {
-    this.firebaseSvc.signOut();
-  }
-
-  constructor(private router: Router) {
-    /**
-     * Any icons you want to use in your application
-     * can be registered in app.component.ts and then
-     * referenced by name anywhere in your application.
-     */
-    addIcons({ library, playCircle, radio, search });
-  }
-
 }

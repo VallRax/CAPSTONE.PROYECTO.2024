@@ -1,68 +1,96 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>ServiList</ion-title>
-
-  </ion-toolbar>
-
-</ion-header>
-
 <ion-content [fullscreen]="true">
 
-  <div class="category-bar" >
-    <h1>Categorias</h1>
+  <div class="category-slider-container">
+    <div class="category-slider">
+      <div class="category-container">
+        <div class="category-circle">
+          <ion-avatar>
+            <img src="https://picsum.photos/600/400?random=1" alt="Imagen del servicio">
+          </ion-avatar>
+        </div>
+        <p>Nom. Cat. 1</p>
+      </div>
+      <div class="category-container">
+        <div class="category-circle">
+          <ion-avatar>
+            <img src="https://picsum.photos/600/400?random=2" alt="Imagen del servicio">
+          </ion-avatar>
+        </div>
+        <p>Nom. Cat. 2</p>
+      </div>
+      <div class="category-container">
+        <div class="category-circle">
+          <ion-avatar>
+            <img src="https://picsum.photos/600/400?random=3" alt="Imagen del servicio">
+          </ion-avatar>
+        </div>
+        <p>Nom. Cat. 3</p>
+      </div>
+      <div class="category-container">
+        <div class="category-circle">
+          <ion-avatar>
+            <img src="https://picsum.photos/600/400?random=4" alt="Imagen del servicio">
+          </ion-avatar>
+        </div>
+        <p>Nom. Cat. 4</p>
+      </div>
+      <div class="category-container">
+        <div class="category-circle">
+          <ion-avatar>
+            <img src="https://picsum.photos/600/400?random=5" alt="Imagen del servicio">
+          </ion-avatar>
+        </div>
+        <p>Nom. Cat. 5</p>
+      </div>
+      <div class="category-container">
+        <div class="category-circle">
+          <ion-avatar>
+            <img src="https://picsum.photos/600/400?random=6" alt="Imagen del servicio">
+          </ion-avatar>
+        </div>
+        <p>Nom. Cat. 6</p>
+      </div>
+      <div class="category-container">
+        <div class="category-circle">
+          <ion-avatar>
+            <img src="https://picsum.photos/600/400?random=7" alt="Imagen del servicio">
+          </ion-avatar>
+        </div>
+        <p>Nom. Cat. 7</p>
+      </div>
+      <div class="category-container">
+        <div class="category-circle">
+          <ion-avatar>
+            <img src="https://picsum.photos/600/400?random=8" alt="Imagen del servicio">
+          </ion-avatar>
+        </div>
+        <p>Nom. Cat. 8</p>
+      </div>
+    </div>
   </div>
 
-  <div class="Servicios">
-    <ion-card class="square-card">
-      <img src="https://picsum.photos/2010/300" alt="Imagen descriptiva">
-      <p class="card-text">servicio</p>
-    </ion-card>
-  </div>
-  
-
-  <div class="image-section">
-    <img src="https://picsum.photos/2010/300" alt="Imagen descriptiva">
+  <div class="selected-category-container">
+    <div class="selected-category">
+      <img src="https://picsum.photos/600/400?random=1" alt="Imagen del servicio">
+      <p>Nom. Cat. 1</p>
+    </div>
   </div>
 
-  <ion-list lines="none">
-
-    <ion-card>
-      <ion-item button detail (click)="goToServiceName()">
+  <!-- Sección de servicios listados -->
+  <ion-list lines="none" class="service-list">
+    <ion-card *ngFor="let service of services">
+      <ion-item button detail (click)="goToServiceName(service)">
         <ion-avatar slot="start">
-          <img src="https://picsum.photos/100" class="image-style" alt="Random image">
+          <img [src]="service.image" alt="Imagen del servicio">
         </ion-avatar>
         <ion-label>
-          <h2>Spa Relajación Total</h2>
-          <p>Calle El Bosque Norte 345, Las Condes, Santiago</p>
+          <h2>{{ service.name }}</h2>
+          <p>{{ service.address }}</p>
+          <p><ion-icon name="star" color="warning"></ion-icon> {{ service.rating }}</p>
         </ion-label>
       </ion-item>
     </ion-card>
-    <ion-card>
-      <ion-item button detail (click)="goToServiceName()">
-        <ion-avatar slot="start">
-          <img src="https://picsum.photos/70" class="image-style" alt="Random image">
-        </ion-avatar>
-        <ion-label>
-          <h2>Spa Relajación Total</h2>
-          <p>Calle El Bosque Norte 345, Las Condes, Santiago</p>
-        </ion-label>
-      </ion-item>
-    </ion-card>
-    <ion-card>
-      <ion-item button detail (click)="goToServiceName()">
-        <ion-avatar slot="start">
-          <img src="https://picsum.photos/80" class="image-style" alt="Random image">
-        </ion-avatar>
-        <ion-label>
-          <h2>Spa Relajación Total</h2>
-          <p>Calle El Bosque Norte 345, Las Condes, Santiago</p>
-        </ion-label>
-      </ion-item>
-    </ion-card>
-
   </ion-list>
-
 </ion-content>
 
-  <!-- Contenido de la página -->
-  <app-bottom-nav></app-bottom-nav> <!-- Añadir la barra de navegación inferior -->
+<app-bottom-nav></app-bottom-nav>
