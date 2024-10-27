@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Glamour Nails Studio</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="service-header">
+    <div class="service-image">
+      <img src="https://picsum.photos/600/400?random=1" alt="Imagen del servicio">
+    </div>
+    <ion-icon name="heart-outline" class="favorite-icon"></ion-icon>
+  </div>
+
+  <div class="service-info">
+    <h2>Glamour Nails Studio</h2>
+    <p>Av. Providencia 1234, Providencia, Santiago</p>
+  </div>
+
+  <div class="service-description">
+    <h3>Sobre nosotros</h3>
+    <p>En Glamour Nails Studio somos expertos en el cuidado de tus manos y pies. Ofrecemos servicios de manicura y pedicura profesional, con una amplia gama de diseños y tratamientos personalizados. Nuestro equipo está comprometido con brindarte una experiencia relajante y de calidad, utilizando productos de alta gama y las últimas tendencias en belleza. ¡Ven y descubre el glamour que mereces!</p>
+  </div>
+
+  <div class="service-pricing">
+    <h3>Precios</h3>
+    <ion-list>
+      <ion-item>
+        <ion-label>
+          <h4>Tratamiento duo</h4>
+          <p>PRECIO $50.000</p>
+        </ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          <h4>Pedicure Completo</h4>
+          <p>PRECIO $30.000</p>
+        </ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          <h4>Manicure Express</h4>
+          <p>PRECIO $20.000</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

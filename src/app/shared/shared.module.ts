@@ -6,6 +6,7 @@ import { CustomInputComponent } from './components/custom-input/custom-input.com
 import { LogoComponent } from './components/logo/logo.component';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ServiceModalComponent } from './components/service-modal/service-modal.component';
 
 @NgModule({
   declarations: [
@@ -13,13 +14,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     BottomNavComponent,
     CustomInputComponent,
     LogoComponent,
+    ServiceModalComponent,
   ],
   exports:[
     HeaderComponent,
     BottomNavComponent,
     CustomInputComponent,
     LogoComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ServiceModalComponent,
   ],
   imports: [
     CommonModule,

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+import { ServiceModalComponent } from 'src/app/shared/components/service-modal/service-modal.component';
 
 @Component({
   selector: 'app-home',
@@ -42,7 +44,7 @@ export class HomePage implements OnInit {
     },
   ];
 
-  constructor() {}
+  constructor(private modalController: ModalController) {}
 
   ngOnInit() {}
 
@@ -50,7 +52,11 @@ export class HomePage implements OnInit {
     console.log(`Selected Category: ${category.name}`);
   }
 
-  goToServiceName(service: any) {
-    console.log(`Selected Service: ${service.name}`);
+  async goToServiceName(service: any) {
+    const modal = await this.modalController.create({
+      component: ServiceModalComponent,
+      componentProps: { service }
+    });
+    return await modal.present();
   }
 }
