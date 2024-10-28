@@ -1,15 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { ServiceModalComponent } from 'src/app/shared/components/service-modal/service-modal.component';
+import { CategoryModalComponent } from 'src/app/shared/components/category-modal/category-modal.component';
 
 @Component({
   selector: 'app-lobby',
   templateUrl: './lobby.page.html',
   styleUrls: ['./lobby.page.scss'],
 })
-
 export class LobbyPage {
-
 
   categories = [
     { name: 'Belleza', icon: 'cut' },
@@ -23,7 +22,7 @@ export class LobbyPage {
   ];
 
   getRandomImage() {
-    const randomNum = Math.floor(Math.random() * 1000); // Genera un número aleatorio entre 0 y 999
+    const randomNum = Math.floor(Math.random() * 1000);
     return `https://picsum.photos/600/400?random=${randomNum}`;
   }
 
@@ -116,10 +115,19 @@ export class LobbyPage {
 
   constructor(private modalController: ModalController) {}
 
+  async openCategoryModal(category: any) {
+    const servicesInCategory = this.services.filter(service => service.category === category.name);
+    const modal = await this.modalController.create({
+      component: CategoryModalComponent,
+      componentProps: { category: { ...category, services: servicesInCategory } }
+    });
+    return await modal.present();
+  }
+
   async openServiceModal(service: any) {
     const modal = await this.modalController.create({
       component: ServiceModalComponent,
-      componentProps: { service: service }
+      componentProps: { service }
     });
     return await modal.present();
   }

@@ -7,6 +7,7 @@ import { LogoComponent } from './components/logo/logo.component';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ServiceModalComponent } from './components/service-modal/service-modal.component';
+import { CategoryModalComponent } from './components/category-modal/category-modal.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { ServiceModalComponent } from './components/service-modal/service-modal.
     CustomInputComponent,
     LogoComponent,
     ServiceModalComponent,
+    CategoryModalComponent,
   ],
   exports:[
     HeaderComponent,
@@ -23,6 +25,7 @@ import { ServiceModalComponent } from './components/service-modal/service-modal.
     LogoComponent,
     ReactiveFormsModule,
     ServiceModalComponent,
+    CategoryModalComponent,
   ],
   imports: [
     CommonModule,

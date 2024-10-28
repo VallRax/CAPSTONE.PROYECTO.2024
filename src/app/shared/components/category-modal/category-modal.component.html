@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar class="header">
+    <ion-title>{{ category?.name }}</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="category-details">
+    <div class="category-info">
+      <h2>{{ category?.name }}</h2>
+      <p>Servicios disponibles en esta categoría</p>
+    </div>
+  </div>
+
+  <ion-list class="service-list" lines="none">
+    <ion-card class="service" *ngFor="let service of servicesInCategory" (click)="openServiceModal(service)">
+      <img [src]="service.image" alt="Imagen del servicio" />
+      <ion-card-header class="service-title">
+        <ion-card-title>{{ service.name }}</ion-card-title>
+        <ion-card-subtitle>{{ service.category }}</ion-card-subtitle>
+        
+        <ion-buttons class="service-fav">
+          <ion-button (click)="toggleFavorite(service); $event.stopPropagation()">
+            <ion-icon [name]="service.isFavorite ? 'heart' : 'heart-outline'"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-card-header>
+      
+      <ion-card-content>
+        {{ service.description }}
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+</ion-content>
+
+<!-- BOTTOM BAR -->
+<app-bottom-nav></app-bottom-nav>
