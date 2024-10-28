@@ -24,6 +24,10 @@ const routes: Routes = [
   {
     path: 'profile',
     loadChildren: () => import('./pages/main/profile/profile.module').then(m => m.ProfilePageModule), canActivate: [AuthGuard]
+  },
+  {
+    path: 'lobby',
+    loadChildren: () => import('./pages/lobby/lobby.module').then( m => m.LobbyPageModule)
   }
 ];
 
