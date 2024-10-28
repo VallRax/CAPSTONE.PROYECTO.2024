@@ -1,9 +1,14 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar class="header">
     <ion-title>{{ service?.name }}</ion-title>
-    <ion-buttons slot="end">
+    <ion-buttons slot="start">
       <ion-button (click)="dismiss()">
         <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end" class="service-fav">
+      <ion-button (click)="toggleFavorite()">
+        <ion-icon [name]="service?.isFavorite ? 'heart' : 'heart-outline'"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -11,22 +16,31 @@
 
 <ion-content>
   <div class="service-details">
-    <img [src]="service?.image" alt="Imagen del servicio" />
-    <h2>{{ service?.name }}</h2>
-    <p>{{ service?.category }}</p>
-    <p>{{ service?.description }}</p>
+    <img [src]="service?.image" alt="Imagen del servicio" class="service-image" />
+    <div class="service-info">
+      <h2>{{ service?.name }}</h2>
+      <p>{{ service?.category }}</p>
+      <p>{{ service?.description }}</p>
+    </div>
   </div>
 
   <div class="service-offers">
     <h3>Servicios Ofrecidos</h3>
     <ion-list>
-      <ion-item *ngFor="let offer of service?.offers">
+      <ion-item *ngFor="let offer of service?.offers" class="offer-item">
         <ion-label>
           <h2>{{ offer.name }}</h2>
           <p>{{ offer.description }}</p>
+          <p class="price">Precio: {{ offer.price }}</p>
         </ion-label>
-        <p>Precio: {{ offer.price }}</p>
+        <div class="offer-image-container">
+          <img [src]="offer.image" alt="Imagen de la oferta" class="offer-image" />
+          <ion-button fill="clear" class="schedule-button">
+            <ion-icon name="calendar"></ion-icon>
+          </ion-button>
+        </div>
       </ion-item>
     </ion-list>
   </div>
 </ion-content>
+

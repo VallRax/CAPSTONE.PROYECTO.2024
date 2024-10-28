@@ -4,7 +4,7 @@ import { ModalController } from '@ionic/angular';
 @Component({
   selector: 'app-service-modal',
   templateUrl: './service-modal.component.html',
-  styleUrls: ['./service-modal.component.scss'],
+  styleUrls: ['./service-modal.component.scss']
 })
 export class ServiceModalComponent {
   @Input() service: any;
@@ -13,5 +13,9 @@ export class ServiceModalComponent {
 
   dismiss() {
     this.modalController.dismiss();
+  }
+
+  toggleFavorite() {
+    this.service.isFavorite = !this.service.isFavorite;
   }
 }
