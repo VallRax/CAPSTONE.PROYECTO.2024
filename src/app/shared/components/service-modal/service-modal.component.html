@@ -35,7 +35,7 @@
         </ion-label>
         <div class="offer-image-container">
           <img [src]="offer.image" alt="Imagen de la oferta" class="offer-image" />
-          <ion-button fill="clear" class="schedule-button">
+          <ion-button fill="clear" class="schedule-button" (click)="openScheduleModal()">
             <ion-icon name="calendar"></ion-icon>
           </ion-button>
         </div>

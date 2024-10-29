@@ -8,6 +8,7 @@ import { IonicModule } from '@ionic/angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ServiceModalComponent } from './components/service-modal/service-modal.component';
 import { CategoryModalComponent } from './components/category-modal/category-modal.component';
+import { ScheduleModalComponent } from './components/schedule-modal/schedule-modal.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { CategoryModalComponent } from './components/category-modal/category-mod
     LogoComponent,
     ServiceModalComponent,
     CategoryModalComponent,
+    ScheduleModalComponent,
   ],
   exports:[
     HeaderComponent,
@@ -26,6 +28,7 @@ import { CategoryModalComponent } from './components/category-modal/category-mod
     ReactiveFormsModule,
     ServiceModalComponent,
     CategoryModalComponent,
+    ScheduleModalComponent,
   ],
   imports: [
     CommonModule,
