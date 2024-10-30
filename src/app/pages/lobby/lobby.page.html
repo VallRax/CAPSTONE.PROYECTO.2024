@@ -25,7 +25,7 @@
         <ion-card-subtitle>{{ service.category }}</ion-card-subtitle>
         
         <ion-buttons class="service-fav">
-          <ion-button (click)="toggleFavorite(service)">
+          <ion-button (click)="toggleFavorite(service); $event.stopPropagation()">
             <ion-icon [name]="service.isFavorite ? 'heart' : 'heart-outline'"></ion-icon>
           </ion-button>
         </ion-buttons>

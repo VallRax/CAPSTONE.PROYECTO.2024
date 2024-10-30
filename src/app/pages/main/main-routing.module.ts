@@ -2,12 +2,14 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { MainPage } from './main.page';
+import { LobbyPage } from '../lobby/lobby.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: MainPage
-  },  {
+    component: LobbyPage
+  },
+  {
     path: 'home',
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
   },
@@ -22,6 +24,10 @@ const routes: Routes = [
   {
     path: 'categories',
     loadChildren: () => import('./categories/categories.module').then( m => m.CategoriesPageModule)
+  },
+  {
+    path: 'lobby',
+    loadChildren: () => import('../lobby/lobby.module').then( m => m.LobbyPageModule)
   }
 
 ];
