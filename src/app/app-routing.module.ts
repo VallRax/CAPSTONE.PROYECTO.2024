@@ -11,23 +11,15 @@ const routes: Routes = [
   },
   {
     path: 'welcome',
-    loadChildren: () => import('./pages/main/welcome/welcome.module').then(m => m.WelcomePageModule)
+    loadChildren: () => import('./pages/auth/welcome/welcome.module').then(m => m.WelcomePageModule), canActivate: [NoAuthGuard]
   },
   {
     path: 'auth',
     loadChildren: () => import('./pages/auth/auth.module').then(m => m.AuthPageModule), canActivate: [NoAuthGuard]
   },
   {
-    path: 'main',
-    loadChildren: () => import('./pages/main/main.module').then(m => m.MainPageModule), canActivate: [AuthGuard]
-  },
-  {
-    path: 'profile',
-    loadChildren: () => import('./pages/main/profile/profile.module').then(m => m.ProfilePageModule), canActivate: [AuthGuard]
-  },
-  {
     path: 'lobby',
-    loadChildren: () => import('./pages/lobby/lobby.module').then( m => m.LobbyPageModule)
+    loadChildren: () => import('./pages/lobby/lobby.module').then( m => m.LobbyPageModule), canActivate: [AuthGuard]
   }
 ];
 
