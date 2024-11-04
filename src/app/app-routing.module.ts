@@ -20,7 +20,6 @@ const routes: Routes = [
   {
     path: 'auth',
     loadChildren: () => import('./pages/auth/auth.module').then(m => m.AuthPageModule), canActivate: [NoAuthGuard]
-    loadChildren: () => import('./pages/auth/auth.module').then(m => m.AuthPageModule), canActivate: [NoAuthGuard]
   },
   {
     path: 'home',
@@ -29,7 +28,7 @@ const routes: Routes = [
   {
     path: 'profile',
     loadChildren: () => import('./pages/profile/profile.module').then( m => m.ProfilePageModule), canActivate: [AuthGuard]
-  }
+  },
 ];
 
 @NgModule({
