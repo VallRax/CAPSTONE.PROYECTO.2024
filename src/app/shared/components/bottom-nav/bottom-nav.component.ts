@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { NavController, ModalController } from '@ionic/angular';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { Router } from '@angular/router'; // Asegúrate de importar Router
 
@@ -11,18 +11,33 @@ import { Router } from '@angular/router'; // Asegúrate de importar Router
 export class BottomNavComponent {
   firebaseSvc = inject(FirebaseService);
 
-  constructor(private navCtrl: NavController, private router: Router) {} // Inyectar Router
+  constructor(
+    private navCtrl: NavController, 
+    private router: Router, // Inyectar Router
+    private modalController: ModalController
+    ) {}
 
-  Profile() {
-    this.router.navigate(['/profile']);  // Navegar a la página de perfil
+  async profile() {
+    await this.closeModal();
+    this.router.navigate(['/profile']);
   }
 
-  home(){
-    this.router.navigate(['home']);
+  async home() {
+    await this.closeModal();
+    this.router.navigate(['/home']);
   }
 
-  signOut() {
+  async signOut() {
+    await this.closeModal();
     this.firebaseSvc.signOut();
   }
 
+  private async closeModal() {
+    try {
+      await this.modalController.dismiss();
+    } catch (error) {
+      // Ignora el error si no hay ningún modal abierto
+      console.warn('No modal to close:', error);
+    }
+  }
 }
