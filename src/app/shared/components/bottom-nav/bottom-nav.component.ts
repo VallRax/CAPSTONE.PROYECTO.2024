@@ -18,7 +18,7 @@ export class BottomNavComponent {
   }
 
   home(){
-    this.router.navigate(['lobby']);
+    this.router.navigate(['home']);
   }
 
   signOut() {
