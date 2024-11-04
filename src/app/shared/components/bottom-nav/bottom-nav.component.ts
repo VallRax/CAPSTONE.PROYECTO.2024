@@ -18,7 +18,7 @@ export class BottomNavComponent {
   }
 
   home(){
-    this.router.navigate(['main/home']);
+    this.router.navigate(['home']);
   }
 
   signOut() {

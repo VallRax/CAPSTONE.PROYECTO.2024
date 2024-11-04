@@ -1,83 +1,105 @@
-ion-content {
-  position: relative; /* Asegura que el video esté en relación a este contenedor */
-  overflow: hidden; /* Evita que el video exceda los límites */
-}
-
-.background-video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Asegura que el video cubra toda el área sin distorsionar */
-  z-index: -1; /* Coloca el video detrás de otros elementos */
-}
-
-.logo-container {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.app-logo {
-  width: 120px; /* Ajusta el tamaño del logotipo */
-  height: 120px; /* Asegura que tenga un alto igual al ancho */
-  border-radius: 50%; /* Convierte el logotipo en un círculo */
-  object-fit: cover; /* Asegura que la imagen se ajuste bien dentro del círculo */
-}
-
-.image-container {
-  display: flex;
-  justify-content: center; /* Centra horizontalmente */
-  align-items: center; /* Centra verticalmente si es necesario */
-  margin-top: 20px; /* Espaciado adicional si lo deseas */
-}
-
-.app-image {
-  width: 300px; /* Ajusta el tamaño de la imagen */
-  height: auto; /* Mantiene la proporción de la imagen */
-  max-width: 100%; /* Asegura que no exceda el tamaño del contenedor */
-}
-
-.app-title {
-  font-family: 'Archivo Black', sans-serif; /* Fuente personalizada */
-  font-size: 2.5rem; /* Tamaño grande del título */
-  font-weight: bold;
-  color: white;
-  margin-top: 20px;
-  width: 100%;
-  text-align: center; /* Centra el texto */
-}
-
-
-
-.button-container {
-  position: absolute;
-  bottom: 40px; /* Ajusta este valor para la distancia desde el fondo */
-  left: 50%;
-  transform: translateX(-50%); /* Centra el botón horizontalmente */
-  width: 100%; /* Asegura que el contenedor del botón ocupe todo el ancho */
-  display: flex;
-  justify-content: center;
-}
-
-.start-button {
-  width: 80%; /* Botón responsivo */
-  max-width: 300px; /* Limita el ancho máximo del botón */
-  background-color: white;
-  color: #ffffff; /* Letras azules */
-  border-radius: 20px; /* Bordes redondeados */
-  font-size: 1.2rem;
-  text-transform: uppercase;
-}
-
-@media (min-width: 768px) {
-  .app-title {
-    font-size: 3rem; /* Aumenta el tamaño del título en pantallas grandes */
+.welcome-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Colocar el contenido en la parte inferior */
+    align-items: center;
+    height: 100vh; /* Asegurarse de que ocupe toda la pantalla */
+    background: linear-gradient(135deg, #FF5722, #FF7043); /* Fondo degradado */
+    background-size: cover;
+    background-position: center; /* Centrar el degradado */
+    --background-color: #FF5722;
+    color: white;
+    text-align: center;
+    padding: 0;
+    position: relative;
+    overflow: hidden; /* Para asegurar que el contenido no se salga del área visible */
   }
-
+  
+  .background-overlay {
+    display: flex;
+    background-color: #FF5722;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end; /* Coloca los elementos en la parte inferior */
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1; /* Asegura que los elementos estén por encima del fondo */
+  }
+  
+  /* Para la imagen de las personas */
+  .people-image {
+    position: absolute;
+    bottom: -10; /* Coloca la imagen en la parte inferior */
+    left: 50%;
+    transform: translateX(-50%); /* Centra la imagen horizontalmente */
+    width: 100%; /* Ajustar el tamaño según sea necesario */
+    max-width: 600px; /* Tamaño máximo de la imagen */
+    z-index: 0; /* Coloca la imagen detrás del texto y botón */
+    pointer-events: none; /* Evita que la imagen interfiera con la interacción */
+  }
+  
+  .gradient-box {
+    background: rgb(255,87,34);
+    background: linear-gradient(180deg, rgba(255,87,34,0) 0%, rgba(255,87,34,1) 100%);
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 2; /* Asegurar que esté por delante de la imagen */
+    border-top-left-radius: 20px; /* Añadir un poco de estilo si se desea */
+    border-top-right-radius: 20px;
+  }
+  
   .start-button {
-    font-size: 1.5rem;
+    --background: white;
+    --color: #FF5722; /* Naranja para el texto del botón */
+    --border-radius: 25px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    width: 80%;
+    max-width: 250px;
+    z-index: 2; /* Asegurar que el botón esté delante de la imagen */
+    margin-bottom: 40px; /* Espacio debajo del botón */
   }
-}
+  
+  /* Estilo para el círculo del logo */
+  .logo-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: white; /* Fondo blanco para el logo */
+    display: flex;
+    align-items: center;
+    z-index: 2; /* Asegurar que esté por delante de la imagen */
+    justify-content: center;
+    margin-bottom: 20px; /* Espacio debajo del círculo */
+  }
+  
+  /* Estilo para el círculo del logo */
+  .logo-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: white; /* Fondo blanco para el logo */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px; /* Espacio debajo del círculo */
+    z-index: 2;
+    position: absolute;
+    top: 10%;
+  }
+  
+  .welcome-title {
+    font-size: 36px;
+    font-weight: bold;
+    color: white;
+    z-index: 2; /* Asegurar que el título esté delante de la imagen */
+    margin-bottom: 30px; /* Reducir el espacio para acercar el título */
+    position: absolute;
+    top: 20%;
+  }
+  
