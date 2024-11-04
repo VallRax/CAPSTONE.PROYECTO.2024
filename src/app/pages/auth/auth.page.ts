@@ -66,7 +66,7 @@ export class AuthPage implements OnInit {
         
        this.utilsSvc.saveInLocalStorage('user', user)
 
-       this.utilsSvc.routerLink('lobby')
+       this.utilsSvc.routerLink('home')
        this.form.reset();
 
        this.utilsSvc.presentToast({
