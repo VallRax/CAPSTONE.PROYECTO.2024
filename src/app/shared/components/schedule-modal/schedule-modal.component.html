@@ -20,6 +20,7 @@
       <ion-item class="form-item">
         <ion-label position="stacked">Fecha</ion-label>
         <ion-datetime
+          [preferWheel]="true"
           displayFormat="DD/MM/YYYY"
           [(ngModel)]="selectedDate"
           presentation="date"
