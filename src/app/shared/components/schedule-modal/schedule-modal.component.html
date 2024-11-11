@@ -17,32 +17,34 @@
 
     <div class="form-container">
       <!-- Campo para seleccionar Fecha -->
-      <ion-item class="form-item">
-        <ion-label position="stacked">Fecha</ion-label>
-        <ion-datetime
-          [preferWheel]="true"
-          displayFormat="DD/MM/YYYY"
-          [(ngModel)]="selectedDate"
-          presentation="date"
-          locale="es-ES"
-          placeholder="Selecciona una fecha">
-        </ion-datetime>
-      </ion-item>
+      <ion-datetime
+        [preferWheel]="true"
+        displayFormat="DD MMMM YYYY"
+        [(ngModel)]="selectedDate"
+        presentation="date"
+        locale="es-ES"
+        [min]="today"
+        [max]="maxDate"
+        placeholder="Selecciona una fecha"
+        (ionChange)="updateAvailability()">
+      </ion-datetime>
+      
+      <!-- Lista de Horas Disponibles -->
+      <div class="hours-list-tittle">
+        <h2>Horas Disponibles</h2>
+      </div>
+      <ion-list class="time-list">
+        <ion-item *ngFor="let time of availableTimes" (click)="selectTime(time)" [disabled]="!time.available">
+          <ion-checkbox slot="start" labelPlacement="end" [(ngModel)]="time.checked" (ionChange)="toggleTimeSelection(time)" [disabled]="!time.available">
+            {{ time.label }}
+          </ion-checkbox>
+        </ion-item>
+      </ion-list>
 
-      <!-- Campo para seleccionar Hora -->
-      <ion-item class="form-item">
-        <ion-label position="stacked">Hora</ion-label>
-        <ion-datetime
-          displayFormat="HH:mm"
-          pickerFormat="HH:mm"
-          [(ngModel)]="selectedTime"
-          presentation="time"
-          locale="es-ES"
-          placeholder="Selecciona una hora">
-        </ion-datetime>
-      </ion-item>
     </div>
-
-    <ion-button expand="full" class="confirm-button" (click)="scheduleService()">Confirmar Agendamiento</ion-button>
   </div>
 </ion-content>
+
+<ion-footer>
+  <ion-button expand="full" class="confirm-button" (click)="scheduleService()">Confirmar Agendamiento</ion-button>
+</ion-footer>
