@@ -27,7 +27,7 @@
   <div class="service-offers">
     <h3>Servicios Ofrecidos</h3>
     <ion-list>
-      <ion-item *ngFor="let offer of service?.offers" class="offer-item">
+      <ion-item *ngFor="let offer of service?.offers" class="offer-item" (click)="openScheduleModal()">
         <ion-label>
           <h2>{{ offer.name }}</h2>
           <p>{{ offer.description }}</p>
@@ -35,7 +35,7 @@
         </ion-label>
         <div class="offer-image-container">
           <img [src]="offer.image" alt="Imagen de la oferta" class="offer-image" />
-          <ion-button fill="clear" class="schedule-button" (click)="openScheduleModal()">
+          <ion-button fill="clear" class="schedule-button" (click)="openScheduleModal(); $event.stopPropagation()">
             <ion-icon name="calendar"></ion-icon>
           </ion-button>
         </div>

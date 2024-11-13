@@ -80,8 +80,8 @@
   
   /* Estilo para el círculo del logo */
   .logo-circle {
-    width: 80px;
-    height: 80px;
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
     background-color: white; /* Fondo blanco para el logo */
     display: flex;
@@ -92,6 +92,18 @@
     position: absolute;
     top: 10%;
   }
+
+  /* Ajuste del tamaño y escalado de la imagen dentro del círculo */
+.logo-circle img {
+  width: 120%; /* Escalar la imagen para que sea más grande que el círculo */
+  height: 120%; 
+  object-fit: cover; /* Recortar la imagen para que se ajuste dentro del círculo */
+  transform: scale(2.6); /* Aumentar el tamaño dentro del círculo */
+  border-radius: 50%;
+}
+
+
+ 
   
   .welcome-title {
     font-size: 36px;
