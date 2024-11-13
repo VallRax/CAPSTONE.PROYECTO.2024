@@ -1,11 +1,17 @@
-.shield-icon{
-    font-size: 80px;
-    margin-top: 40px;
-    color: #FF5722;
-}
+/* Estilo para el círculo del logo */
+.logo {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 10%;
+  }
 
 h1{
     margin-top: 0;
     color: #FF5722;
 }
+
 
