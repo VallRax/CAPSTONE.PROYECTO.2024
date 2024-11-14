@@ -1,40 +1,28 @@
 import { NgModule } from '@angular/core';
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { NoAuthGuard } from './guards/no-auth.guard';
-import { AuthGuard } from './guards/auth.guard';
+import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: '',
-    redirectTo: 'welcome', // Cambia a la ruta de bienvenida para que sea la primera página que se muestre
-    pathMatch: 'full'
-  },
-  {
-    path: 'welcome',
-    loadChildren: () => import('./pages/auth/welcome/welcome.module').then(m => m.WelcomePageModule), canActivate: [NoAuthGuard]
-  },
-  {
-    path: 'welcome',
-    loadChildren: () => import('./pages/auth/welcome/welcome.module').then(m => m.WelcomePageModule), canActivate: [NoAuthGuard]
-  },
-  {
     path: 'auth',
-    loadChildren: () => import('./pages/auth/auth.module').then(m => m.AuthPageModule), canActivate: [NoAuthGuard]
+    loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule)
   },
   {
     path: 'home',
-    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule), canActivate: [AuthGuard]
+    loadChildren: () => import('./modules/home/home.module').then(m => m.HomeModule)
   },
   {
     path: 'profile',
-    loadChildren: () => import('./pages/profile/profile.module').then( m => m.ProfilePageModule), canActivate: [AuthGuard]
+    loadChildren: () => import('./modules/profile/profile.module').then(m => m.ProfileModule)
   },
+  {
+    path: '',
+    redirectTo: 'auth/login',
+    pathMatch: 'full'
+  }
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
-  ],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

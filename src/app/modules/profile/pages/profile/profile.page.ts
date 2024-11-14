@@ -1,6 +1,6 @@
 import { Component, ElementRef, inject, Input, OnInit, ViewChild } from '@angular/core';
-import { FirebaseService } from 'src/app/services/firebase.service'; // Servicio de Firebase
-import { UtilsService } from 'src/app/services/utils.service'; // Servicio de utilidades
+import { FirebaseService } from 'src/app/core/services/firebase.service';
+import { UtilsService } from 'src/app/core/services/utils.service';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { getAuth } from 'firebase/auth'; // Para autenticación de Firebase

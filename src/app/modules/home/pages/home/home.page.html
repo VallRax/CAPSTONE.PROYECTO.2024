@@ -1,0 +1,45 @@
+
+<!-- CONTENIDO -->
+<ion-content [fullscreen]="true">
+
+  <!-- CIRCULOS DE CATEGORÍAS -->
+  <div class="category-list">
+    <div class="category-item" *ngFor="let category of categories" (click)="openCategoryModal(category)">
+      <div class="category-icon">
+        <ion-icon [name]="category.icon"></ion-icon>
+      </div>
+      <p>{{ category.name }}</p>
+    </div>
+  </div>
+
+  <!-- CARDS DE SERVICIOS -->
+  <ion-list class="service-list" lines="none">
+    <div class="service-list-tittle">
+      <h1>Todos los Servicios</h1>
+    </div>
+    <ion-card class="service" *ngFor="let service of services" (click)="openServiceModal(service)">
+      <img [src]="service.image" alt="Imagen del servicio" />
+      <ion-card-header class="service-tittle">
+
+        <ion-card-title>{{ service.name }}</ion-card-title>
+        <ion-card-subtitle>{{ service.category }}</ion-card-subtitle>
+        
+        <ion-buttons class="service-fav">
+          <ion-button (click)="toggleFavorite(service); $event.stopPropagation()">
+            <ion-icon [name]="service.isFavorite ? 'heart' : 'heart-outline'"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+
+      </ion-card-header>
+      
+      <ion-card-content>
+        {{ service.description }}
+      </ion-card-content>
+
+    </ion-card>
+  </ion-list>
+
+</ion-content>
+
+<!-- BOTTOM BAR -->
+<app-bottom-nav></app-bottom-nav>
