@@ -1,9 +1,19 @@
-<app-header [title]="'Perfil '" [showBackButton]="true"></app-header>
+<app-header [title]="'Perfil Servicio'" [showBackButton]="true"></app-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">profileservis</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  
+  <ion-tabs>
+    <ion-tab-bar slot="bottom">
+      <ion-tab-button (click)="home()">
+        <ion-icon name="home-outline"></ion-icon>
+        Inicio
+      </ion-tab-button>
+      <ion-tab-button (click)="Profile()">
+        <ion-icon name="Person-outline"></ion-icon>
+        Perfil
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+
+
 </ion-content>
