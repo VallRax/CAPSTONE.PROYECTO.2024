@@ -1,37 +1,22 @@
-import { Injectable, inject } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
-import { FirebaseService } from '../services/firebase.service';
-import { UtilsService } from '../services/utils.service';
+import { Injectable } from '@angular/core';
+import { CanActivate, Router } from '@angular/router';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class noAuthGuard implements CanActivate {
+export class NoAuthGuard implements CanActivate {
+  constructor(private router: Router) {}
 
-  firebaseSvc = inject(FirebaseService);
-  utilsSvc = inject(UtilsService);
-
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-
-    
-    
-    
-    return new Promise((resolve) => {
-      // Aquí faltaría la implementación
-      this.firebaseSvc.getAuth().onAuthStateChanged((auth) => {
-        if(!auth) resolve(true)
-        
-        else {
-          this.utilsSvc.routerLink('/main/home');
-          resolve(false);
-        }
-      })
-
-    });
- 
+  canActivate(): boolean {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+      if (user.role === 'client') {
+        this.router.navigate(['/home']); // Redirige a home si es cliente
+      } else if (user.role === 'service') {
+        this.router.navigate(['/home']); // Redirige a página de servicio si es proveedor
+      }
+      return false;
+    }
+    return true;
   }
 }
