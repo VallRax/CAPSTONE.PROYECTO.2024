@@ -3,16 +3,17 @@ import { CommonModule } from '@angular/common';
 
 import { FirebaseService } from './services/firebase.service';
 import { UtilsService } from './services/utils.service';
-import { authGuard } from './guards/auth.guard';
-import { noAuthGuard } from './guards/no-auth.guard';
+import { AuthGuard } from './guards/auth.guard';
+import { NoAuthGuard } from './guards/no-auth.guard';
+
 
 @NgModule({
   imports: [CommonModule],
   providers: [
     FirebaseService,
     UtilsService,
-    authGuard,
-    noAuthGuard,
+    AuthGuard,
+    NoAuthGuard,
   ]
 })
 export class CoreModule { 

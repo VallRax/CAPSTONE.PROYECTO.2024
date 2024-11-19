@@ -3,6 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { ServiceModalComponent } from 'src/app/shared/components/service-modal/service-modal.component';
 import { CategoryModalComponent } from 'src/app/shared/components/category-modal/category-modal.component';
 
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -135,4 +136,15 @@ export class homePage {
   toggleFavorite(service: any) {
     service.isFavorite = !service.isFavorite;
   }
+
+  // loadAllServices() {
+  //   const path = `services`;
+  //   this.firebaseSvc.getCollection(path).then((data: Service[]) => {
+  //     this.services = data; // Mostrar todos los servicios
+  //     console.log('Todos los servicios:', this.services);
+  //   }).catch((error) => {
+  //     console.error('Error al cargar servicios:', error);
+  //   });
+  // }
+  
 }

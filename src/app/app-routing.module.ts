@@ -10,13 +10,21 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'service-home',
+    loadChildren: () =>
+      import('./modules/service-home/service-home.module').then(
+        (m) => m.ServiceHomeModule
+      ),
+  },
+  {
     path: 'auth',
     loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule),
     canActivate: [NoAuthGuard],
   },
   {
     path: 'profile',
-    loadChildren: () => import('./modules/profile/profile.module').then(m => m.ProfileModule)
+    loadChildren: () => import('./modules/profile/profile.module').then(m => m.ProfileModule),
+    canActivate: [AuthGuard],
   },
   {
     path: '',

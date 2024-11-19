@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Mis Servicios</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/service-home/add">Añadir Servicio</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let service of services">
+      <ion-label>
+        <h2>{{ service.name }}</h2>
+        <p>{{ service.category }}</p>
+        <p>{{ service.description }}</p>
+      </ion-label>
+      <ion-button (click)="deleteService(service.id)" color="danger">
+        Eliminar
+      </ion-button>
+    </ion-item>
+  </ion-list>
+</ion-content>
