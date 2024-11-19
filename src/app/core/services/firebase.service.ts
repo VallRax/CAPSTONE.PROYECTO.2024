@@ -21,8 +21,13 @@ export class FirebaseService {
   }
 
   signIn(user: User) {
-    return signInWithEmailAndPassword(getAuth(), user.email, user.password);
+    return signInWithEmailAndPassword(getAuth(), user.email, user.password)
+      .catch((error) => {
+        console.error('Error al iniciar sesión:', error.message);
+        throw error; // Propaga el error para manejarlo en `submit()`
+      });
   }
+  
 
   signUp(user: User) {
     return createUserWithEmailAndPassword(getAuth(), user.email, user.password);

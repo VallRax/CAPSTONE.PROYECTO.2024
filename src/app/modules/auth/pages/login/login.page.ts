@@ -53,45 +53,50 @@ export class loginPage implements OnInit {
   }
 
 
-  async getUserInfo(uid: string){
-    if (this.form.valid){
-
-      const loading = await this.utilsSvc.loading();
-      await loading.present();
-
-      let path = `users_test/${uid}`;
-    
-
-      this.firebaseSvc.getDocument(path).then((user: User) => {
-        
-       this.utilsSvc.saveInLocalStorage('user', user)
-
-       this.utilsSvc.routerLink('home')
-       this.form.reset();
-
-       this.utilsSvc.presentToast({
-        message: `Te damos la bienvenida ${user.name}`,
-        duration: 1500,
-        color:'success',
-        position: 'middle',
-        icon: 'person-circle-outline'
-      })
-        
-      }).catch(error => {
-        console.log(error);
-
+  async getUserInfo(uid: string) {
+    const loading = await this.utilsSvc.loading();
+    await loading.present();
+  
+    let path = `users_test/${uid}`;
+  
+    try {
+      const user = await this.firebaseSvc.getDocument(path) as User;
+      if (user) {
+        this.utilsSvc.saveInLocalStorage('user', user);
+  
+        this.utilsSvc.routerLink('home');
+        this.form.reset();
+  
         this.utilsSvc.presentToast({
-          message: error.message,
+          message: `Te damos la bienvenida ${user.name}`,
+          duration: 1500,
+          color: 'success',
+          position: 'middle',
+          icon: 'person-circle-outline'
+        });
+      } else {
+        console.error('El usuario no existe en Firestore');
+        this.utilsSvc.presentToast({
+          message: 'El usuario no se encuentra registrado en el sistema.',
           duration: 2500,
-          color:'primary',
+          color: 'warning',
           position: 'middle',
           icon: 'alert-circle-outline'
-        })
-
-      }).finally(() => {
-        loading.dismiss();
-      })
+        });
+      }
+    } catch (error) {
+      console.error('Error al obtener la información del usuario:', error);
+  
+      this.utilsSvc.presentToast({
+        message: 'Hubo un error al obtener la información del usuario.',
+        duration: 2500,
+        color: 'danger',
+        position: 'middle',
+        icon: 'alert-circle-outline'
+      });
+    } finally {
+      loading.dismiss();
     }
   }
-
+  
 }
