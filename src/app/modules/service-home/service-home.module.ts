@@ -8,12 +8,14 @@ import { AddServicePage } from './pages/add-service/add-service.page';
 import { ServiceHomePage } from './pages/service-home/service-home.page';
 import { EditServicePage } from './pages/edit-service/edit-service.page';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { AddOfferPage } from './pages/add-offer/add-offer.page';
 
 @NgModule({
   declarations: [
     ServiceHomePage,
     AddServicePage,
     EditServicePage,
+    AddOfferPage,
   ],
   imports: [
     CommonModule,

@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ServiceHomePage } from './pages/service-home/service-home.page';
 import { AddServicePage } from './pages/add-service/add-service.page';
 import { EditServicePage } from './pages/edit-service/edit-service.page';
+import { AddOfferPage } from './pages/add-offer/add-offer.page';
 
 const routes: Routes = [
   {
@@ -17,6 +18,10 @@ const routes: Routes = [
   {
     path: 'edit/:id',
     component: EditServicePage,
+  },
+  {
+    path: 'add-offer/:id',
+    component: AddOfferPage,
   },
 ];
 

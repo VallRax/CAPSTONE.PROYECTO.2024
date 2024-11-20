@@ -1,0 +1,27 @@
+.header {
+    --background: #FF7043;
+    --color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .header ion-title {
+    text-align: center;
+    width: 100%;
+  }
+  
+  .header ion-icon {
+    color: white;
+  }
+  
+  form {
+    padding: 0px 10px;
+  }
+  
+  .orange-button {
+    --background: #FF7043; /* Tu color naranja */
+    --background-hover: #e66139; /* Color más oscuro para el hover */
+    --background-activated: #ff9170; /* Color al hacer clic */
+  }
+  

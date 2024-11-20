@@ -3,6 +3,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { FirebaseService } from 'src/app/core/services/firebase.service';
 import { UtilsService } from 'src/app/core/services/utils.service';
 
+import { Service } from 'src/app/models/service.model';
+
+
 @Component({
   selector: 'app-add-service',
   templateUrl: './add-service.page.html',
@@ -13,7 +16,7 @@ export class AddServicePage {
     name: new FormControl('', Validators.required),
     category: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required),
-    price: new FormControl(null, [Validators.required, Validators.min(0)]) // Validación para valores no negativos
+    //price: new FormControl(null, [Validators.required, Validators.min(0)]) // Validación para valores no negativos
   });
 
   //imageFile: File | null = null; // Archivo de imagen seleccionado
@@ -36,12 +39,19 @@ export class AddServicePage {
       }
   
       const id = this.firebaseSvc.createId(); // Generar ID único para el servicio
-      const data = {
+      const timestamp = new Date().toISOString(); // Fecha actual
+  
+      const data: Service = {
         id,
-        ...this.form.value,
+        name: this.form.controls.name.value,
+        category: this.form.controls.category.value,
+        description: this.form.controls.description.value,
         providerId: user.uid, // Relacionar con el usuario que crea el servicio
         providerName: user.name || 'Proveedor Anónimo', // Nombre del proveedor
-        timestamp: new Date().toISOString(), // Fecha de creación
+        imageUrl: this.getRandomImage(), // Imagen aleatoria de ejemplo
+        createdAt: timestamp, // Fecha de creación
+        updatedAt: timestamp, // Fecha de última actualización
+        offers: [] // Inicialmente vacío
       };
   
       try {
@@ -54,4 +64,9 @@ export class AddServicePage {
     }
   }
   
+  
+  getRandomImage() {
+    const randomNum = Math.floor(Math.random() * 1000);
+    return `https://picsum.photos/600/400?random=${randomNum}`;
+  }
 }

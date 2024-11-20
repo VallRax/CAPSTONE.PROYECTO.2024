@@ -80,13 +80,13 @@ export class FirebaseService {
         return docSnap.data(); // Retorna los datos del documento
       } else {
         console.warn('El documento no existe en la ruta:', path);
-        return null; // O lanza un error si prefieres
+        throw new Error('Documento no encontrado');
       }
     } catch (error) {
       console.error('Error al obtener el documento:', error);
       throw error; // Propaga el error
     }
-  }
+  }  
   
  
   async uploadImage(path: string, file: File): Promise<string> {

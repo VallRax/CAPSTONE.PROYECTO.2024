@@ -21,13 +21,60 @@
     --background-activated: #ff9170; /* Color al hacer clic */
   }  
 
-  ion-label strong {
-    display: block;
-    max-width: calc(100% - 60px);
-    overflow: hidden;
-    text-overflow: ellipsis;
+  // ion-label strong {
+  //   display: block;
+  //   max-width: calc(100% - 60px);
+  //   overflow: hidden;
+  //   text-overflow: ellipsis;
+  // }
+  
+  // ion-label ion-note {
+  //   font-size: 0.9rem;
+  // }
+
+   // SEVICES CARDS
+   .service-list {
+    background-color: #f6f6f6;
   }
   
-  ion-label ion-note {
-    font-size: 0.9rem;
+  .service-list-tittle h1{
+    font-size: 20px;
+    margin-top: 5px;
+    margin-bottom: 0px;
+    padding: 0 15px;
   }
+  
+  .service {
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
+  
+  .service img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      object-position: center;
+  } 
+  
+  .service-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+    
+  .service-title ion-card-title {
+      flex: 1;
+    }
+    
+  .service-delete {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+    }
+    
+  .service-delete ion-icon {
+      font-size: 24px;
+      flex: 2;
+    }
+    

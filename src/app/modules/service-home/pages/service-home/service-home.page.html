@@ -5,11 +5,43 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
+  <!-- CARDS DE SERVICIOS -->
+  <ion-list class="service-list" lines="none">
+    <div class="service-list-tittle">
+      <h1>Todos los Servicios</h1>
+    </div>
+    <ion-card class="service" *ngFor="let service of services" [routerLink]="['/service-home/edit', service.id]">
+      <img [src]="service.imageUrl" alt="Imagen del servicio" />
+      <ion-card-header class="service-tittle">
+
+        <ion-card-title>{{ service.name }}</ion-card-title>
+        <ion-card-subtitle>{{ service.category }}</ion-card-subtitle>
+        
+        <ion-buttons class="service-delete">
+          <ion-button>
+            <ion-icon [routerLink]="['/service-home/edit', service.id]" color="primary" name="create"></ion-icon>
+          </ion-button>
+          <ion-button (click)="deleteService(service.id); $event.stopPropagation()">
+            <ion-icon color="danger" name="trash"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+
+      </ion-card-header>
+      
+      <ion-card-content>
+        {{ service.description }}
+      </ion-card-content>
+
+    </ion-card>
+  </ion-list>
+  <!-- <ion-list>
     <ion-item-sliding  *ngFor="let service of services">
       <ion-item>
         <ion-label>
           <strong>{{ service.name }}</strong>
+          <ion-text>
+            {{ service.description }}
+          </ion-text><br>
           <ion-text>
             {{ service.price | currency:'CLP': '$' }}
           </ion-text><br>
@@ -28,7 +60,7 @@
         </ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
-  </ion-list>
+  </ion-list> -->
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button class="fab-orange">

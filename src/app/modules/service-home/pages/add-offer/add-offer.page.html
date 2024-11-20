@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar class="header">
-    <ion-title>Agregar Servicio</ion-title>
+    <ion-title>Agregar Oferta</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -10,39 +10,25 @@
     <app-custom-input 
       icon="home-outline"
       [control]="form.controls.name"
-      type="name"
-      label="Nombre del Servicio">
-    </app-custom-input>
-
-    <app-custom-input 
-      icon="pricetag-outline"
-      [control]="form.controls.category"
-      type="category"
-      label="Categoria">
+      type="text"
+      label="Nombre de la Oferta">
     </app-custom-input>
 
     <app-custom-input 
       icon="information-circle-outline"
       [control]="form.controls.description"
-      type="description"
+      type="text"
       label="Descripción">
     </app-custom-input>
 
-    <!-- <app-custom-input 
+    <app-custom-input 
       icon="cash-outline"
       [control]="form.controls.price"
-      type="price"
+      type="number"
       label="Precio">
-    </app-custom-input> -->
-    
-
-    <!-- <ion-item>
-      <ion-label position="stacked">Imagen del Servicio</ion-label>
-      <input type="file" (change)="onFileSelected($event)" />
-    </ion-item> -->
+    </app-custom-input>
 
     <ion-button class="orange-button" shape="round" expand="block" type="submit" [disabled]="form.invalid"> 
-      <!-- || !imageFile"> -->
       Guardar
     </ion-button>
   </form>
