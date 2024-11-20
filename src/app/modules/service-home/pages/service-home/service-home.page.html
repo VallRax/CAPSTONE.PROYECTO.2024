@@ -10,7 +10,7 @@
     <div class="service-list-tittle">
       <h1>Todos los Servicios</h1>
     </div>
-    <ion-card class="service" *ngFor="let service of services" [routerLink]="['/service-home/edit', service.id]">
+    <ion-card class="service" *ngFor="let service of services" [routerLink]="['/service-home/edit-service', service.id]">
       <img [src]="service.imageUrl" alt="Imagen del servicio" />
       <ion-card-header class="service-tittle">
 
@@ -19,7 +19,7 @@
         
         <ion-buttons class="service-delete">
           <ion-button>
-            <ion-icon [routerLink]="['/service-home/edit', service.id]" color="primary" name="create"></ion-icon>
+            <ion-icon [routerLink]="['/service-home/edit-service', service.id]" color="primary" name="create"></ion-icon>
           </ion-button>
           <ion-button (click)="deleteService(service.id); $event.stopPropagation()">
             <ion-icon color="danger" name="trash"></ion-icon>
@@ -64,7 +64,7 @@
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button class="fab-orange">
-      <ion-icon name="add" routerLink="/service-home/add"></ion-icon>
+      <ion-icon name="add" routerLink="/service-home/add-service"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 </ion-content>

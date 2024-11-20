@@ -12,11 +12,11 @@ const routes: Routes = [
     component: ServiceHomePage,
   },
   {
-    path: 'add',
+    path: 'add-service',
     component: AddServicePage,
   },
   {
-    path: 'edit/:id',
+    path: 'edit-service/:id',
     component: EditServicePage,
   },
   {

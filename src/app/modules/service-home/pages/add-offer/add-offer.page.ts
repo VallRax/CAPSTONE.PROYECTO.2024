@@ -76,7 +76,7 @@ export class AddOfferPage {
         await this.firebaseSvc.setDocument(path, service);
   
         console.log('Oferta añadida con éxito');
-        this.utilsSvc.routerLink(`/service-home/edit/${this.serviceId}`); // Redirigir al detalle del servicio
+        this.utilsSvc.routerLink(`/service-home/edit-service/${this.serviceId}`); // Redirigir al detalle del servicio
       } catch (error) {
         console.error('Error al añadir la oferta:', error);
       }
