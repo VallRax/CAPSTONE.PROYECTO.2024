@@ -6,6 +6,7 @@ import { getFirestore, setDoc, doc, getDoc, deleteDoc, collection, getDocs } fro
 import { UtilsService } from './utils.service';
 import { User } from 'src/app/models/user.model';
 import { Service } from 'src/app/models/service.model';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 @Injectable({
   providedIn: 'root',
@@ -87,5 +88,16 @@ export class FirebaseService {
     }
   }
   
-
+ 
+  async uploadImage(path: string, file: File): Promise<string> {
+    try {
+      const storage = getStorage();
+      const storageRef = ref(storage, path);
+      const snapshot = await uploadBytes(storageRef, file);
+      return await getDownloadURL(snapshot.ref); // Obtener la URL pública de la imagen
+    } catch (error) {
+      console.error('Error al subir la imagen:', error);
+      throw error; // Propaga el error
+    }
+  }
 }

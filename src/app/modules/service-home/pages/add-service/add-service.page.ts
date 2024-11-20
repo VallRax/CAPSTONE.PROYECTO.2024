@@ -13,9 +13,19 @@ export class AddServicePage {
     name: new FormControl('', Validators.required),
     category: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required),
+    price: new FormControl(null, [Validators.required, Validators.min(0)]) // Validación para valores no negativos
   });
 
+  //imageFile: File | null = null; // Archivo de imagen seleccionado
+
   constructor(private firebaseSvc: FirebaseService, private utilsSvc: UtilsService) {}
+
+  // onFileSelected(event: Event) {
+  //   const input = event.target as HTMLInputElement;
+  //   if (input.files && input.files.length > 0) {
+  //     this.imageFile = input.files[0]; // Asignar archivo seleccionado
+  //   }
+  // }
 
   async submit() {
     if (this.form.valid) {
@@ -24,7 +34,7 @@ export class AddServicePage {
         console.error('El usuario no está definido');
         return;
       }
-
+  
       const id = this.firebaseSvc.createId(); // Generar ID único para el servicio
       const data = {
         id,
@@ -33,7 +43,7 @@ export class AddServicePage {
         providerName: user.name || 'Proveedor Anónimo', // Nombre del proveedor
         timestamp: new Date().toISOString(), // Fecha de creación
       };
-
+  
       try {
         await this.firebaseSvc.setDocument(`services/${id}`, data);
         console.log('Servicio creado con éxito');
@@ -43,4 +53,5 @@ export class AddServicePage {
       }
     }
   }
+  
 }

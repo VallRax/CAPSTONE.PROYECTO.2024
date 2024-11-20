@@ -21,7 +21,19 @@
       <ion-textarea formControlName="description"></ion-textarea>
     </ion-item>
 
-    <ion-button expand="block" type="submit" [disabled]="form.invalid">
+    <ion-item>
+      <ion-label position="floating">Precio</ion-label>
+      <ion-input formControlName="price" type="number"></ion-input>
+    </ion-item>
+    
+
+    <!-- <ion-item>
+      <ion-label position="stacked">Imagen del Servicio</ion-label>
+      <input type="file" (change)="onFileSelected($event)" />
+    </ion-item> -->
+
+    <ion-button expand="block" type="submit" [disabled]="form.invalid"> 
+      <!-- || !imageFile"> -->
       Guardar
     </ion-button>
   </form>
