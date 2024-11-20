@@ -45,6 +45,9 @@ export class EditServicePage implements OnInit {
         throw new Error('El servicio no existe.');
       }
   
+      // Asegurar que 'offers' sea un array
+      this.service.offers = this.service.offers || [];
+  
       // Inicializa el formulario con los datos del servicio
       this.form = new FormGroup({
         name: new FormControl(this.service.name, Validators.required),
@@ -59,7 +62,8 @@ export class EditServicePage implements OnInit {
       });
       this.utilsSvc.routerLink('/service-home'); // Redirigir en caso de error
     }
-  }  
+  }
+  
   
 
   async saveChanges() {
@@ -88,10 +92,33 @@ export class EditServicePage implements OnInit {
     }
   }
 
-  deleteOffer(index: number) {
-    if (this.service) {
-      this.service.offers.splice(index, 1); // Eliminar la oferta del array
+  async deleteOffer(index: number) {
+    if (!this.service) {
+      console.error('El servicio no está definido.');
+      return;
+    }
+  
+    try {
+      // Eliminar la oferta del array
+      this.service.offers.splice(index, 1);
+  
+      // Actualizar el documento del servicio en Firebase
+      const path = `services/${this.serviceId}`;
+      await this.firebaseSvc.setDocument(path, this.service);
+  
+      console.log('Oferta eliminada con éxito.');
+      this.utilsSvc.presentToast({
+        message: 'Oferta eliminada con éxito.',
+        color: 'success',
+      });
+    } catch (error) {
+      console.error('Error al eliminar la oferta:', error);
+      this.utilsSvc.presentToast({
+        message: 'Error al eliminar la oferta.',
+        color: 'danger',
+      });
     }
   }
+  
 }
 
