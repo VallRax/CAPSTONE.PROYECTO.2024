@@ -4,103 +4,66 @@
   </ion-toolbar>
 </ion-header>
 
-
 <ion-content>
   <div class="service-details" *ngIf="service">
     <img [src]="service.imageUrl" alt="Imagen del servicio" class="service-image" />
-    <div class="service-info">
-      <h2>{{ service.name }}</h2>
-      <p>{{ service.category }}</p>
-      <p>{{ service.description }}</p>
-    </div>
-  </div>
 
-  <!-- <div class="service-offers">
-    <h3>Servicios Ofrecidos</h3>
-    <ion-list>
-      <ion-item *ngFor="let offer of service.offers" class="offer-item">
+    <ion-list class="editable-list">
+      <!-- Nombre del servicio editable -->
+      <ion-item lines="full">
         <ion-label>
-          <h2>{{ offer.name }}</h2>
-          <p>{{ offer.description }}</p>
-          <p class="price">Precio: {{ offer.price }}</p>
+          <h2>{{ service.name }}</h2>
         </ion-label>
-        <div class="offer-image-container">
-          <img [src]="offer.imageUrl" alt="Imagen de la oferta" class="offer-image" />
-          <ion-button fill="clear" class="schedule-button">
-            <ion-icon name="calendar"></ion-icon>
-          </ion-button>
-        </div>
+        <ion-button fill="clear" size="small" slot="end" (click)="openEditAlert('name', service.name)">
+          <ion-icon name="create"></ion-icon>
+        </ion-button>
+      </ion-item>
+
+      <!-- Categoría editable -->
+      <ion-item lines="full">
+        <ion-label>
+          <p>{{ service.category }}</p>
+        </ion-label>
+        <ion-button fill="clear" size="small" slot="end" (click)="openEditAlert('category', service.category)">
+          <ion-icon name="create"></ion-icon>
+        </ion-button>
+      </ion-item>
+
+      <!-- Descripción editable -->
+      <ion-item lines="full">
+        <ion-label>
+          <p>{{ service.description }}</p>
+        </ion-label>
+        <ion-button fill="clear" size="small" slot="end" (click)="openEditAlert('description', service.description)">
+          <ion-icon name="create"></ion-icon>
+        </ion-button>
       </ion-item>
     </ion-list>
-  </div> -->
+  </div>
 
+  <!-- Listado de ofertas -->
   <ion-list *ngIf="service?.offers?.length">
     <ion-item-sliding *ngFor="let offer of service.offers; let i = index">
       <ion-item>
         <ion-label>
-          <strong>{{ offer.name }}</strong><br>
-          <ion-text>{{ offer.price | currency:'CLP': '$' }}</ion-text><br>
-          <ion-note color="medium" class="ion-text-wrap">
-            {{ offer.description }}
-          </ion-note>
+          <strong>{{ offer.name }}</strong><br />
+          <ion-text>{{ offer.price | currency:'CLP': '$' }}</ion-text><br />
+          <ion-note color="medium" class="ion-text-wrap">{{ offer.description }}</ion-note>
         </ion-label>
         <ion-icon slot="end" name="arrow-forward"></ion-icon>
       </ion-item>
       <ion-item-options slot="end">
-        <ion-item-option color="primary">
-          <ion-icon slot="icon-only" name="create"></ion-icon>
-        </ion-item-option>
         <ion-item-option color="danger" expandable="true" (click)="deleteOffer(i)">
           <ion-icon slot="icon-only" name="trash"></ion-icon>
         </ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
-  
 
+  <!-- Botón para añadir nueva oferta -->
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button *ngIf="service" [routerLink]="['/service-home/add-offer', service.id]"  class="fab-orange">
+    <ion-fab-button *ngIf="service" [routerLink]="['/service-home/add-offer', service.id]" class="fab-orange">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 </ion-content>
-  
-  <!-- <form [formGroup]="form" (ngSubmit)="saveChanges()">
-    <ion-item>
-      <ion-label position="stacked">Nombre del Servicio</ion-label>
-      <ion-input formControlName="name"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label position="stacked">Categoría</ion-label>
-      <ion-input formControlName="category"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label position="stacked">Descripción</ion-label>
-      <ion-textarea formControlName="description"></ion-textarea>
-    </ion-item>
-
-    <div class="offers-section">
-      <h2>Ofertas</h2>
-      <ion-button (click)="addOffer()" expand="block">Añadir Oferta</ion-button>
-      <ion-list>
-        <ion-item *ngFor="let offer of serviceData.offers; let i = index">
-          <ion-label position="stacked">Nombre</ion-label>
-          <ion-input [(ngModel)]="serviceData.offers[i].name"></ion-input>
-
-          <ion-label position="stacked">Descripción</ion-label>
-          <ion-input [(ngModel)]="serviceData.offers[i].description"></ion-input>
-
-          <ion-label position="stacked">Precio</ion-label>
-          <ion-input type="number" [(ngModel)]="serviceData.offers[i].price"></ion-input>
-
-          <ion-button color="danger" (click)="serviceData.offers.splice(i, 1)">Eliminar Oferta</ion-button>
-        </ion-item>
-      </ion-list>
-    </div> 
-    
-   
-    <ion-button expand="block" type="submit" [disabled]="form.invalid">Guardar Cambios</ion-button>
-  </form> -->
-

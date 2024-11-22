@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { FirebaseService } from 'src/app/core/services/firebase.service';
 import { UtilsService } from 'src/app/core/services/utils.service';
@@ -11,81 +12,91 @@ import { Service } from 'src/app/models/service.model';
   styleUrls: ['./edit-service.page.scss'],
 })
 export class EditServicePage implements OnInit {
-  service: Service | null = null; // Para almacenar los datos del servicio
-  form: FormGroup;
+  service: Service | null = null; // Datos del servicio
   serviceId: string;
+  isEditingField = { name: false, category: false, description: false }; // Control de edición por campo
 
   constructor(
     private route: ActivatedRoute,
     private firebaseSvc: FirebaseService,
-    private utilsSvc: UtilsService
+    private utilsSvc: UtilsService,
+    private alertCtrl: AlertController
   ) {}
 
   ngOnInit() {
     this.serviceId = this.route.snapshot.paramMap.get('id');
     if (!this.serviceId) {
-      console.error('El ID del servicio no fue proporcionado.');
       this.utilsSvc.presentToast({
         message: 'Error: No se pudo cargar el servicio.',
         duration: 3000,
         color: 'danger',
       });
-      this.utilsSvc.routerLink('/service-home'); // Redirigir en caso de error
+      this.utilsSvc.routerLink('/service-home');
       return;
     }
     this.loadService();
   }
-  
+
   async loadService() {
     try {
       const path = `services/${this.serviceId}`;
       this.service = await this.firebaseSvc.getDocument(path) as Service;
-  
       if (!this.service) {
         throw new Error('El servicio no existe.');
       }
-  
-      // Asegurar que 'offers' sea un array
-      this.service.offers = this.service.offers || [];
-  
-      // Inicializa el formulario con los datos del servicio
-      this.form = new FormGroup({
-        name: new FormControl(this.service.name, Validators.required),
-        category: new FormControl(this.service.category, Validators.required),
-        description: new FormControl(this.service.description, Validators.required),
-      });
     } catch (error) {
       console.error('Error al cargar el servicio:', error);
       this.utilsSvc.presentToast({
         message: 'Error al cargar el servicio.',
         color: 'danger',
       });
-      this.utilsSvc.routerLink('/service-home'); // Redirigir en caso de error
+      this.utilsSvc.routerLink('/service-home');
     }
   }
-  
-  
 
-  async saveChanges() {
-    if (this.form.valid) {
+  async openEditAlert(field: string, currentValue: string) {
+    const alert = await this.alertCtrl.create({
+      header: `Editar ${field}`,
+      inputs: [
+        {
+          name: 'value',
+          type: field === 'description' ? 'textarea' : 'text',
+          placeholder: `Editar ${field}`,
+          value: currentValue,
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Confirmar',
+          handler: (data) => {
+            this.updateField(field, data.value);
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  async updateField(field: string, value: string) {
+    if (this.service) {
+      this.service[field] = value;
+
       try {
-        const updatedService = {
-          ...this.service,
-          ...this.form.value,
-          updatedAt: new Date().toISOString(), // Actualizar la marca temporal
-        };
-
-        await this.firebaseSvc.setDocument(`services/${this.serviceId}`, updatedService);
-        console.log('Cambios guardados correctamente.');
+        const path = `services/${this.serviceId}`;
+        await this.firebaseSvc.setDocument(path, this.service);
         this.utilsSvc.presentToast({
-          message: 'Servicio actualizado con éxito.',
+          message: `${field} actualizado con éxito.`,
           color: 'success',
         });
-        this.utilsSvc.routerLink('/service-home');
       } catch (error) {
-        console.error('Error al guardar los cambios:', error);
+        console.error(`Error al actualizar ${field}:`, error);
         this.utilsSvc.presentToast({
-          message: 'Error al guardar los cambios.',
+          message: `Error al actualizar ${field}.`,
           color: 'danger',
         });
       }
@@ -97,15 +108,15 @@ export class EditServicePage implements OnInit {
       console.error('El servicio no está definido.');
       return;
     }
-  
+
     try {
       // Eliminar la oferta del array
       this.service.offers.splice(index, 1);
-  
+
       // Actualizar el documento del servicio en Firebase
       const path = `services/${this.serviceId}`;
       await this.firebaseSvc.setDocument(path, this.service);
-  
+
       console.log('Oferta eliminada con éxito.');
       this.utilsSvc.presentToast({
         message: 'Oferta eliminada con éxito.',
@@ -121,4 +132,3 @@ export class EditServicePage implements OnInit {
   }
   
 }
-

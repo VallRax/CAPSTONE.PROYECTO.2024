@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FirebaseService } from 'src/app/core/services/firebase.service';
 import { Service } from 'src/app/models/service.model';
 
+import { TestDataService } from 'src/app/core/services/test-data.service';
+
 @Component({
   selector: 'app-service-home',
   templateUrl: './service-home.page.html',
@@ -10,7 +12,10 @@ import { Service } from 'src/app/models/service.model';
 export class ServiceHomePage implements OnInit {
   services: Service[] = []; // Usar el modelo de servicio
 
-  constructor(private firebaseSvc: FirebaseService) {}
+  constructor(
+    private testDataService: TestDataService,
+    private firebaseSvc: FirebaseService
+  ) {}
 
   ngOnInit() {
     this.loadServices();
@@ -36,5 +41,16 @@ export class ServiceHomePage implements OnInit {
     }).catch((error) => {
       console.error('Error al eliminar el servicio:', error);
     });
+  }
+
+  async generateTestData() {
+    try {
+      await this.testDataService.generateTestData();
+      console.log('Datos de prueba generados con éxito.');
+      alert('Datos de prueba generados correctamente.');
+    } catch (error) {
+      console.error('Error al generar datos de prueba:', error);
+      alert('Error al generar datos de prueba.');
+    }
   }
 }
