@@ -5,6 +5,7 @@ import { ServiceHomePage } from './pages/service-home/service-home.page';
 import { AddServicePage } from './pages/add-service/add-service.page';
 import { EditServicePage } from './pages/edit-service/edit-service.page';
 import { AddOfferPage } from './pages/add-offer/add-offer.page';
+import { EditOfferPage } from './pages/edit-offer/edit-offer.page';
 
 const routes: Routes = [
   {
@@ -22,6 +23,10 @@ const routes: Routes = [
   {
     path: 'add-offer/:id',
     component: AddOfferPage,
+  },
+  {
+    path: 'edit-offer/:serviceId/:offerId',
+    component: EditOfferPage,
   },
 ];
 

@@ -1,6 +1,16 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar class="header">
     <ion-title>{{ service?.name }}</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end" class="service-fav">
+      <ion-button (click)="deleteService()">
+        <ion-icon name="trash"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -44,7 +54,7 @@
   <!-- Listado de ofertas -->
   <ion-list *ngIf="service?.offers?.length">
     <ion-item-sliding *ngFor="let offer of service.offers; let i = index">
-      <ion-item>
+      <ion-item (click)="editOffer(offer.id)">
         <ion-label>
           <strong>{{ offer.name }}</strong><br />
           <ion-text>{{ offer.price | currency:'CLP': '$' }}</ion-text><br />
@@ -53,6 +63,9 @@
         <ion-icon slot="end" name="arrow-forward"></ion-icon>
       </ion-item>
       <ion-item-options slot="end">
+        <ion-item-option color="primary" expandable="true" (click)="editOffer(offer.id)">
+          <ion-icon slot="icon-only" name="create"></ion-icon>
+        </ion-item-option>
         <ion-item-option color="danger" expandable="true" (click)="deleteOffer(i)">
           <ion-icon slot="icon-only" name="trash"></ion-icon>
         </ion-item-option>
@@ -61,9 +74,12 @@
   </ion-list>
 
   <!-- Botón para añadir nueva oferta -->
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+  <ion-fab class="fabs" slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button *ngIf="service" [routerLink]="['/service-home/add-offer', service.id]" class="fab-orange">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 </ion-content>
+
+<!-- BOTTOM BAR -->
+<app-bottom-nav></app-bottom-nav>

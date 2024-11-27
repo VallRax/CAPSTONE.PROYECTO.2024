@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { AlertController } from '@ionic/angular';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AlertController, NavController } from '@ionic/angular';
 import { FirebaseService } from 'src/app/core/services/firebase.service';
 import { UtilsService } from 'src/app/core/services/utils.service';
 import { Service } from 'src/app/models/service.model';
@@ -14,13 +13,14 @@ import { Service } from 'src/app/models/service.model';
 export class EditServicePage implements OnInit {
   service: Service | null = null; // Datos del servicio
   serviceId: string;
-  isEditingField = { name: false, category: false, description: false }; // Control de edición por campo
 
   constructor(
     private route: ActivatedRoute,
     private firebaseSvc: FirebaseService,
     private utilsSvc: UtilsService,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private navCtrl: NavController,
+    private router: Router // Para redirigir a otras páginas
   ) {}
 
   ngOnInit() {
@@ -37,10 +37,14 @@ export class EditServicePage implements OnInit {
     this.loadService();
   }
 
+  /**
+   * Carga el servicio desde Firebase.
+   */
   async loadService() {
     try {
       const path = `services/${this.serviceId}`;
-      this.service = await this.firebaseSvc.getDocument(path) as Service;
+      this.service = (await this.firebaseSvc.getDocument(path)) as Service;
+
       if (!this.service) {
         throw new Error('El servicio no existe.');
       }
@@ -54,7 +58,10 @@ export class EditServicePage implements OnInit {
     }
   }
 
-  async openEditAlert(field: string, currentValue: string) {
+  /**
+   * Abre un cuadro de diálogo para editar un campo del servicio.
+   */
+  async openEditAlert(field: keyof Service, currentValue: string) {
     const alert = await this.alertCtrl.create({
       header: `Editar ${field}`,
       inputs: [
@@ -82,10 +89,20 @@ export class EditServicePage implements OnInit {
     await alert.present();
   }
 
-  async updateField(field: string, value: string) {
+  /**
+   * Actualiza un campo del servicio en Firebase.
+   */
+  async updateField(field: keyof Service, value: any) {
     if (this.service) {
+      // Verifica si el campo es 'offers' y el valor no es un arreglo
+      if (field === 'offers' && !Array.isArray(value)) {
+        console.error('Intento de asignar un valor no válido a "offers". Se esperaba un arreglo de ofertas.');
+        return;
+      }
+  
+      // Asigna el valor al campo correspondiente
       this.service[field] = value;
-
+  
       try {
         const path = `services/${this.serviceId}`;
         await this.firebaseSvc.setDocument(path, this.service);
@@ -102,7 +119,11 @@ export class EditServicePage implements OnInit {
       }
     }
   }
+  
 
+  /**
+   * Elimina una oferta específica del servicio.
+   */
   async deleteOffer(index: number) {
     if (!this.service) {
       console.error('El servicio no está definido.');
@@ -130,5 +151,47 @@ export class EditServicePage implements OnInit {
       });
     }
   }
-  
+
+  /**
+   * Redirige a la página de edición de una oferta.
+   */
+  editOffer(offerId: string) {
+    this.router.navigate(['/service-home/edit-offer', this.serviceId, offerId]);
+  }
+
+  /**
+   * Elimina el servicio actual.
+   */
+  async deleteService() {
+    if (!this.serviceId) {
+      this.utilsSvc.presentToast({
+        message: 'No se puede eliminar el servicio: ID no encontrado.',
+        color: 'danger',
+      });
+      return;
+    }
+
+    try {
+      const path = `services/${this.serviceId}`;
+      await this.firebaseSvc.deleteDocument(path);
+      this.utilsSvc.presentToast({
+        message: 'Servicio eliminado con éxito.',
+        color: 'success',
+      });
+      this.navCtrl.back(); // Regresa a la página anterior
+    } catch (error) {
+      console.error('Error al eliminar el servicio:', error);
+      this.utilsSvc.presentToast({
+        message: 'Error al eliminar el servicio.',
+        color: 'danger',
+      });
+    }
+  }
+
+  /**
+   * Redirige a la página anterior.
+   */
+  goBack() {
+    this.navCtrl.back();
+  }
 }

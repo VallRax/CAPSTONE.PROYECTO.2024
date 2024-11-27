@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-toolbar class="header">
+    <ion-title>{{ offer?.name || 'Editar Oferta' }}</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="deleteOffer()">
+        <ion-icon name="trash"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="offer-details" *ngIf="offer">
+    <img [src]="offer.imageUrl || 'https://via.placeholder.com/600x200'" alt="Imagen de la oferta" class="offer-image" />
+
+    <ion-list class="editable-list">
+      <!-- Nombre de la oferta editable -->
+      <ion-item lines="full">
+        <ion-label>
+          <h2>{{ offer.name }}</h2>
+        </ion-label>
+        <ion-button fill="clear" size="small" slot="end" (click)="openEditAlert('name', offer.name)">
+          <ion-icon name="create"></ion-icon>
+        </ion-button>
+      </ion-item>
+
+      <!-- Descripción editable -->
+      <ion-item lines="full">
+        <ion-label>
+          <p>{{ offer.description }}</p>
+        </ion-label>
+        <ion-button fill="clear" size="small" slot="end" (click)="openEditAlert('description', offer.description)">
+          <ion-icon name="create"></ion-icon>
+        </ion-button>
+      </ion-item>
+
+      <!-- Precio editable -->
+      <ion-item lines="full">
+        <ion-label>
+          <p>{{ offer.price | currency: 'CLP' }}</p>
+        </ion-label>
+        <ion-button fill="clear" size="small" slot="end" (click)="openEditAlert('price', offer.price)">
+          <ion-icon name="create"></ion-icon>
+        </ion-button>
+      </ion-item>
+
+      <!-- URL de la imagen editable -->
+      <ion-item lines="full">
+        <ion-label>
+          <p>{{ offer.imageUrl }}</p>
+        </ion-label>
+        <ion-button fill="clear" size="small" slot="end" (click)="openEditAlert('imageUrl', offer.imageUrl)">
+          <ion-icon name="create"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>
+
+<!-- BOTTOM BAR -->
+<app-bottom-nav></app-bottom-nav>

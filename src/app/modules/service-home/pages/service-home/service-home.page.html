@@ -35,15 +35,18 @@
     </ion-card>
   </ion-list>
 
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+  <ion-fab class="fabs" slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button class="fab-orange">
       <ion-icon name="add" routerLink="/service-home/add-service"></ion-icon>
     </ion-fab-button>
   </ion-fab>
   
-  <ion-fab slot="fixed" vertical="bottom">
+  <ion-fab class="fabs" slot="fixed" vertical="bottom">
     <ion-fab-button>
       <ion-icon name="add" (click)="generateTestData()"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 </ion-content>
+
+<!-- BOTTOM BAR -->
+<app-bottom-nav></app-bottom-nav>

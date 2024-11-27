@@ -1,3 +1,11 @@
+ion-content {
+  --padding-bottom: 50px;
+}
+
+.fabs{
+  bottom: 60px;
+}
+
 .header {
     --background: #FF7043;
     --color: white;
@@ -19,7 +27,7 @@
     --background: #FF7043; /* Tu color naranja */
     --background-hover: #e66139; /* Color más oscuro para el hover */
     --background-activated: #ff9170; /* Color al hacer clic */
-  }  
+  } 
 
   // ion-label strong {
   //   display: block;

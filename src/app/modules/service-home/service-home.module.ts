@@ -9,6 +9,7 @@ import { ServiceHomePage } from './pages/service-home/service-home.page';
 import { EditServicePage } from './pages/edit-service/edit-service.page';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { AddOfferPage } from './pages/add-offer/add-offer.page';
+import { EditOfferPage } from './pages/edit-offer/edit-offer.page';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { AddOfferPage } from './pages/add-offer/add-offer.page';
     AddServicePage,
     EditServicePage,
     AddOfferPage,
+    EditOfferPage,
   ],
   imports: [
     CommonModule,
