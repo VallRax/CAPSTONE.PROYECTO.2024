@@ -10,6 +10,7 @@ import { homePage } from './pages/home/home.page';
 
 // Módulo Compartido - Componentes
 import { SharedModule } from 'src/app/shared/shared.module';
+import { ServicePage } from './pages/service/service.page';
 
 
 
@@ -20,6 +21,9 @@ import { SharedModule } from 'src/app/shared/shared.module';
     HomeRoutingModule,
     SharedModule,
   ],
-  declarations: [homePage]
+  declarations: [
+    homePage,
+    ServicePage,
+  ]
 })
 export class HomeModule { }

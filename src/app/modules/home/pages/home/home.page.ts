@@ -1,16 +1,16 @@
-import { Component } from '@angular/core';
-import { ModalController } from '@ionic/angular';
-import { ServiceModalComponent } from 'src/app/shared/components/service-modal/service-modal.component';
-import { CategoryModalComponent } from 'src/app/shared/components/category-modal/category-modal.component';
-
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { FirebaseService } from 'src/app/core/services/firebase.service';
+import { UtilsService } from 'src/app/core/services/utils.service';
+import { Service } from 'src/app/models/service.model';
+import { User } from 'src/app/models/user.model';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
-export class homePage {
-
+export class homePage implements OnInit {
   categories = [
     { name: 'Belleza', icon: 'cut' },
     { name: 'Veterinaria', icon: 'paw' },
@@ -22,129 +22,122 @@ export class homePage {
     { name: 'Otros', icon: 'ellipsis-horizontal' },
   ];
 
-  getRandomImage() {
-    const randomNum = Math.floor(Math.random() * 1000);
-    return `https://picsum.photos/600/400?random=${randomNum}`;
+  services: Service[] = [];
+  currentUser: User;
+
+  constructor(private firebaseSvc: FirebaseService, private utilsSvc: UtilsService, private router: Router) {}
+
+  async ngOnInit() {
+    await this.loadCurrentUser();
+    await this.loadServices();
+    await this.syncFavorites();
   }
 
-  services = [
-    {
-      name: 'Glamour Nails Studio',
-      category: 'Belleza',
-      description: "Ofrecemos tratamientos de belleza para uñas, manicura y pedicura profesional.",
-      image: this.getRandomImage(),
-      isFavorite: false,
-      offers: [
-        { name: 'Manicure Básico', description: 'Un tratamiento básico para el cuidado de tus uñas.', price: '$10.000', image: this.getRandomImage() },
-        { name: 'Pedicure Completo', description: 'Incluye hidratación y esmaltado.', price: '$15.000', image: this.getRandomImage() },
-        { name: 'Manicure Gel', description: 'Esmaltado en gel para una mayor duración.', price: '$12.000', image: this.getRandomImage() }
-      ]
-    },
-    {
-      name: 'Gimnasio Elite',
-      category: 'Fitness',
-      description: "Un gimnasio de primera clase para todos tus objetivos de fitness.",
-      image: this.getRandomImage(),
-      isFavorite: true,
-      offers: [
-        { name: 'Entrenamiento Personal', description: 'Sesión con entrenador personal.', price: '$20.000', image: this.getRandomImage() },
-        { name: 'Clases de Yoga', description: 'Clases grupales de yoga.', price: '$8.000', image: this.getRandomImage() },
-        { name: 'Clases de Spinning', description: 'Entrenamiento cardiovascular en bicicleta.', price: '$10.000', image: this.getRandomImage() }
-      ]
-    },
-    {
-      name: 'Clínica Dental Sonrisas',
-      category: 'Salud',
-      description: "Especialistas en el cuidado de tu sonrisa, con tratamientos personalizados.",
-      image: this.getRandomImage(),
-      isFavorite: false,
-      offers: [
-        { name: 'Limpieza Dental', description: 'Elimina el sarro y manchas de los dientes.', price: '$15.000', image: this.getRandomImage() },
-        { name: 'Blanqueamiento Dental', description: 'Blanqueamiento seguro y efectivo.', price: '$30.000', image: this.getRandomImage() },
-        { name: 'Ortodoncia', description: 'Tratamiento de corrección dental.', price: '$40.000', image: this.getRandomImage() }
-      ]
-    },
-    {
-      name: 'PetCare Veterinaria',
-      category: 'Veterinaria',
-      description: "Cuidados integrales para tu mascota con profesionales altamente capacitados.",
-      image: this.getRandomImage(),
-      isFavorite: false,
-      offers: [
-        { name: 'Consulta Veterinaria', description: 'Chequeo general para tu mascota.', price: '$20.000', image: this.getRandomImage() },
-        { name: 'Vacunación', description: 'Vacunas completas para perros y gatos.', price: '$15.000', image: this.getRandomImage() },
-        { name: 'Baño y Peluquería', description: 'Aseo completo y corte de pelo.', price: '$10.000', image: this.getRandomImage() }
-      ]
-    },
-    {
-      name: 'Limpieza Hogar 24/7',
-      category: 'Hogar',
-      description: "Servicios de limpieza profesional para tu hogar u oficina.",
-      image: this.getRandomImage(),
-      isFavorite: true,
-      offers: [
-        { name: 'Limpieza Básica', description: 'Limpieza superficial de las áreas principales.', price: '$18.000', image: this.getRandomImage() },
-        { name: 'Limpieza Profunda', description: 'Limpieza completa y detallada.', price: '$30.000', image: this.getRandomImage() },
-        { name: 'Desinfección', description: 'Elimina gérmenes y bacterias en el hogar.', price: '$25.000', image: this.getRandomImage() }
-      ]
-    },
-    {
-      name: 'TechFix Soluciones',
-      category: 'Tecnología',
-      description: "Reparación y mantenimiento de dispositivos tecnológicos.",
-      image: this.getRandomImage(),
-      isFavorite: false,
-      offers: [
-        { name: 'Reparación de Pantalla', description: 'Cambio de pantalla para smartphones.', price: '$50.000', image: this.getRandomImage() },
-        { name: 'Formateo de PC', description: 'Formateo e instalación de software.', price: '$20.000', image: this.getRandomImage() },
-        { name: 'Limpieza de Virus', description: 'Eliminación de virus y malware.', price: '$15.000', image: this.getRandomImage() }
-      ]
-    },
-    {
-      name: 'PizzaManía',
-      category: 'Comida',
-      description: "Las mejores pizzas artesanales hechas con ingredientes frescos.",
-      image: this.getRandomImage(),
-      isFavorite: true,
-      offers: [
-        { name: 'Pizza Margarita', description: 'Pizza con tomate, mozzarella y albahaca.', price: '$8.000', image: this.getRandomImage() },
-        { name: 'Pizza Pepperoni', description: 'Pizza con pepperoni y extra queso.', price: '$9.000', image: this.getRandomImage() },
-        { name: 'Pizza Veggie', description: 'Pizza con vegetales frescos.', price: '$10.000', image: this.getRandomImage() }
-      ]
+  // Cargar usuario actual desde Firebase
+  // Cargar usuario actual desde Firebase
+async loadCurrentUser() {
+  try {
+    // Obtén el ID del usuario desde el almacenamiento local o una variable global
+    const localUser = this.utilsSvc.getFromLocalStorage('user'); // Asegúrate de que se guarde en el login
+    if (!localUser || !localUser.uid) {
+      throw new Error('Usuario no encontrado en el almacenamiento local.');
     }
-  ];
 
-  constructor(private modalController: ModalController) {}
+    // Busca el usuario en Firebase
+    const userDoc = await this.firebaseSvc.getDocument(`users_test/${localUser.uid}`);
+    if (!userDoc) {
+      throw new Error('Documento de usuario no encontrado en Firebase.');
+    }
 
-  async openCategoryModal(category: any) {
-    const servicesInCategory = this.services.filter(service => service.category === category.name);
-    const modal = await this.modalController.create({
-      component: CategoryModalComponent,
-      componentProps: { category: { ...category, services: servicesInCategory } }
-    });
-    return await modal.present();
+    this.currentUser = userDoc as User;
+
+    // Inicializa favoritos si no existen
+    if (!this.currentUser.favorites) {
+      this.currentUser.favorites = [];
+    }
+
+    console.log('Usuario cargado:', this.currentUser);
+  } catch (error) {
+    console.error('Error al cargar el usuario:', error);
+
+    // Redirige al login si no hay autenticación
+    this.utilsSvc.routerLink('/auth/login');
+  }
+} 
+
+  // Cargar servicios desde Firebase
+  async loadServices() {
+    try {
+      this.services = await this.firebaseSvc.getCollection('services');
+    } catch (error) {
+      console.error('Error al cargar servicios:', error);
+    }
   }
 
-  async openServiceModal(service: any) {
-    const modal = await this.modalController.create({
-      component: ServiceModalComponent,
-      componentProps: { service }
-    });
-    return await modal.present();
+  // Sincronizar favoritos del usuario eliminando los que no existen
+  async syncFavorites() {
+    try {
+      if (this.currentUser?.favorites && Array.isArray(this.currentUser.favorites)) {
+        const validFavorites = this.currentUser.favorites.filter((favoriteId) =>
+          this.services.some((service) => service.id === favoriteId)
+        );
+  
+        if (validFavorites.length !== this.currentUser.favorites.length) {
+          this.currentUser.favorites = validFavorites;
+  
+          await this.firebaseSvc.setDocument(`users/${this.currentUser.uid}`, {
+            ...this.currentUser,
+            favorites: validFavorites,
+          });
+        }
+      } else {
+        this.currentUser.favorites = [];
+      }
+    } catch (error) {
+      console.error('Error al sincronizar favoritos:', error);
+    }
+  }  
+  
+
+  async toggleFavorite(service: Service) {
+    try {
+      if (!this.currentUser) throw new Error('Usuario no definido.');
+  
+      const isFavorite = this.currentUser.favorites?.includes(service.id) || false;
+  
+      console.log('Favorito actual:', isFavorite);
+      console.log('Servicio:', service);
+  
+      const updatedFavorites = isFavorite
+        ? this.currentUser.favorites.filter((id) => id !== service.id)
+        : [...(this.currentUser?.favorites || []), service.id];
+  
+      console.log('Favoritos actualizados:', updatedFavorites);
+  
+      await this.firebaseSvc.setDocument(`users/${this.currentUser.uid}`, {
+        ...this.currentUser,
+        favorites: updatedFavorites,
+      });
+  
+      this.currentUser.favorites = updatedFavorites;
+  
+      this.utilsSvc.presentToast({
+        message: isFavorite
+          ? 'Servicio eliminado de favoritos.'
+          : 'Servicio añadido a favoritos.',
+        color: 'success',
+      });
+    } catch (error) {
+      console.error('Error al actualizar favoritos:', error);
+      this.utilsSvc.presentToast({
+        message: 'Error al actualizar favoritos.',
+        color: 'danger',
+      });
+    }
   }
 
-  toggleFavorite(service: any) {
-    service.isFavorite = !service.isFavorite;
+  goToServiceDetails(serviceId: string) {
+    this.router.navigate([`/home/service/${serviceId}`]);
   }
-
-  // loadAllServices() {
-  //   const path = `services`;
-  //   this.firebaseSvc.getCollection(path).then((data: Service[]) => {
-  //     this.services = data; // Mostrar todos los servicios
-  //     console.log('Todos los servicios:', this.services);
-  //   }).catch((error) => {
-  //     console.error('Error al cargar servicios:', error);
-  //   });
-  // }
   
 }

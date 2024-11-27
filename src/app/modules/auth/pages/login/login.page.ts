@@ -24,6 +24,7 @@ export class loginPage implements OnInit {
   }
 
  async submit(){
+    localStorage.clear()
     if (this.form.valid){
 
       const loading = await this.utilsSvc.loading();
@@ -62,6 +63,7 @@ export class loginPage implements OnInit {
     try {
       const user = await this.firebaseSvc.getDocument(path) as User;
       if (user) {
+        localStorage.clear();
         this.utilsSvc.saveInLocalStorage('user', user);
   
         this.utilsSvc.routerLink('home');

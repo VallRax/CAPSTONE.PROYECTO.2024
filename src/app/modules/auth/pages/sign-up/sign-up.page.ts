@@ -53,16 +53,22 @@ export class SignUpPage implements OnInit {
     }
   }  
 
-  async setUserInfo(uid: string){
-    if (this.form.valid){
+  async setUserInfo(uid: string) {
+    if (this.form.valid) {
       const loading = await this.utilsSvc.loading();
       await loading.present();
   
-      let path = `users_test/${uid}`;
-      delete this.form.value.password; // No guardes la contraseña en Firestore
+      const path = `users_test/${uid}`;
   
-      this.firebaseSvc.setDocument(path, this.form.value).then(async res => {
-        this.utilsSvc.saveInLocalStorage('user', this.form.value);
+      // Asegúrate de inicializar el campo favorites
+      const userData = {
+        ...this.form.value,
+        favorites: [] // Inicializa favorites como un arreglo vacío
+      };
+      delete userData.password; // No guardes la contraseña en Firestore
+  
+      this.firebaseSvc.setDocument(path, userData).then(async () => {
+        this.utilsSvc.saveInLocalStorage('user', userData);
         this.utilsSvc.routerLink('/auth');
         this.form.reset();
       }).catch(error => {
@@ -79,10 +85,5 @@ export class SignUpPage implements OnInit {
       });
     }
   }
-  
-
-
-
-
   
 }

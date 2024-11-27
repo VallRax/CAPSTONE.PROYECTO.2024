@@ -45,6 +45,7 @@ export class FirebaseService {
   signOut() {
     getAuth().signOut();
     localStorage.removeItem('user');
+    localStorage.clear()
     this.utilsSvc.routerLink('/auth');
   }
 

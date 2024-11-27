@@ -20,18 +20,24 @@ async generateTestData() {
     try {
       // Crear usuarios de prueba
       const users: User[] = [
-        { uid: this.firebaseSvc.createId(), email: 'user1@test.com', password: 'password1', name: 'Juan Pérez', role: UserRole.Service },
-        { uid: this.firebaseSvc.createId(), email: 'user2@test.com', password: 'password2', name: 'María López', role: UserRole.Service },
-        { uid: this.firebaseSvc.createId(), email: 'user3@test.com', password: 'password3', name: 'Carlos García', role: UserRole.Service },
-        { uid: this.firebaseSvc.createId(), email: 'user4@test.com', password: 'password4', name: 'Ana Torres', role: UserRole.Service },
-        { uid: this.firebaseSvc.createId(), email: 'user5@test.com', password: 'password5', name: 'Luis Gómez', role: UserRole.Service },
-        { uid: this.firebaseSvc.createId(), email: 'user6@test.com', password: 'password6', name: 'Laura Jiménez', role: UserRole.Service },
-        { uid: this.firebaseSvc.createId(), email: 'client1@test.com', password: 'password7', name: 'Sofía Díaz', role: UserRole.Client },
-        { uid: this.firebaseSvc.createId(), email: 'client2@test.com', password: 'password8', name: 'Pedro Sánchez', role: UserRole.Client },
+        { uid: this.firebaseSvc.createId(), email: 'user1@test.com', password: 'password1', name: 'Juan Pérez', role: UserRole.Service, favorites: []},
+        { uid: this.firebaseSvc.createId(), email: 'user2@test.com', password: 'password2', name: 'María López', role: UserRole.Service, favorites: []},
+        { uid: this.firebaseSvc.createId(), email: 'user3@test.com', password: 'password3', name: 'Carlos García', role: UserRole.Service, favorites: []},
+        { uid: this.firebaseSvc.createId(), email: 'user4@test.com', password: 'password4', name: 'Ana Torres', role: UserRole.Service, favorites: []},
+        { uid: this.firebaseSvc.createId(), email: 'user5@test.com', password: 'password5', name: 'Luis Gómez', role: UserRole.Service, favorites: []},
+        { uid: this.firebaseSvc.createId(), email: 'user6@test.com', password: 'password6', name: 'Laura Jiménez', role: UserRole.Service, favorites: []},
+        { uid: this.firebaseSvc.createId(), email: 'client1@test.com', password: 'password7', name: 'Sofía Díaz', role: UserRole.Client, favorites: []},
+        { uid: this.firebaseSvc.createId(), email: 'client2@test.com', password: 'password8', name: 'Pedro Sánchez', role: UserRole.Client, favorites: []},
       ];
   
       for (const user of users) {
-        await this.firebaseSvc.setDocument(`users_test/${user.uid}`, user);
+        // Crea la cuenta en Firebase Authentication
+      const authUser = await this.firebaseSvc.signUp(user);
+      user.uid = authUser.user.uid; // Asigna el UID generado por Firebase Auth
+
+      // Guarda el usuario en Firestore
+      delete user.password; // No guardes la contraseña en Firestore por seguridad
+      await this.firebaseSvc.setDocument(`users_test/${user.uid}`, user);
       }
   
       console.log('Usuarios creados con éxito.');

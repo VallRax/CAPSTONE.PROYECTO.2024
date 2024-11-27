@@ -9,6 +9,6 @@ export enum UserRole {
     password?: string;
     name: string;
     role: UserRole;
-    //favorites: string[]; // Lista de IDs de servicios favoritos
+    favorites: string[]; // Lista de IDs de servicios favoritos
   }
   
