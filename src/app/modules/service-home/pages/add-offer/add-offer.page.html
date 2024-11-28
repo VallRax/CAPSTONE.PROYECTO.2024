@@ -28,6 +28,13 @@
       label="Precio">
     </app-custom-input>
 
+    <app-custom-input 
+      icon="alarm-outline"
+      [control]="form.controls.duration"
+      type="number"
+      label="Duración">
+    </app-custom-input>
+
     <ion-button class="orange-button" shape="round" expand="block" type="submit" [disabled]="form.invalid"> 
       Guardar
     </ion-button>

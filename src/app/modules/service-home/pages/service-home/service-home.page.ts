@@ -25,7 +25,7 @@ export class ServiceHomePage implements OnInit {
     const user = JSON.parse(localStorage.getItem('user'));
     const path = `services`; // Colección global
     this.firebaseSvc.getCollection(path).then((data: Service[]) => {
-      this.services = data.filter(service => service.providerId === user.uid); // Filtrar por UID del proveedor
+      this.services = data.filter(service => service.ownerId === user.uid); // Filtrar por UID del proveedor
       console.log('Servicios cargados:', this.services);
     }).catch((error) => {
       console.error('Error al cargar servicios:', error);
@@ -43,14 +43,14 @@ export class ServiceHomePage implements OnInit {
     });
   }
 
-  async generateTestData() {
-    try {
-      await this.testDataService.generateTestData();
-      console.log('Datos de prueba generados con éxito.');
-      alert('Datos de prueba generados correctamente.');
-    } catch (error) {
-      console.error('Error al generar datos de prueba:', error);
-      alert('Error al generar datos de prueba.');
-    }
-  }
+  // async generateTestData() {
+  //   try {
+  //     await this.testDataService.generateTestData();
+  //     console.log('Datos de prueba generados con éxito.');
+  //     alert('Datos de prueba generados correctamente.');
+  //   } catch (error) {
+  //     console.error('Error al generar datos de prueba:', error);
+  //     alert('Error al generar datos de prueba.');
+  //   }
+  // }
 }

@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar class="header">
+    <ion-title>Agendar Cita</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="modal-content">
+    <h2>{{ service?.name }}</h2>
+    <p class="service-category">Categoría: {{ service?.category }}</p>
+    <p class="instruction">Seleccione la fecha y hora de su cita.</p>
+
+    <!-- Selección de Fecha -->
+    <ion-datetime
+      [preferWheel]="true"
+      displayFormat="DD MMMM YYYY"
+      [(ngModel)]="selectedDate"
+      presentation="date"
+      locale="es-ES"
+      [min]="today"
+      [max]="maxDate"
+      placeholder="Selecciona una fecha"
+      (ionChange)="updateAvailability()">
+    </ion-datetime>
+
+    <!-- Lista de Horarios Disponibles -->
+    <div class="hours-list-tittle">
+      <h2>Horas Disponibles</h2>
+    </div>
+    <ion-list>
+      <ion-item *ngFor="let time of availableTimes" [disabled]="!time.available">
+        <ion-checkbox
+          slot="start"
+          [(ngModel)]="time.selected"
+          (ionChange)="onTimeSelected(time)"
+          [disabled]="!time.available">
+        </ion-checkbox>
+        <ion-label>{{ time.label }}</ion-label>
+      </ion-item>
+    </ion-list>
+    
+    
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-button expand="full" class="confirm-button" (click)="scheduleService()">Confirmar Agendamiento</ion-button>
+</ion-footer>

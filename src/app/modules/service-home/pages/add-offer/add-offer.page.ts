@@ -14,7 +14,8 @@ export class AddOfferPage {
   form = new FormGroup({
     name: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required),
-    price: new FormControl(null, [Validators.required, Validators.min(0)]) // Validación para valores no negativos
+    price: new FormControl(null, [Validators.required, Validators.min(0)]),
+    duration: new FormControl(null, [Validators.required, Validators.min(0)])
   });
 
   serviceId: string | null = null; // ID del servicio al que pertenece la oferta
@@ -62,6 +63,7 @@ export class AddOfferPage {
           description: this.form.controls.description.value,
           price: this.form.controls.price.value,
           imageUrl,
+          duration: this.form.controls.duration.value,
         };
   
         // Guardar la oferta dentro del servicio

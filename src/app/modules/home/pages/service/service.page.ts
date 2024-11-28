@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { FirebaseService } from 'src/app/core/services/firebase.service';
 import { UtilsService } from 'src/app/core/services/utils.service';
@@ -17,6 +17,7 @@ export class ServicePage implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private firebaseSvc: FirebaseService,
     private utilsSvc: UtilsService,
     private navCtrl: NavController
@@ -93,5 +94,10 @@ export class ServicePage implements OnInit {
 
   goBack() {
     this.navCtrl.back();
+  }
+
+  scheduleOffer(serviceId: string, offerId: string) {
+    // Redirigir a la página de agendamiento
+    this.router.navigate([`/home/schedule/${serviceId}/${offerId}`]);
   }
 }

@@ -28,18 +28,35 @@
       label="Descripción">
     </app-custom-input>
 
-    <!-- <app-custom-input 
-      icon="cash-outline"
-      [control]="form.controls.price"
-      type="price"
-      label="Precio">
-    </app-custom-input> -->
-    
+  <!-- Días disponibles -->
+  <ion-item>
+    <ion-label position="stacked">Días Disponibles</ion-label>
+    <ion-select formControlName="availableDays" multiple="true">
+      <ion-select-option value="monday">Lunes</ion-select-option>
+      <ion-select-option value="tuesday">Martes</ion-select-option>
+      <ion-select-option value="wednesday">Miércoles</ion-select-option>
+      <ion-select-option value="thursday">Jueves</ion-select-option>
+      <ion-select-option value="friday">Viernes</ion-select-option>
+      <ion-select-option value="saturday">Sábado</ion-select-option>
+      <ion-select-option value="sunday">Domingo</ion-select-option>
+    </ion-select>
+  </ion-item>
 
-    <!-- <ion-item>
-      <ion-label position="stacked">Imagen del Servicio</ion-label>
-      <input type="file" (change)="onFileSelected($event)" />
-    </ion-item> -->
+    <!-- Horarios disponibles -->
+    <ion-item>
+      <ion-label position="stacked">Horarios Disponibles</ion-label>
+      <ion-button expand="block" color="medium" (click)="addAvailableHour()">Añadir Horario</ion-button>
+    </ion-item>
+
+    <!-- Muestra los horarios ingresados -->
+    <ion-list>
+      <ion-item *ngFor="let hour of availableHours; let i = index">
+        <ion-label>{{ hour.startTime }} - {{ hour.endTime }}</ion-label>
+        <ion-button fill="clear" color="danger" (click)="removeAvailableHour(i)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-list>
 
     <ion-button class="orange-button" shape="round" expand="block" type="submit" [disabled]="form.invalid"> 
       <!-- || !imageFile"> -->

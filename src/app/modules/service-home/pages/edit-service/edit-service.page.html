@@ -48,6 +48,32 @@
           <ion-icon name="create"></ion-icon>
         </ion-button>
       </ion-item>
+
+      <!-- Días disponibles -->
+      <ion-item lines="full">
+        <ion-label>Días Disponibles</ion-label>
+        <ion-select multiple="true" [value]="service.availableDays" (ionChange)="updateDays($event)">
+          <ion-select-option value="monday">Lunes</ion-select-option>
+          <ion-select-option value="tuesday">Martes</ion-select-option>
+          <ion-select-option value="wednesday">Miércoles</ion-select-option>
+          <ion-select-option value="thursday">Jueves</ion-select-option>
+          <ion-select-option value="friday">Viernes</ion-select-option>
+          <ion-select-option value="saturday">Sábado</ion-select-option>
+          <ion-select-option value="sunday">Domingo</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <!-- Horarios disponibles -->
+      <ion-item lines="full">
+        <ion-label>Horario de Atención</ion-label>
+        <ion-button fill="clear" slot="end" (click)="editAvailableHour()">Editar Horario</ion-button>
+      </ion-item>
+
+      <ion-item *ngIf="service.availableHours">
+        <ion-label>
+          {{ service.availableHours[0].startTime }} - {{ service.availableHours[0].endTime }}
+        </ion-label>
+      </ion-item>
     </ion-list>
   </div>
 

@@ -194,4 +194,70 @@ export class EditServicePage implements OnInit {
   goBack() {
     this.navCtrl.back();
   }
+
+  async updateDays(event: any) {
+    if (this.service) {
+      this.service.availableDays = event.detail.value;
+
+      await this.saveChanges('availableDays');
+    }
+  }
+
+  async editAvailableHour() {
+    const alert = await this.alertCtrl.create({
+      header: 'Editar Horario de Atención',
+      inputs: [
+        {
+          name: 'startTime',
+          type: 'time',
+          value: this.service?.availableHours[0]?.startTime || '',
+          placeholder: 'Hora de inicio',
+        },
+        {
+          name: 'endTime',
+          type: 'time',
+          value: this.service?.availableHours[0]?.endTime || '',
+          placeholder: 'Hora de cierre',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Guardar',
+          handler: (data) => {
+            if (data.startTime && data.endTime && this.service) {
+              this.service.availableHours[0] = {
+                startTime: data.startTime,
+                endTime: data.endTime,
+              };
+              this.saveChanges('availableHours');
+            }
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  async saveChanges(field: keyof Service) {
+    try {
+      const path = `services/${this.serviceId}`;
+      await this.firebaseSvc.setDocument(path, this.service);
+      this.utilsSvc.presentToast({
+        message: `${field} actualizado con éxito.`,
+        color: 'success',
+      });
+    } catch (error) {
+      console.error(`Error al actualizar ${field}:`, error);
+      this.utilsSvc.presentToast({
+        message: `Error al actualizar ${field}.`,
+        color: 'danger',
+      });
+    }
+  }
+
+
 }

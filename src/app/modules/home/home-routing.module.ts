@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { homePage } from './pages/home/home.page';
 import { ServicePage } from './pages/service/service.page';
+import { SchedulePage } from './pages/schedule/schedule.page';
 
 const routes: Routes = [
   {
@@ -12,7 +13,12 @@ const routes: Routes = [
   {
     path: 'service/:id',
     component: ServicePage
-  }
+  },
+
+  {
+    path: 'schedule/:serviceId/:offerId',
+    component: SchedulePage,
+  },
 ];
 
 @NgModule({

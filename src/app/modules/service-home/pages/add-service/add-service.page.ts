@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { AlertController } from '@ionic/angular';
 import { FirebaseService } from 'src/app/core/services/firebase.service';
 import { UtilsService } from 'src/app/core/services/utils.service';
 
@@ -16,12 +17,14 @@ export class AddServicePage {
     name: new FormControl('', Validators.required),
     category: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required),
-    //price: new FormControl(null, [Validators.required, Validators.min(0)]) // Validación para valores no negativos
+    availableDays: new FormControl([], Validators.required),
   });
+
+  availableHours: { startTime: string; endTime: string }[] = []; // Lista para almacenar horarios
 
   //imageFile: File | null = null; // Archivo de imagen seleccionado
 
-  constructor(private firebaseSvc: FirebaseService, private utilsSvc: UtilsService) {}
+  constructor(private firebaseSvc: FirebaseService, private utilsSvc: UtilsService, private alertCtrl: AlertController) {}
 
   // onFileSelected(event: Event) {
   //   const input = event.target as HTMLInputElement;
@@ -46,12 +49,15 @@ export class AddServicePage {
         name: this.form.controls.name.value,
         category: this.form.controls.category.value,
         description: this.form.controls.description.value,
-        providerId: user.uid, // Relacionar con el usuario que crea el servicio
-        providerName: user.name || 'Proveedor Anónimo', // Nombre del proveedor
+        ownerId: user.uid, // Relacionar con el usuario que crea el servicio
         imageUrl: this.getRandomImage(), // Imagen aleatoria de ejemplo
         createdAt: timestamp, // Fecha de creación
         updatedAt: timestamp, // Fecha de última actualización
-        offers: [] // Inicialmente vacío
+        offers: [], // Inicialmente vacío    
+        availableDays: this.form.controls.availableDays.value,
+        availableHours: this.availableHours, // Agregar los horarios ingresados
+        blockedTimeSlots: [],  
+        
       };
   
       try {
@@ -68,5 +74,45 @@ export class AddServicePage {
   getRandomImage() {
     const randomNum = Math.floor(Math.random() * 1000);
     return `https://picsum.photos/600/400?random=${randomNum}`;
+  }
+
+  async addAvailableHour() {
+    const alert = await this.alertCtrl.create({
+      header: 'Añadir Horario',
+      inputs: [
+        {
+          name: 'startTime',
+          type: 'time',
+          placeholder: 'Hora de inicio',
+        },
+        {
+          name: 'endTime',
+          type: 'time',
+          placeholder: 'Hora de fin',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Añadir',
+          handler: (data) => {
+            if (data.startTime && data.endTime) {
+              this.availableHours.push({
+                startTime: data.startTime,
+                endTime: data.endTime,
+              });
+            }
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  removeAvailableHour(index: number) {
+    this.availableHours.splice(index, 1);
   }
 }
