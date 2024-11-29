@@ -7,5 +7,9 @@ export interface Booking {
     startTime: string; // Hora de inicio
     endTime: string; // Hora de fin
     status: 'pending' | 'confirmed' | 'cancelled'; // Estado de la reserva
+
+    /* MARCAS TEMPORALES */
+    createdAt: string; // Fecha de creación
+    updatedAt: string; // Fecha de última actualización
   }
   

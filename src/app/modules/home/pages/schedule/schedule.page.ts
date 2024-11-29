@@ -128,7 +128,9 @@ export class SchedulePage implements OnInit {
       });
       return;
     }
-
+  
+    const currentTime = new Date().toISOString(); // Hora actual en formato ISO
+  
     const booking: Booking = {
       id: this.firebaseSvc.createId(),
       serviceId: this.service.id,
@@ -138,8 +140,10 @@ export class SchedulePage implements OnInit {
       startTime: this.selectedTime.startTime,
       endTime: this.addMinutes(this.selectedTime.startTime, this.offer.duration),
       status: 'pending',
+      createdAt: currentTime,
+      updatedAt: currentTime,
     };
-
+  
     try {
       await this.firebaseSvc.setDocument(`bookings/${booking.id}`, booking);
       this.utilsSvc.presentToast({
@@ -174,26 +178,33 @@ export class SchedulePage implements OnInit {
 
   async loadBookingsForDate(date: string): Promise<Booking[]> {
     try {
-        // Rango de inicio y fin del día en formato ISO para la consulta
-        const startOfDay = new Date(date).toISOString().split('T')[0] + 'T00:00:00';
-        const endOfDay = new Date(date).toISOString().split('T')[0] + 'T23:59:59';
+        const startOfDay = new Date(date).toISOString().split('T')[0];
+        const endOfDay = new Date(date).toISOString().split('T')[0];
 
         console.log('Rango de fechas aplicado:', { startOfDay, endOfDay });
 
-        // Consulta con múltiples filtros
         const bookings = await this.firebaseSvc.getCollectionWithMultipleFilters<Booking>('bookings', [
             { field: 'date', operator: '>=', value: startOfDay },
             { field: 'date', operator: '<=', value: endOfDay },
             { field: 'serviceId', operator: '==', value: this.service.id },
         ]);
 
-        console.log('Bookings cargados:', bookings);
+        console.log('Resultados de la consulta con múltiples filtros:', bookings);
+
+        // Revisa si hay más de un booking con el mismo horario.
+        const duplicates = bookings.reduce((acc, booking) => {
+            acc[booking.startTime] = (acc[booking.startTime] || 0) + 1;
+            return acc;
+        }, {});
+        console.log('Duplicados detectados:', duplicates);
+
         return bookings;
     } catch (error) {
         console.error('Error al cargar bookings:', error);
         return [];
     }
 }
+
 
   
   goBack() {
