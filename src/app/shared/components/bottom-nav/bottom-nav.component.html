@@ -1,21 +1,21 @@
 <ion-footer>
   <ion-tab-bar slot="bottom" class="custom-tab-bar">
-    <ion-tab-button tab="home" (click)="home()">
+    <ion-tab-button tab="home" (click)="navigateTo('home')" [class.active]="activeTab === 'home'">
       <ion-icon name="home-outline"></ion-icon>
       <ion-label>Inicio</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="favorites" (click)="favorites()">
+    <ion-tab-button tab="favorites" (click)="navigateTo('home/favorites')" [class.active]="activeTab === 'favorites'">
       <ion-icon name="heart-outline"></ion-icon>
       <ion-label>Favoritos</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="scheduled-services" (click)="scheduledServices()">
+    <ion-tab-button tab="scheduled-services" (click)="navigateTo('home/scheduled-services')" [class.active]="activeTab === 'scheduled-services'">
       <ion-icon name="calendar-outline"></ion-icon>
       <ion-label>Mis Citas</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="menu" (click)="openMenu()">
+    <ion-tab-button tab="menu" (click)="openMenu()" [class.active]="activeTab === 'menu'">
       <ion-icon name="menu-outline"></ion-icon>
       <ion-label>Menú</ion-label>
     </ion-tab-button>

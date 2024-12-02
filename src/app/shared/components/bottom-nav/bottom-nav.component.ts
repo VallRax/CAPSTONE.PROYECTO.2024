@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { MenuController, NavController, ModalController } from '@ionic/angular';
+import { Router } from '@angular/router';
 import { FirebaseService } from 'src/app/core/services/firebase.service';
-import { Router } from '@angular/router'; // Asegúrate de importar Router
 
 @Component({
   selector: 'app-bottom-nav',
@@ -11,26 +11,18 @@ import { Router } from '@angular/router'; // Asegúrate de importar Router
 export class BottomNavComponent {
   firebaseSvc = inject(FirebaseService);
   menuCtrl = inject(MenuController);
+  activeTab: string = 'home'; // Inicializar con la pestaña activa predeterminada
 
   constructor(
     private navCtrl: NavController, 
-    private router: Router, // Inyectar Router
+    private router: Router,
     private modalController: ModalController
-    ) {}
+  ) {}
 
-  async favorites() {
-    await this.closeModal();
-    this.router.navigate(['home/favorites']);
-  }
-
-  async scheduledServices() {
-    await this.closeModal();
-    this.router.navigate(['home/scheduled-services']);
-  }
-
-  async home() {
-    await this.closeModal();
-    this.router.navigate(['/home']);
+  navigateTo(tab: string) {
+    this.activeTab = tab; // Cambiar la pestaña activa
+    this.router.navigate([`/${tab}`]);
+    this.closeModal();
   }
 
   async signOut() {
@@ -42,14 +34,12 @@ export class BottomNavComponent {
     try {
       await this.modalController.dismiss();
     } catch (error) {
-      // Ignora el error si no hay ningún modal abierto
       console.warn('No modal to close:', error);
     }
   }
 
   async openMenu() {
     try {
-      // Abrir el menú con ID "main-menu"
       await this.menuCtrl.open('main-menu');
     } catch (error) {
       console.error('Error al abrir el menú:', error);
