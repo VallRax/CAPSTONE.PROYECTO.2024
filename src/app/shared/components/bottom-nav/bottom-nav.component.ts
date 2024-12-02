@@ -23,6 +23,11 @@ export class BottomNavComponent {
     this.router.navigate(['home/favorites']);
   }
 
+  async scheduledServices() {
+    await this.closeModal();
+    this.router.navigate(['home/scheduled-services']);
+  }
+
   async home() {
     await this.closeModal();
     this.router.navigate(['/home']);

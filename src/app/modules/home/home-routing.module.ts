@@ -5,6 +5,7 @@ import { homePage } from './pages/home/home.page';
 import { ServicePage } from './pages/service/service.page';
 import { SchedulePage } from './pages/schedule/schedule.page';
 import { FavoritesPage } from './pages/favorites/favorites.page';
+import { ScheduledServicesPage } from './pages/scheduled-services/scheduled-services.page';
 
 const routes: Routes = [
   {
@@ -23,6 +24,10 @@ const routes: Routes = [
   {
     path: 'favorites',
     component: FavoritesPage,
+  },
+  {
+    path: 'scheduled-services',
+    component: ScheduledServicesPage,
   },
 ];
 
