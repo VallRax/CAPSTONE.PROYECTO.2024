@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { MenuController, NavController, ModalController } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { MenuController, ModalController } from '@ionic/angular';
+import { Router, NavigationEnd } from '@angular/router';
 import { FirebaseService } from 'src/app/core/services/firebase.service';
 
 @Component({
@@ -14,27 +14,32 @@ export class BottomNavComponent {
   activeTab: string = 'home'; // Inicializar con la pestaña activa predeterminada
 
   constructor(
-    private navCtrl: NavController, 
     private router: Router,
     private modalController: ModalController
-  ) {}
+  ) {
+    // Escuchar cambios en la ruta activa
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.syncActiveTab(event.urlAfterRedirects);
+      }
+    });
+  }
 
   navigateTo(tab: string) {
-    this.activeTab = tab; // Cambiar la pestaña activa
     this.router.navigate([`/${tab}`]);
     this.closeModal();
   }
 
-  async signOut() {
-    await this.closeModal();
-    this.firebaseSvc.signOut();
-  }
-
-  private async closeModal() {
-    try {
-      await this.modalController.dismiss();
-    } catch (error) {
-      console.warn('No modal to close:', error);
+  private syncActiveTab(url: string) {
+    // Actualizar la pestaña activa basado en la ruta
+    if (url.includes('/home/favorites')) {
+      this.activeTab = 'favorites';
+    } else if (url.includes('/home/scheduled-services')) {
+      this.activeTab = 'scheduled-services';
+    } else if (url.includes('/home')) {
+      this.activeTab = 'home';
+    } else {
+      this.activeTab = ''; // Si no coincide, ninguna pestaña activa
     }
   }
 
@@ -43,6 +48,14 @@ export class BottomNavComponent {
       await this.menuCtrl.open('main-menu');
     } catch (error) {
       console.error('Error al abrir el menú:', error);
+    }
+  }
+
+  private async closeModal() {
+    try {
+      await this.modalController.dismiss();
+    } catch (error) {
+      console.warn('No modal to close:', error);
     }
   }
 }
