@@ -19,9 +19,17 @@
   <div class="info-container">
     <h2>Información de la cuenta</h2>
 
+  
     <div class="profile-container">
+
+      <ion-avatar *ngIf="form.value.image">
+        <img [src]="form.value.image" />
+      </ion-avatar>
+  
+      <ion-icon  class="image-icon"  *ngIf="!form.value.image" name="image-outline"></ion-icon>
+
       <!-- Botón para cambiar la foto -->
-      <ion-button class="custom-button" (click)="takeImage()">Cambiar Foto</ion-button>
+      <ion-button class="custom-button" (click)="takeImage()" size="small">Agregar imagen</ion-button>
     </div>
 
     <h2>Información básica</h2>
@@ -66,5 +74,5 @@
 
 </ion-content>
 
-  <!-- Contenido de la página -->
-  <app-bottom-nav></app-bottom-nav> <!-- Añadir la barra de navegación inferior -->
+<!-- Contenido de la página -->
+<app-bottom-nav></app-bottom-nav> <!-- Añadir la barra de navegación inferior -->
