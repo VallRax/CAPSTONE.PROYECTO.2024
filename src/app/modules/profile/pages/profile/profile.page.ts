@@ -3,9 +3,10 @@ import { FirebaseService } from 'src/app/core/services/firebase.service';
 import { UtilsService } from 'src/app/core/services/utils.service';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
-import { getAuth } from 'firebase/auth'; // Para autenticación de Firebase
+import { getAuth, User } from 'firebase/auth'; // Para autenticación de Firebase
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Para subir imágenes a Firebase Storage
 import { doc, getFirestore, getDoc, setDoc } from 'firebase/firestore'; // Firestore para la base de datos
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-profile',
@@ -22,6 +23,19 @@ export class ProfilePage implements OnInit {
   storage = getStorage(); // Accedemos a Firebase Storage
   db = getFirestore(); // Accedemos a Firestore
 
+  form = new FormGroup({
+    image: new FormControl('', [Validators.required]),
+    
+  })
+
+  async takeImage() {
+    const dataUrl = (await this.utilsSvc.takePicture('Selecciona una opcion')).dataUrl;
+    this.form.controls.image.setValue(dataUrl)
+  }
+
+
+
+
   constructor(private router: Router, private navCtrl: NavController) { }
 
   // Método para cargar la información del usuario desde Firebase
@@ -34,6 +48,10 @@ export class ProfilePage implements OnInit {
         this.userData = userSnap.data();  // Asignar los datos obtenidos al objeto userData
       }
     }
+  }
+
+  user(): User {
+    return this.utilsSvc.getFromLocalStorage('user');
   }
 
   // Abrir el selector de archivos

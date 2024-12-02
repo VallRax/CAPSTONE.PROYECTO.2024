@@ -20,13 +20,8 @@
     <h2>Información de la cuenta</h2>
 
     <div class="profile-container">
-      <img [src]="profileImage ? profileImage : 'assets/default-profile.png'" class="profile-image" alt="Imagen de perfil"/>
-      
-      <!-- Input de tipo file oculto -->
-      <input type="file" #fileInput hidden (change)="onFileSelected($event)" accept="image/*" />
-
       <!-- Botón para cambiar la foto -->
-      <ion-button class="custom-button" (click)="triggerFileInput()">Cambiar Foto</ion-button>
+      <ion-button class="custom-button" (click)="takeImage()">Cambiar Foto</ion-button>
     </div>
 
     <h2>Información básica</h2>
