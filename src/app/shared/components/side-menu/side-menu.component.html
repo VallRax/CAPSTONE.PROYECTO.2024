@@ -1,0 +1,27 @@
+<ion-menu side="start" menuId="main-menu" contentId="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Opciones</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item button (click)="navigateTo('/home')">
+        <ion-icon slot="start" name="home-outline"></ion-icon>
+        <ion-label>Inicio</ion-label>
+      </ion-item>
+      <ion-item button (click)="navigateTo('/profile')">
+        <ion-icon slot="start" name="person-outline"></ion-icon>
+        <ion-label>Perfil</ion-label>
+      </ion-item>
+      <ion-item button (click)="navigateTo('/settings')">
+        <ion-icon slot="start" name="settings-outline"></ion-icon>
+        <ion-label>Configuraciones</ion-label>
+      </ion-item>
+      <ion-item button (click)="signOut()">
+        <ion-icon slot="start" name="log-out-outline"></ion-icon>
+        <ion-label>Cerrar Sesión</ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>

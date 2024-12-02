@@ -9,6 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ServiceModalComponent } from './components/service-modal/service-modal.component';
 import { CategoryModalComponent } from './components/category-modal/category-modal.component';
 import { ScheduleModalComponent } from './components/schedule-modal/schedule-modal.component';
+import { SideMenuComponent } from './components/side-menu/side-menu.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { ScheduleModalComponent } from './components/schedule-modal/schedule-mod
     ServiceModalComponent,
     CategoryModalComponent,
     ScheduleModalComponent,
+    SideMenuComponent,
   ],
   exports:[
     HeaderComponent,
@@ -29,6 +31,7 @@ import { ScheduleModalComponent } from './components/schedule-modal/schedule-mod
     ServiceModalComponent,
     CategoryModalComponent,
     ScheduleModalComponent,
+    SideMenuComponent,
   ],
   imports: [
     CommonModule,

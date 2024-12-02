@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { NavController, ModalController } from '@ionic/angular';
-import { FirebaseService } from 'src/app/services/firebase.service';
+import { FirebaseService } from 'src/app/core/services/firebase.service';
 import { Router } from '@angular/router'; // Asegúrate de importar Router
 
 @Component({
