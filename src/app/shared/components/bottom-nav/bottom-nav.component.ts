@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { NavController, ModalController } from '@ionic/angular';
+import { MenuController, NavController, ModalController } from '@ionic/angular';
 import { FirebaseService } from 'src/app/core/services/firebase.service';
 import { Router } from '@angular/router'; // Asegúrate de importar Router
 
@@ -10,6 +10,7 @@ import { Router } from '@angular/router'; // Asegúrate de importar Router
 })
 export class BottomNavComponent {
   firebaseSvc = inject(FirebaseService);
+  menuCtrl = inject(MenuController);
 
   constructor(
     private navCtrl: NavController, 
@@ -17,9 +18,9 @@ export class BottomNavComponent {
     private modalController: ModalController
     ) {}
 
-  async profile() {
+  async favorites() {
     await this.closeModal();
-    this.router.navigate(['/profile']);
+    this.router.navigate(['home/favorites']);
   }
 
   async home() {
@@ -38,6 +39,15 @@ export class BottomNavComponent {
     } catch (error) {
       // Ignora el error si no hay ningún modal abierto
       console.warn('No modal to close:', error);
+    }
+  }
+
+  async openMenu() {
+    try {
+      // Abrir el menú con ID "main-menu"
+      await this.menuCtrl.open('main-menu');
+    } catch (error) {
+      console.error('Error al abrir el menú:', error);
     }
   }
 }

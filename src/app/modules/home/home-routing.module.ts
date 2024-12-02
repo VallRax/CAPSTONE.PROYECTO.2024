@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { homePage } from './pages/home/home.page';
 import { ServicePage } from './pages/service/service.page';
 import { SchedulePage } from './pages/schedule/schedule.page';
+import { FavoritesPage } from './pages/favorites/favorites.page';
 
 const routes: Routes = [
   {
@@ -18,6 +19,10 @@ const routes: Routes = [
   {
     path: 'schedule/:serviceId/:offerId',
     component: SchedulePage,
+  },
+  {
+    path: 'favorites',
+    component: FavoritesPage,
   },
 ];
 
