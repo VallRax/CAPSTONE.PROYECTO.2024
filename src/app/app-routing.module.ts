@@ -2,12 +2,13 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 import { NoAuthGuard } from './core/guards/no-auth.guard';
+import { RoleGuard } from './core/guards/role.guard';
 
 const routes: Routes = [
   {
     path: 'home',
     loadChildren: () => import('./modules/home/home.module').then(m => m.HomeModule),
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['client'] }, // Rutas para clientes
   },
   {
@@ -16,7 +17,7 @@ const routes: Routes = [
       import('./modules/service-home/service-home.module').then(
         (m) => m.ServiceHomeModule
       ),
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['service'] }, // Rutas para proveedores de servicios
   },
   {
