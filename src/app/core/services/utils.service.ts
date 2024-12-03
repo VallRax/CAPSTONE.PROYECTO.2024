@@ -11,9 +11,6 @@ export class UtilsService {
   toastCtrl = inject(ToastController);
   router = inject(Router);
 
- 
-
-
   async takePicture(promptLabelHeader: string = 'Selecciona una opción') {
     // Configuración para la cámara con texto personalizado en el encabezado
     return await Camera.getPhoto({

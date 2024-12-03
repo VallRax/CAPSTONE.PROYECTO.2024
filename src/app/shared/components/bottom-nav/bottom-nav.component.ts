@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
-import { MenuController, ModalController } from '@ionic/angular';
-import { Router, NavigationEnd } from '@angular/router';
+import { NavController, ModalController } from '@ionic/angular';
 import { FirebaseService } from 'src/app/core/services/firebase.service';
+import { Router } from '@angular/router'; // Asegúrate de importar Router
 
 @Component({
   selector: 'app-bottom-nav',
@@ -10,51 +10,33 @@ import { FirebaseService } from 'src/app/core/services/firebase.service';
 })
 export class BottomNavComponent {
   firebaseSvc = inject(FirebaseService);
-  menuCtrl = inject(MenuController);
-  activeTab: string = 'home'; // Inicializar con la pestaña activa predeterminada
 
   constructor(
-    private router: Router,
+    private navCtrl: NavController, 
+    private router: Router, // Inyectar Router
     private modalController: ModalController
-  ) {
-    // Escuchar cambios en la ruta activa
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationEnd) {
-        this.syncActiveTab(event.urlAfterRedirects);
-      }
-    });
+    ) {}
+
+  async profile() {
+    await this.closeModal();
+    this.router.navigate(['/profile']);
   }
 
-  navigateTo(tab: string) {
-    this.router.navigate([`/${tab}`]);
-    this.closeModal();
+  async home() {
+    await this.closeModal();
+    this.router.navigate(['/home']);
   }
 
-  private syncActiveTab(url: string) {
-    // Actualizar la pestaña activa basado en la ruta
-    if (url.includes('/home/favorites')) {
-      this.activeTab = 'favorites';
-    } else if (url.includes('/home/scheduled-services')) {
-      this.activeTab = 'scheduled-services';
-    } else if (url.includes('/home')) {
-      this.activeTab = 'home';
-    } else {
-      this.activeTab = ''; // Si no coincide, ninguna pestaña activa
-    }
-  }
-
-  async openMenu() {
-    try {
-      await this.menuCtrl.open('main-menu');
-    } catch (error) {
-      console.error('Error al abrir el menú:', error);
-    }
+  async signOut() {
+    await this.closeModal();
+    this.firebaseSvc.signOut();
   }
 
   private async closeModal() {
     try {
       await this.modalController.dismiss();
     } catch (error) {
+      // Ignora el error si no hay ningún modal abierto
       console.warn('No modal to close:', error);
     }
   }

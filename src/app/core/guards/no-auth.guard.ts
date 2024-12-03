@@ -9,16 +9,14 @@ export class NoAuthGuard implements CanActivate {
 
   canActivate(): boolean {
     const user = JSON.parse(localStorage.getItem('user'));
-
     if (user) {
-      const defaultRedirect = user.roles.includes('client') 
-        ? '/home' 
-        : '/service-home';
-      this.router.navigate([defaultRedirect]);
+      if (user.role === 'client') {
+        this.router.navigate(['/home']); // Redirige a home si es cliente
+      } else if (user.role === 'service') {
+        this.router.navigate(['/home']); // Redirige a página de servicio si es proveedor
+      }
       return false;
     }
-
-    // Si no hay sesión iniciada, permite el acceso a páginas no protegidas
     return true;
   }
 }

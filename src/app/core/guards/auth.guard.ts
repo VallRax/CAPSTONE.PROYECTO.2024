@@ -9,13 +9,14 @@ export class AuthGuard implements CanActivate {
 
   canActivate(): boolean {
     const user = JSON.parse(localStorage.getItem('user'));
-
-    if (user && user.roles && user.roles.length > 0) {
-      return true;
+    if (user && user.role) {
+      if (user.role === 'client') {
+        return true; // Cliente puede acceder a rutas de cliente
+      } else if (user.role === 'service') {
+        return true; // Servicio puede acceder a rutas de servicio
+      }
     }
-
-    // Si no está autenticado, redirige a la página de bienvenida
-    this.router.navigate(['/auth/welcome']);
+    this.router.navigate(['/auth/login']); // Redirigir si no está autenticado o el rol es inválido
     return false;
   }
 }

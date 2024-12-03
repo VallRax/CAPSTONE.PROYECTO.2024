@@ -1,22 +1,19 @@
 ion-tab-bar {
-  --background: #ffffff; /* Fondo blanco */
-  --color: #333; /* Color del ícono y texto */
-  --color-selected: #FF5722; /* Naranja para el ícono y texto seleccionados */
-}
+    --background: #ffffff; /* Fondo blanco */
+    --color: #333; /* Color del icono y texto */
+    --color-selected: #FF5722; /* Naranja para el icono y texto seleccionados */
+  }
 
-ion-footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  z-index: 100;
-}
-
-.custom-tab-bar ion-tab-button {
-  color: #333; /* Color inactivo */
-}
-
-.custom-tab-bar ion-tab-button.active ion-icon,
-.custom-tab-bar ion-tab-button.active ion-label {
-  color: #FF5722; /* Naranja */
-  font-weight: bold; /* Resaltar texto opcional */
-}
+  ion-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 100;
+  }
+  
+  .custom-tab-bar {
+    --background: #ffffff; /* Fondo blanco */
+    --color: #333; /* Color de icono y texto inactivo */
+    --color-selected: #FF5722; /* Color naranja para icono y texto activo */
+  }
+  

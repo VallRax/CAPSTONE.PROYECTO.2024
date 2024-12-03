@@ -92,9 +92,15 @@ export class EditServicePage implements OnInit {
   /**
    * Actualiza un campo del servicio en Firebase.
    */
-  async updateField<T extends keyof Service>(field: T, value: Service[T]) {
+  async updateField(field: keyof Service, value: any) {
     if (this.service) {
-      // Actualiza el valor del campo específico
+      // Verifica si el campo es 'offers' y el valor no es un arreglo
+      if (field === 'offers' && !Array.isArray(value)) {
+        console.error('Intento de asignar un valor no válido a "offers". Se esperaba un arreglo de ofertas.');
+        return;
+      }
+  
+      // Asigna el valor al campo correspondiente
       this.service[field] = value;
   
       try {
@@ -113,7 +119,6 @@ export class EditServicePage implements OnInit {
       }
     }
   }
-  
   
 
   /**

@@ -1,137 +1,82 @@
-<ion-header>
-  <ion-toolbar class="header">
-    <ion-title>Registro de Usuario</ion-title>
-    <ion-buttons slot="start">
-      <ion-button routerLink="auth">
-        <ion-icon name="arrow-back-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<app-header  backButton="/auth"  title="Registro "></app-header>
+<ion-content >
+  
+    <div class="d-flex-center">
+        
+        <form [formGroup]="form" class="auth-form" (ngSubmit)="submit()" (keypress.enter)="submit()">
 
-<ion-content>
-  <div class="d-flex-center">
-    <form [formGroup]="form" class="auth-form" (ngSubmit)="submit()" (keypress.enter)="submit()">
+            <app-logo></app-logo>
 
-      <!-- Nombre -->
-      <app-custom-input
-        autocomplete="name"
-        icon="person-outline"
-        [control]="form.controls.name"
-        type="text"
-        label="Nombre"
-      ></app-custom-input>
+            <ion-item>
+                <ion-label>Selecciona tu rol</ion-label>
+                <ion-select formControlName="role" placeholder="Selecciona un rol">
+                    <ion-select-option value="client">Cliente</ion-select-option>
+                    <ion-select-option value="service">Servicio</ion-select-option>
+                </ion-select>
+            </ion-item>
+              
 
-      <!-- Apellido -->
-      <app-custom-input
-        autocomplete="family-name"
-        icon="people-outline"
-        [control]="form.controls.lastName"
-        type="text"
-        label="Apellido"
-      ></app-custom-input>
+            <!--Nombre-->
 
-      <!-- RUT -->
-      <app-custom-input
-        autocomplete="off"
-        icon="information-circle-outline"
-        [control]="form.controls.rut"
-        type="text"
-        label="RUT"
-        placeholder="Ej. 12.345.678-9"
-      ></app-custom-input>
+            <app-custom-input 
+            autocomplete="name"
+            icon="person-outline"
+            [control]="form.controls.name"
+            type="text"
+            label="Nombre"
+            ></app-custom-input>
 
-      <!-- Email -->
-      <app-custom-input
-        autocomplete="email"
-        icon="mail-outline"
-        [control]="form.controls.email"
-        type="email"
-        label="Correo"
-      ></app-custom-input>
+            <div class="validators" *ngIf="form.controls.name.errors && form.controls.name.touched">
 
-      <!-- Contraseña -->
-      <app-custom-input
-        [control]="form.controls.password"
-        icon="lock-closed-outline"
-        type="password"
-        label="Contraseña"
-      ></app-custom-input>
+                <div *ngIf="form.controls.name.errors?. ['requerid']" >El correo es requerido</div>
+                <div *ngIf="form.controls.name.errors?. ['minlenght']" >El nombre debe tener al menos 4 caracteres</div>
+            </div>
 
-      <!-- Número de contacto -->
-      <app-custom-input
-        [control]="form.controls.contactNumber"
-        icon="call-outline"
-        type="text"
-        label="Número de Contacto"
-      ></app-custom-input>
+            <!--Email-->
 
-      <!-- Región -->
-      <app-custom-input
-        [control]="form.controls.location.controls.region"
-        icon="map-outline"
-        type="text"
-        label="Región"
-        placeholder="Ej. Ciudad de México"
-      ></app-custom-input>
+            <app-custom-input 
+            autocomplete="email"
+            icon="mail-outline"
+            [control]="form.controls.email"
+            type="email"
+            label="Correo"
+            ></app-custom-input>
 
-      <!-- Comuna -->
-      <app-custom-input
-      [control]="form.controls.location.controls.comuna"
-      icon="business-outline"
-      type="text"
-      label="Comuna"
-      placeholder="Ej. Santiago Centro"
-      ></app-custom-input>
+            <div class="validators" *ngIf="form.controls.email.errors && form.controls.email.touched">
+
+                <div *ngIf="form.controls.email.errors?. ['requerid']" >El correo es requerido</div>
+                <div *ngIf="form.controls.email.errors?. ['email']" >Ingrese un correo valido</div>
+            </div>
+        
+            <!--Contraseña-->
+                
+               <app-custom-input 
+               [control]="form.controls.password"
+               icon="lock-closed-outline"
+               type="password"
+               label="Contraseña"
+                
+               icon="lock-closed-outline"
+               ></app-custom-input>
+
+               <div class="validators" *ngIf="form.controls.password.errors && form.controls.password.touched">
+                <div *ngIf="form.controls.password.errors?. ['requerid']" >La contraseña es requerida</div>
+            </div>
+
+          
+
+            <ion-button  expand="block"  shape="round" class="submit" type="submit" [disabled]="form.invalid">
+              Registro
+              <ion-icon slot="end" name="person-add-outline"></ion-icon>
+            </ion-button>      
+                
+            </form>
+        
+
+    </div>
+
+    
 
 
-      <!-- Dirección -->
-      <app-custom-input
-        [control]="form.controls.location.controls.address"
-        icon="location-outline"
-        type="text"
-        label="Dirección"
-        placeholder="Calle y colonia"
-      ></app-custom-input>
 
-      <!-- Número de Dirección -->
-      <app-custom-input
-        [control]="form.controls.location.controls.addressNumber"
-        icon="keypad-outline"
-        type="text"
-        label="Número de Dirección"
-        placeholder="Ej. 123"
-      ></app-custom-input>
-
-      <!-- Departamento -->
-      <app-custom-input
-        [control]="form.controls.location.controls.department"
-        icon="home-outline"
-        type="text"
-        label="Departamento (opcional)"
-        placeholder="Ej. Apto 4"
-      ></app-custom-input>
-
-      <!-- Roles -->
-      <ion-item lines="none">
-        <ion-label>Selecciona tu rol</ion-label>
-      </ion-item>
-      <ion-radio-group formControlName="role" class="roles-container">
-        <ion-item lines="none">
-          <ion-radio class="custom-radio" slot="start" value="client"></ion-radio>
-          <ion-label>Cliente</ion-label>
-        </ion-item>
-        <ion-item lines="none">
-          <ion-radio class="custom-radio" slot="start" value="service"></ion-radio>
-          <ion-label>Proveedor</ion-label>
-        </ion-item>
-      </ion-radio-group>
-
-      <!-- Botón de Registro -->
-      <ion-button expand="block" shape="round" class="submit custom-button" type="submit" [disabled]="form.invalid">
-        Registrarse
-        <ion-icon slot="end" name="person-add-outline"></ion-icon>
-      </ion-button>
-    </form>
-  </div>
 </ion-content>
