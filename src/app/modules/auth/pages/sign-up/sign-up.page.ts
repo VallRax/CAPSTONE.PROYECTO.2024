@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { User } from 'src/app/models/user.model';
+import { User, UserRole } from 'src/app/models/user.model';
 import { FirebaseService } from 'src/app/core/services/firebase.service';
 import { UtilsService } from 'src/app/core/services/utils.service';
 
@@ -10,80 +10,85 @@ import { UtilsService } from 'src/app/core/services/utils.service';
   styleUrls: ['./sign-up.page.scss'],
 })
 export class SignUpPage implements OnInit {
-
- 
   form = new FormGroup({
-    uid: new FormControl(''),
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required]),
+    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     name: new FormControl('', [Validators.required, Validators.minLength(4)]),
-    role: new FormControl('client', Validators.required) // Rol predeterminado como cliente
-  })  
-
+    lastName: new FormControl('', [Validators.required, Validators.minLength(2)]), // Campo apellido
+    rut: new FormControl('', [Validators.required, Validators.pattern(/^\d{1,2}\.\d{3}\.\d{3}-[\dkK]{1}$/)]), // Validación de RUT
+    role: new FormControl('client', Validators.required), // Rol predeterminado como Cliente
+    contactNumber: new FormControl('', [Validators.required]),
+    location: new FormGroup({
+      region: new FormControl('', [Validators.required]),
+      comuna: new FormControl('', [Validators.required]), // Nuevo campo comuna
+      address: new FormControl('', [Validators.required]),
+      addressNumber: new FormControl(''),
+      department: new FormControl(''),
+    }),
+  });
   
+  
+  
+
   firebaseSvc = inject(FirebaseService);
-  utilsSvc = inject( UtilsService)
-  ngOnInit() {
-  }
+  utilsSvc = inject(UtilsService);
+
+  ngOnInit() {}
 
   async submit() {
     if (this.form.valid) {
       const loading = await this.utilsSvc.loading();
       await loading.present();
-  
-      this.firebaseSvc.signUp(this.form.value as User).then(async res => {
-        await this.firebaseSvc.updateUser(this.form.value.name);
-  
-        let uid = res.user.uid;
-        this.form.controls.uid.setValue(uid);
-  
-        this.setUserInfo(uid);
-      }).catch(error => {
-        console.log(error);
-        this.utilsSvc.presentToast({
-          message: `Correo no válido, inténtelo nuevamente`,
-          duration: 2500,
-          color: 'warning',
-          position: 'middle',
-          icon: 'alert-circle-outline'
-        });
-      }).finally(() => {
-        loading.dismiss();
-      });
-    }
-  }  
 
-  async setUserInfo(uid: string) {
-    if (this.form.valid) {
-      const loading = await this.utilsSvc.loading();
-      await loading.present();
-  
-      const path = `users_test/${uid}`;
-  
-      // Asegúrate de inicializar el campo favorites
-      const userData = {
-        ...this.form.value,
-        favorites: [] // Inicializa favorites como un arreglo vacío
-      };
-      delete userData.password; // No guardes la contraseña en Firestore
-  
-      this.firebaseSvc.setDocument(path, userData).then(async () => {
-        this.utilsSvc.saveInLocalStorage('user', userData);
-        this.utilsSvc.routerLink('/auth');
-        this.form.reset();
-      }).catch(error => {
-        console.log(error);
+      try {
+        const { email, password, name, lastName, rut, role, contactNumber, location } = this.form.value;
+
+        // Crear usuario en Firebase Authentication
+        const userCredential = await this.firebaseSvc.signUp({ email, password });
+
+        const uid = userCredential.user.uid;
+
+        // Crear objeto del usuario basado en el modelo
+        const newUser: User = {
+        uid,
+        email,
+        name,
+        lastName,
+        rut,
+        roles: [role as UserRole], // Convertir a un array con un único rol
+        contactNumber,
+        location,
+        profileImageUrl: '', // Imagen predeterminada
+        createdAt: new Date().toISOString(),
+        favorites: [],
+        bookings: [],
+        servicesOffered: [],
+        ratingAverage: 0,
+        reviews: [],
+        };
+
+        // Guardar usuario en Firestore
+        await this.firebaseSvc.setDocument(`users_test/${uid}`, newUser);
+
+        // Guardar usuario en localStorage
+        this.utilsSvc.saveInLocalStorage('user', newUser);
+
         this.utilsSvc.presentToast({
-          message: error.message,
-          duration: 2500,
-          color: 'primary',
-          position: 'middle',
-          icon: 'alert-circle-outline'
+          message: 'Registro exitoso. Bienvenido!',
+          color: 'success',
         });
-      }).finally(() => {
+
+        this.utilsSvc.routerLink('/home');
+      } catch (error) {
+        console.error('Error al registrar usuario:', error);
+        this.utilsSvc.presentToast({
+          message: 'Hubo un error al registrarte. Intenta nuevamente.',
+          color: 'danger',
+        });
+      } finally {
         loading.dismiss();
-      });
+      }
     }
   }
-  
+
 }

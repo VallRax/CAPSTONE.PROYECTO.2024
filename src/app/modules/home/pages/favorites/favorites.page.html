@@ -1,25 +1,28 @@
-<!-- Menú Lateral -->
-<app-side-menu></app-side-menu>
+<ion-header>
+  <ion-toolbar class="header">
+    <ion-title>Favoritos</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
 
-<!-- CONTENIDO -->
+  </ion-toolbar>
+</ion-header>
+
 <ion-content [fullscreen]="true">
-
-  <!-- CIRCULOS DE CATEGORÍAS -->
-  <div class="category-list">
-    <div class="category-item" *ngFor="let category of categories"> <!-- (click)="openCategoryModal(category)"> -->
-      <div class="category-icon">
-        <ion-icon [name]="category.icon"></ion-icon>
-      </div>
-      <p>{{ category.name }}</p>
-    </div>
+  <!-- TÍTULO -->
+  <div class="service-list-tittle">
+    <h1>Servicios Favoritos</h1>
   </div>
 
-  <!-- CARDS DE SERVICIOS -->
+  <!-- LISTA DE SERVICIOS FAVORITOS -->
   <ion-list class="service-list" lines="none">
-    <div class="service-list-tittle">
-      <h1>Todos los Servicios</h1>
-    </div>
-    <ion-card class="service" *ngFor="let service of services" (click)="goToServiceDetails(service.id)">
+    <ion-card
+      class="service"
+      *ngFor="let service of favoriteServices"
+      (click)="goToServiceDetails(service.id)"
+    >
       <img [src]="service.imageUrl" alt="Imagen del servicio" />
       <ion-card-header class="service-tittle">
         <ion-card-title>{{ service.name }}</ion-card-title>
@@ -38,7 +41,6 @@
     </ion-card>
   </ion-list>
 </ion-content>
-
 
 <!-- BOTTOM BAR -->
 <app-bottom-nav></app-bottom-nav>

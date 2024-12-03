@@ -8,6 +8,7 @@ const routes: Routes = [
     path: 'home',
     loadChildren: () => import('./modules/home/home.module').then(m => m.HomeModule),
     canActivate: [AuthGuard],
+    data: { roles: ['client'] }, // Rutas para clientes
   },
   {
     path: 'service-home',
@@ -15,6 +16,8 @@ const routes: Routes = [
       import('./modules/service-home/service-home.module').then(
         (m) => m.ServiceHomeModule
       ),
+    canActivate: [AuthGuard],
+    data: { roles: ['service'] }, // Rutas para proveedores de servicios
   },
   {
     path: 'auth',
@@ -24,13 +27,17 @@ const routes: Routes = [
   {
     path: 'profile',
     loadChildren: () => import('./modules/profile/profile.module').then(m => m.ProfileModule),
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard], // Ruta compartida para todos los usuarios autenticados
   },
   {
     path: '',
-    redirectTo: 'auth/login',
+    redirectTo: 'auth/welcome',
     pathMatch: 'full'
-  }
+  },
+  {
+    path: '**',
+    redirectTo: 'auth/welcome', // Redirige a welcome si la ruta no existe
+  },
 ];
 
 @NgModule({

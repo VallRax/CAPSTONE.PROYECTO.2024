@@ -1,0 +1,55 @@
+ion-content {
+    --padding-bottom: 60px;
+  }
+  
+  /* Encabezado */
+  .header {
+    --background: #FF7043;
+    --color: white;
+  }
+  
+  .header ion-icon {
+    color: white;
+  }
+
+.service-list-tittle h1 {
+    font-size: 24px;
+    margin: 16px 0;
+    text-align: center;
+  }
+  
+  .service {
+    margin: 10px;
+  }
+  
+  .service img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+  }
+  
+  .service-tittle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .service-tittle ion-card-title {
+    flex: 1;
+  }
+  
+  .status-pending {
+    color: orange;
+    font-weight: bold;
+  }
+  
+  .status-confirmed {
+    color: green;
+    font-weight: bold;
+  }
+  
+  .status-cancelled {
+    color: red;
+    font-weight: bold;
+  }
+  
