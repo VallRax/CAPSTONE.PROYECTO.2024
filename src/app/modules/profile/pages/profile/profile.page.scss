@@ -1,66 +1,78 @@
 .profile-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
-  }
-  
-  .profile-image {
-    width: 150px;
-    height: 150px;
-    border-radius: 15px;
-    object-fit: cover;
-    border: 2px solid #FF7F7F;
-    margin-bottom: 15px;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
 
-  .info-container {
-    padding-left: 15px;
-    padding-right: 15px;
-  }
+.profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 15px;
+  object-fit: cover;
+  border: 2px solid #FF7F7F;
+  margin-bottom: 15px;
+}
 
-  .custom-button {
-    --background: #ff5722; /* Color de fondo personalizado (ajusta el color según la imagen) */
-    --border-radius: 20px; /* Redondeado para que el botón se vea suave */
-    --padding-top: 12px;
-    --padding-bottom: 12px;
-    --padding-start: 24px;
-    --padding-end: 24px;
-    --font-weight: bold;
-    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra para dar efecto elevado */
-    --transition: background-color 0.3s ease;
-    width: 80%; /* Ajusta el ancho del botón si es necesario */
-    margin: 0 auto; /* Centrar el botón */
-  }
+.info-container {
+  padding-left: 15px;
+  padding-right: 15px;
+}
 
-  ion-item::part(detail-icon) {
-    color: #FF5722; /* Cambia a un color naranja similar */
-    font-size: 20px; /* Ajusta el tamaño si es necesario */
-  }
-  
-  .custom-button:hover {
-    --background: #e64a19; /* Color ligeramente más oscuro al pasar el ratón */
-  }
+.custom-button {
+  --background: #ff5722; /* Color de fondo personalizado (ajusta el color según la imagen) */
+  --border-radius: 20px; /* Redondeado para que el botón se vea suave */
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  --padding-start: 24px;
+  --padding-end: 24px;
+  --font-weight: bold;
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra para dar efecto elevado */
+  --transition: background-color 0.3s ease;
+  width: 80%; /* Ajusta el ancho del botón si es necesario */
+  margin: 0 auto; /* Centrar el botón */
+}
 
-  icon-button {
-    --background-color: #FF7F7F;
-  }
+ion-item::part(detail-icon) {
+  color: #FF5722; /* Cambia a un color naranja similar */
+  font-size: 20px; /* Ajusta el tamaño si es necesario */
+}
 
-  ion-item {
-    --background: #f4f4f4; /* Color de fondo de cada rectángulo */
-    --border-radius: 10px; /* Bordes redondeados */
-    margin: 10px 0; /* Separación entre los ítems */
-  }
-  
-  ion-label h2 {
-    font-weight: bold; /* Título en negrita */
-  }
-  
-  ion-label p {
-    color: gray; /* Color del texto secundario */
-  }
+.custom-button:hover {
+  --background: #e64a19; /* Color ligeramente más oscuro al pasar el ratón */
+}
 
-  ion-content {
-    --padding-bottom: 60px; /* Ajusta este valor según la altura de tu footer */
-  }
-  
+icon-button {
+  --background-color: #FF7F7F;
+}
+
+ion-item {
+  --background: #f4f4f4; /* Color de fondo de cada rectángulo */
+  --border-radius: 10px; /* Bordes redondeados */
+  margin: 10px 0; /* Separación entre los ítems */
+}
+
+ion-label h2 {
+  font-weight: bold; /* Título en negrita */
+}
+
+ion-label p {
+  color: gray; /* Color del texto secundario */
+}
+
+ion-content {
+  --padding-bottom: 60px; /* Ajusta este valor según la altura de tu footer */
+}
+
+
+.image-icon{
+  font-size: 100px;
+  opacity: 30%;
+}
+
+ion-avatar{
+  width: 200px;
+  height: 160px;
+  --border-radius: 15px;
+  margin: 10px 0; /* Separación entre los ítems */
+}

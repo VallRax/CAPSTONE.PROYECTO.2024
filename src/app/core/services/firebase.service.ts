@@ -133,12 +133,14 @@ export class FirebaseService {
   async uploadImage(path: string, file: File): Promise<string> {
     try {
       const storage = getStorage();
-      const storageRef = ref(storage, path);
+      const storageRef = ref(storage, path); // Ruta específica para la imagen
       const snapshot = await uploadBytes(storageRef, file);
       return await getDownloadURL(snapshot.ref); // Obtener la URL pública de la imagen
     } catch (error) {
       console.error('Error al subir la imagen:', error);
-      throw error; // Propaga el error
+      throw error;
     }
   }
+
+
 }

@@ -1,47 +1,45 @@
 <app-header [title]="'Perfil'" [showBackButton]="true"></app-header>
 
 <ion-content [fullscreen]="true">
-
-
-  <ion-tabs>
-    <ion-tab-bar slot="bottom">
-      <ion-tab-button (click)="home()">
-        <ion-icon name="home-outline"></ion-icon>
-        Inicio
-      </ion-tab-button>
-      <ion-tab-button (click)="Profile()">
-        <ion-icon name="Person-outline"></ion-icon>
-        Perfil
-      </ion-tab-button>
-    </ion-tab-bar>
-  </ion-tabs>
-
   <div class="info-container">
     <h2>Información de la cuenta</h2>
 
     <div class="profile-container">
-      <img [src]="profileImage ? profileImage : 'assets/default-profile.png'" class="profile-image" alt="Imagen de perfil"/>
-      
-      <!-- Input de tipo file oculto -->
-      <input type="file" #fileInput hidden (change)="onFileSelected($event)" accept="image/*" />
+      <ion-avatar *ngIf="userData.profileImageUrl" class="profile-avatar">
+        <img [src]="userData.profileImageUrl" />
+      </ion-avatar>
+
+      <ion-icon
+        class="image-icon"
+        *ngIf="!userData.profileImageUrl"
+        name="image-outline"
+      ></ion-icon>
 
       <!-- Botón para cambiar la foto -->
-      <ion-button class="custom-button" (click)="triggerFileInput()">Cambiar Foto</ion-button>
+      <ion-button class="custom-button" size="small" (click)="showImageOptions()">
+        Cambiar imagen
+      </ion-button>      
     </div>
 
     <h2>Información básica</h2>
-
     <ion-list lines="none">
-
-      <!-- Nombre de Usuario -->
+      <!-- Nombre -->
       <ion-item>
         <ion-label>
           <h2>Nombre</h2>
-          <p>{{ userData?.name }}</p>
+          <p>{{ userData?.name }} {{ userData?.lastName }}</p>
         </ion-label>
       </ion-item>
 
-      <!-- Correo Electrónico -->
+      <!-- RUT -->
+      <ion-item>
+        <ion-label>
+          <h2>RUT</h2>
+          <p>{{ userData?.rut }}</p>
+        </ion-label>
+      </ion-item>
+
+      <!-- Correo -->
       <ion-item>
         <ion-label>
           <h2>Correo Electrónico</h2>
@@ -52,24 +50,26 @@
       <!-- Número de Contacto -->
       <ion-item>
         <ion-label>
-          <h2>Número de contacto</h2>
-          <p>{{ userData?.phone }}</p>
+          <h2>Número de Contacto</h2>
+          <p>{{ userData?.contactNumber }}</p>
         </ion-label>
       </ion-item>
 
       <!-- Ubicación -->
       <ion-item>
         <ion-label>
-          <h2>Ubicación</h2>
-          <p>{{ userData?.location }}</p>
+          <h2>Dirección</h2>
+          <p>
+            {{ userData?.location?.address || 'No especificada' }}
+            {{ userData?.location?.addressNumber || 'No especificada' }},
+            {{ userData?.location?.comuna || 'No especificada' }},
+            {{ userData?.location?.region || 'No especificada' }}
+          </p>
         </ion-label>
       </ion-item>
-
     </ion-list>
   </div>
-
-
 </ion-content>
 
-  <!-- Contenido de la página -->
-  <app-bottom-nav></app-bottom-nav> <!-- Añadir la barra de navegación inferior -->
+<!-- BOTTOM BAR -->
+<app-bottom-nav></app-bottom-nav>
