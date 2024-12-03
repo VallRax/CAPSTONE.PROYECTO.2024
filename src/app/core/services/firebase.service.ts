@@ -28,8 +28,8 @@ export class FirebaseService {
     });
   }
 
-  signUp(user: User) {
-    return createUserWithEmailAndPassword(getAuth(), user.email, user.password);
+  signUp(credentials: { email: string; password: string }) {
+    return createUserWithEmailAndPassword(getAuth(), credentials.email, credentials.password);
   }
 
   updateUser(displayName: string) {

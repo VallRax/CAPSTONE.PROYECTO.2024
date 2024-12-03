@@ -24,7 +24,7 @@ export class SchedulePage implements OnInit {
     private route: ActivatedRoute,
     private firebaseSvc: FirebaseService,
     private utilsSvc: UtilsService,
-    private navCtrl: NavController,
+    private navCtrl: NavController
   ) {}
 
   async ngOnInit() {
@@ -60,18 +60,16 @@ export class SchedulePage implements OnInit {
   async updateAvailability() {
     if (!this.service || !this.selectedDate || !this.offer) return;
 
-    // Normalizar la fecha seleccionada al formato 'YYYY-MM-DD'
     this.selectedDate = new Date(this.selectedDate).toISOString().split('T')[0];
 
     const startTime = this.service.availableHours[0]?.startTime || '09:00';
     const endTime = this.service.availableHours[0]?.endTime || '18:00';
     const duration = this.offer.duration;
 
-    // Cargar bookings existentes para la fecha y servicio seleccionados
     const bookings = await this.loadBookingsForDate(this.selectedDate);
 
     this.availableTimes = this.calculateTimeBlocks(startTime, endTime, duration, this.selectedDate, bookings);
-    this.selectedTime = null; // Reiniciar la selección cuando se actualice la disponibilidad
+    this.selectedTime = null;
   }
 
   calculateTimeBlocks(
@@ -81,7 +79,6 @@ export class SchedulePage implements OnInit {
     selectedDate: string,
     bookings: Booking[]
   ): { label: string; startTime: string; available: boolean; selected?: boolean }[] {
-    console.log('Bookings para la fecha seleccionada:', bookings);
     const start = this.parseTime(startTime);
     const end = this.parseTime(endTime);
     const slots = [];
@@ -99,8 +96,6 @@ export class SchedulePage implements OnInit {
         (booking) => booking.startTime === slotStart
       );
 
-      console.log(`Horario: ${slotStart} - Disponible: ${!isBooked}`);
-
       slots.push({
         label: `${slotStart} - ${slotEnd}`,
         startTime: slotStart,
@@ -114,10 +109,10 @@ export class SchedulePage implements OnInit {
   }
 
   onTimeSelected(time: { label: string; startTime: string; available: boolean; selected?: boolean }) {
-    if (!time.available) return; // Ignorar si no está disponible
-    this.availableTimes.forEach((t) => (t.selected = false)); // Desmarcar otros
-    time.selected = true; // Marcar como seleccionado
-    this.selectedTime = time; // Establecer como seleccionado
+    if (!time.available) return;
+    this.availableTimes.forEach((t) => (t.selected = false));
+    time.selected = true;
+    this.selectedTime = time;
   }
 
   async scheduleService() {
@@ -128,28 +123,39 @@ export class SchedulePage implements OnInit {
       });
       return;
     }
-  
-    const currentTime = new Date().toISOString(); // Hora actual en formato ISO
-  
+
+    const currentUser = JSON.parse(localStorage.getItem('user'));
+    if (!currentUser) {
+      this.utilsSvc.presentToast({
+        message: 'Debe iniciar sesión para agendar un servicio.',
+        color: 'warning',
+      });
+      return;
+    }
+
     const booking: Booking = {
       id: this.firebaseSvc.createId(),
       serviceId: this.service.id,
       offerId: this.offer.id,
-      userId: JSON.parse(localStorage.getItem('user')).uid,
-      date: this.selectedDate, // Ya está normalizada
+      clientId: currentUser.uid,
+      clientName: currentUser.name,
+      providerId: this.service.ownerId,
+      providerName: this.service.ownerName,
+      serviceName: this.service.name,
+      date: this.selectedDate,
       startTime: this.selectedTime.startTime,
       endTime: this.addMinutes(this.selectedTime.startTime, this.offer.duration),
       status: 'pending',
-      createdAt: currentTime,
-      updatedAt: currentTime,
+      createdAt: new Date().toISOString(),
     };
-  
+
     try {
       await this.firebaseSvc.setDocument(`bookings/${booking.id}`, booking);
       this.utilsSvc.presentToast({
         message: 'Cita agendada con éxito.',
         color: 'success',
       });
+      this.navCtrl.back();
     } catch (error) {
       console.error('Error al agendar la cita:', error);
       this.utilsSvc.presentToast({
@@ -178,37 +184,18 @@ export class SchedulePage implements OnInit {
 
   async loadBookingsForDate(date: string): Promise<Booking[]> {
     try {
-        const startOfDay = new Date(date).toISOString().split('T')[0];
-        const endOfDay = new Date(date).toISOString().split('T')[0];
-
-        console.log('Rango de fechas aplicado:', { startOfDay, endOfDay });
-
-        const bookings = await this.firebaseSvc.getCollectionWithMultipleFilters<Booking>('bookings', [
-            { field: 'date', operator: '>=', value: startOfDay },
-            { field: 'date', operator: '<=', value: endOfDay },
-            { field: 'serviceId', operator: '==', value: this.service.id },
-        ]);
-
-        console.log('Resultados de la consulta con múltiples filtros:', bookings);
-
-        // Revisa si hay más de un booking con el mismo horario.
-        const duplicates = bookings.reduce((acc, booking) => {
-            acc[booking.startTime] = (acc[booking.startTime] || 0) + 1;
-            return acc;
-        }, {});
-        console.log('Duplicados detectados:', duplicates);
-
-        return bookings;
+      const bookings = await this.firebaseSvc.getCollectionWithMultipleFilters<Booking>('bookings', [
+        { field: 'date', operator: '==', value: date },
+        { field: 'serviceId', operator: '==', value: this.service.id },
+      ]);
+      return bookings;
     } catch (error) {
-        console.error('Error al cargar bookings:', error);
-        return [];
+      console.error('Error al cargar bookings:', error);
+      return [];
     }
-}
+  }
 
-
-  
   goBack() {
     this.navCtrl.back();
   }
-  
 }

@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from 'src/app/core/guards/auth.guard';
+import { RoleGuard } from 'src/app/core/guards/role.guard';
 
 import { homePage } from './pages/home/home.page';
 import { ServicePage } from './pages/service/service.page';
@@ -10,29 +12,38 @@ import { ScheduledServicesPage } from './pages/scheduled-services/scheduled-serv
 const routes: Routes = [
   {
     path: '',
-    component: homePage
+    component: homePage,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['client'] },
   },
   {
     path: 'service/:id',
-    component: ServicePage
+    component: ServicePage,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['client'] },
   },
-
   {
     path: 'schedule/:serviceId/:offerId',
     component: SchedulePage,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['client'] },
   },
   {
     path: 'favorites',
     component: FavoritesPage,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['client'] },
   },
   {
     path: 'scheduled-services',
     component: ScheduledServicesPage,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['client'] },
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class HomeRoutingModule { }
+export class HomeRoutingModule {}
