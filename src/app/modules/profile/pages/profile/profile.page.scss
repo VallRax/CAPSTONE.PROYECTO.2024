@@ -64,3 +64,15 @@
     --padding-bottom: 60px; /* Ajusta este valor según la altura de tu footer */
   }
   
+
+  .image-icon{
+    font-size: 100px;
+    opacity: 30%;
+  }
+
+  ion-avatar{
+    width: 200px;
+    height: 160px;
+    --border-radius: 15px;
+    margin: 10px 0; /* Separación entre los ítems */
+  }
