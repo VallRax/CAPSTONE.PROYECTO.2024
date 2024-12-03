@@ -14,8 +14,6 @@ import { homePage } from './pages/home/home.page';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ServicePage } from './pages/service/service.page';
 import { SchedulePage } from './pages/schedule/schedule.page';
-import { FavoritesPage } from './pages/favorites/favorites.page';
-import { ScheduledServicesPage } from './pages/scheduled-services/scheduled-services.page';
 
 
 
@@ -31,8 +29,6 @@ import { ScheduledServicesPage } from './pages/scheduled-services/scheduled-serv
     homePage,
     ServicePage,
     SchedulePage,
-    FavoritesPage,
-    ScheduledServicesPage,
   ]
 })
 export class HomeModule { }

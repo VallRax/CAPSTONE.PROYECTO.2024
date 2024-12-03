@@ -1,36 +1,15 @@
-<ion-menu type="push" side="end" menuId="main-menu" contentId="main-content">
+<ion-menu side="start" menuId="main-menu" contentId="main-content">
   <ion-header>
     <ion-toolbar>
-      <ion-title>Menú</ion-title>
+      <ion-title>Opciones</ion-title>
     </ion-toolbar>
   </ion-header>
   <ion-content>
     <ion-list>
-      <!-- Opciones actuales -->
       <ion-item button (click)="navigateTo('/home')">
         <ion-icon slot="start" name="home-outline"></ion-icon>
         <ion-label>Inicio</ion-label>
       </ion-item>
-      <ion-item button (click)="navigateTo('home/favorites')">
-        <ion-icon slot="start" name="heart-outline"></ion-icon>
-        <ion-label>Favoritos</ion-label>
-      </ion-item>
-      <ion-item button (click)="navigateTo('home/scheduled-services')">
-        <ion-icon slot="start" name="calendar-outline"></ion-icon>
-        <ion-label>Mis Citas</ion-label>
-      </ion-item>
-
-      <!-- Opciones por desarrollar -->
-      <ion-item button (click)="navigateTo('/notifications')">
-        <ion-icon slot="start" name="notifications-outline"></ion-icon>
-        <ion-label>Notificaciones</ion-label>
-      </ion-item>
-      <ion-item button (click)="navigateTo('/support')">
-        <ion-icon slot="start" name="help-circle-outline"></ion-icon>
-        <ion-label>Soporte</ion-label>
-      </ion-item>
-
-      <!-- Opciones generales -->
       <ion-item button (click)="navigateTo('/profile')">
         <ion-icon slot="start" name="person-outline"></ion-icon>
         <ion-label>Perfil</ion-label>

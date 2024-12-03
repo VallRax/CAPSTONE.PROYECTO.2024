@@ -1,22 +1,15 @@
 export interface Booking {
-  id: string; // ID único de la reserva
-  serviceId: string; // ID del servicio reservado
-  offerId: string; // ID de la oferta reservada
-  clientId: string; // ID del cliente que realiza la reserva
-  clientName?: string; // Nombre del cliente
-  serviceName?: string; // Nombre del servicio reservado
-  providerId: string; // ID del proveedor del servicio
-  providerName?: string; // Nombre del proveedor para visualización
+    id: string; // ID único de la reserva
+    serviceId: string; // ID del servicio
+    offerId: string; // ID de la oferta
+    userId: string; // ID del cliente
+    date: string; // Fecha
+    startTime: string; // Hora de inicio
+    endTime: string; // Hora de fin
+    status: 'pending' | 'confirmed' | 'cancelled'; // Estado de la reserva
 
-  /* FECHAS Y HORARIOS */
-  date: string; // Fecha de la reserva
-  startTime: string; // Hora de inicio
-  endTime: string; // Hora de fin
-
-  /* ESTADO DE LA RESERVA */
-  status: 'pending' | 'confirmed' | 'cancelled'; // Estado actual de la reserva
-
-  /* DATOS TEMPORALES */
-  createdAt: string; // Fecha de creación de la reserva
-  updatedAt?: string; // Última actualización de la reserva
-}
+    /* MARCAS TEMPORALES */
+    createdAt: string; // Fecha de creación
+    updatedAt: string; // Fecha de última actualización
+  }
+  

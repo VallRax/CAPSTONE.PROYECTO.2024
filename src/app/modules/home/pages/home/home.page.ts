@@ -85,7 +85,7 @@ async loadCurrentUser() {
         if (validFavorites.length !== this.currentUser.favorites.length) {
           this.currentUser.favorites = validFavorites;
   
-          await this.firebaseSvc.setDocument(`users_test/${this.currentUser.uid}`, {
+          await this.firebaseSvc.setDocument(`users/${this.currentUser.uid}`, {
             ...this.currentUser,
             favorites: validFavorites,
           });
@@ -114,7 +114,7 @@ async loadCurrentUser() {
   
       console.log('Favoritos actualizados:', updatedFavorites);
   
-      await this.firebaseSvc.setDocument(`users_test/${this.currentUser.uid}`, {
+      await this.firebaseSvc.setDocument(`users/${this.currentUser.uid}`, {
         ...this.currentUser,
         favorites: updatedFavorites,
       });
