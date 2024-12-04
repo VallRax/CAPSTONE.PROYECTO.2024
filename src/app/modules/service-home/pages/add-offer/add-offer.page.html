@@ -1,6 +1,11 @@
 <ion-header>
-  <ion-toolbar class="header">
+  <ion-toolbar>
     <ion-title>Agregar Oferta</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -34,6 +39,14 @@
       type="number"
       label="Duración">
     </app-custom-input>
+
+    <!-- Vista previa de la imagen seleccionada -->
+    <div *ngIf="imagePreview" class="image-preview">
+      <img [src]="imagePreview" alt="Vista previa de la imagen" />
+    </div>
+
+    <!-- Botón para seleccionar o tomar una foto -->
+    <ion-button expand="block" color="primary" (click)="selectImage()">Seleccionar Imagen</ion-button>
 
     <ion-button class="orange-button" shape="round" expand="block" type="submit" [disabled]="form.invalid"> 
       Guardar

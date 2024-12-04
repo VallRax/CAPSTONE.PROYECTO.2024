@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NavController, AlertController } from '@ionic/angular';
 import { FirebaseService } from 'src/app/core/services/firebase.service';
 import { UtilsService } from 'src/app/core/services/utils.service';
@@ -17,13 +18,37 @@ export class EditServicePage implements OnInit {
   imageFile: File | null = null;
   defaultImageUrl = 'assets/no-image.jpg';
 
+  segmentValue = 'edit'; // Valor inicial del segmento
+
+  blockedTimeSlots: { days: string[]; startTime: string; endTime: string; reason: string }[] = [];
+
+  form: FormGroup;
+
+  allDays = [
+    { label: 'Lunes', value: 'monday' },
+    { label: 'Martes', value: 'tuesday' },
+    { label: 'Miércoles', value: 'wednesday' },
+    { label: 'Jueves', value: 'thursday' },
+    { label: 'Viernes', value: 'friday' },
+    { label: 'Sábado', value: 'saturday' },
+    { label: 'Domingo', value: 'sunday' },
+  ];
+
   constructor(
     private route: ActivatedRoute,
     private firebaseSvc: FirebaseService,
     private utilsSvc: UtilsService,
     private alertCtrl: AlertController,
-    private navCtrl: NavController
-  ) {}
+    private navCtrl: NavController,
+    private router: Router // Para redirigir a otras páginas
+  ) {
+    this.form = new FormGroup({
+      blockDays: new FormControl([], Validators.required),
+      blockStartTime: new FormControl('', Validators.required),
+      blockEndTime: new FormControl('', Validators.required),
+      reason: new FormControl(''),
+    });
+  }
 
   ngOnInit() {
     this.serviceId = this.route.snapshot.paramMap.get('id');
@@ -37,11 +62,13 @@ export class EditServicePage implements OnInit {
     }
     this.loadService();
   }
-
   async loadService() {
     try {
       const path = `services/${this.serviceId}`;
       this.service = (await this.firebaseSvc.getDocument(path)) as Service;
+  
+      // Inicializar blockedTimeSlots si es nulo o indefinido
+      this.blockedTimeSlots = this.service.blockedTimeSlots || [];
     } catch (error) {
       console.error('Error al cargar el servicio:', error);
       this.utilsSvc.presentToast({
@@ -50,6 +77,7 @@ export class EditServicePage implements OnInit {
       });
     }
   }
+  
 
   async selectPhoto() {
     try {
@@ -118,17 +146,16 @@ export class EditServicePage implements OnInit {
           text: 'Guardar',
           handler: (data) => {
             if (this.service) {
-              this.service[field] = data.value as Service[K]; // Ajuste al tipo correcto
+              this.service[field] = data.value as Service[K];
               this.saveChanges();
             }
           },
         },
       ],
     });
-  
+
     await alert.present();
   }
-  
 
   async updateDays(event: any) {
     if (this.service) {
@@ -137,26 +164,40 @@ export class EditServicePage implements OnInit {
     }
   }
 
-  async editAvailableHours() {
+  get availableStartTime(): string | null {
+    return this.service?.availableHours?.[0]?.startTime || null;
+  }
+
+  get availableEndTime(): string | null {
+    return this.service?.availableHours?.[0]?.endTime || null;
+  }
+
+  async editHours(type: 'startTime' | 'endTime') {
+    const currentValue = type === 'startTime' ? this.availableStartTime : this.availableEndTime;
     const alert = await this.alertCtrl.create({
-      header: 'Añadir Horario',
+      header: `Editar ${type === 'startTime' ? 'Hora de Apertura' : 'Hora de Cierre'}`,
       inputs: [
-        { name: 'startTime', type: 'time', placeholder: 'Hora de Inicio' },
-        { name: 'endTime', type: 'time', placeholder: 'Hora de Fin' },
-        { name: 'days', type: 'text', placeholder: 'Días (e.g., monday,tuesday)' },
+        {
+          name: type,
+          type: 'time',
+          value: currentValue,
+        },
       ],
       buttons: [
         { text: 'Cancelar', role: 'cancel' },
         {
           text: 'Guardar',
           handler: (data) => {
-            if (data.startTime && data.endTime && this.service) {
-              const daysArray = data.days?.split(',').map((day: string) => day.trim()) || [];
-              this.service.availableHours.push({
-                startTime: data.startTime,
-                endTime: data.endTime,
-                days: daysArray,
-              });
+            if (data[type] && this.service) {
+              const availableHour = this.service.availableHours?.[0];
+              if (availableHour) {
+                availableHour[type] = data[type];
+              } else {
+                this.service.availableHours = [
+                  { days: this.service.availableDays, startTime: '', endTime: '' },
+                ];
+                this.service.availableHours[0][type] = data[type];
+              }
               this.saveChanges();
             }
           },
@@ -165,62 +206,125 @@ export class EditServicePage implements OnInit {
     });
     await alert.present();
   }
-  
 
-  async editBlockedTimeSlots() {
-    const alert = await this.alertCtrl.create({
-      header: 'Añadir Bloqueo',
-      inputs: [
-        { name: 'days', type: 'text', placeholder: 'Días (e.g., monday,tuesday)' },
-        { name: 'startTime', type: 'time', placeholder: 'Hora de Inicio' },
-        { name: 'endTime', type: 'time', placeholder: 'Hora de Fin' },
-        { name: 'reason', type: 'text', placeholder: 'Motivo' },
-      ],
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Guardar',
-          handler: (data) => {
-            if (data.days && data.startTime && data.endTime && this.service) {
-              const daysArray = data.days.split(',').map((day: string) => day.trim()); // Convertir a string[]
-              this.service.blockedTimeSlots.push({
-                days: daysArray,
-                startTime: data.startTime,
-                endTime: data.endTime,
-                reason: data.reason || 'Sin motivo',
-              });
-              this.saveChanges();
-            }
-          },
-        },
-      ],
-    });
-    await alert.present();
+  get isAddBlockDisabled(): boolean {
+    const blockDays = this.form.get('blockDays')?.value || [];
+    const blockStartTime = this.form.get('blockStartTime')?.value || '';
+    const blockEndTime = this.form.get('blockEndTime')?.value || '';
+    const reason = this.form.get('reason')?.value || '';
+  
+    // Validar cada campo
+    return (
+      blockDays.length === 0 || // No hay días seleccionados
+      !blockStartTime ||        // Hora de inicio vacía
+      !blockEndTime ||          // Hora de fin vacía
+      blockStartTime >= blockEndTime || // Hora de inicio >= hora de fin
+      reason.trim() === ''      // Razón vacía
+    );
   }
   
 
-  async removeAvailableHour(index: number) {
-    if (this.service) {
-      this.service.availableHours.splice(index, 1);
+  addBlockedTimeSlot() {
+    const blockDays = this.form.get('blockDays')?.value;
+    const blockStartTime = this.form.get('blockStartTime')?.value;
+    const blockEndTime = this.form.get('blockEndTime')?.value;
+    const reason = this.form.get('reason')?.value?.trim();
+  
+    if (blockDays && blockDays.length > 0 && blockStartTime && blockEndTime && blockStartTime < blockEndTime && reason) {
+      const newBlock = {
+        days: blockDays,
+        startTime: blockStartTime,
+        endTime: blockEndTime,
+        reason,
+      };
+  
+      console.log('Añadiendo nuevo bloqueo:', newBlock);
+  
+      // Actualizar el arreglo local
+      this.blockedTimeSlots.push(newBlock);
+  
+      // Actualizar el modelo del servicio
+      if (this.service) {
+        this.service.blockedTimeSlots = [...this.blockedTimeSlots];
+      }
+  
+      // Guardar en Firebase
       this.saveChanges();
+  
+      // Resetear el formulario
+      this.form.reset({
+        blockDays: [],
+        blockStartTime: '',
+        blockEndTime: '',
+        reason: '',
+      });
+  
+      // Notificar éxito
+      this.utilsSvc.presentToast({ message: 'Bloqueo añadido con éxito.', color: 'success' });
+    } else {
+      console.error('Error al añadir bloqueo. Datos incompletos o inválidos:', {
+        blockDays,
+        blockStartTime,
+        blockEndTime,
+        reason,
+      });
+      this.utilsSvc.presentToast({ message: 'Complete todos los campos correctamente.', color: 'danger' });
     }
   }
+  
 
-  async removeBlockedTimeSlot(index: number) {
-    if (this.service) {
-      this.service.blockedTimeSlots.splice(index, 1);
-      this.saveChanges();
-    }
+  removeBlockedTimeSlot(index: number) {
+    this.blockedTimeSlots.splice(index, 1);
+    this.service.blockedTimeSlots = this.blockedTimeSlots;
+    this.saveChanges();
   }
 
   async saveChanges() {
     try {
+      if (!this.serviceId || !this.service) {
+        throw new Error('No se encontró el ID del servicio o el modelo del servicio es nulo.');
+      }
+  
       const path = `services/${this.serviceId}`;
       await this.firebaseSvc.setDocument(path, this.service);
+  
+      console.log('Cambios guardados en Firebase:', this.service);
       this.utilsSvc.presentToast({ message: 'Cambios guardados.', color: 'success' });
     } catch (error) {
-      console.error('Error al guardar cambios:', error);
+      console.error('Error al guardar cambios en Firebase:', error);
       this.utilsSvc.presentToast({ message: 'Error al guardar cambios.', color: 'danger' });
+    }
+  }
+
+  editOffer(offerId: string) {
+    this.router.navigate(['/service-home/edit-offer', this.serviceId, offerId]);
+  }
+
+  async deleteOffer(index: number) {
+    if (!this.service) {
+      console.error('El servicio no está definido.');
+      return;
+    }
+
+    try {
+      // Eliminar la oferta del array
+      this.service.offers.splice(index, 1);
+
+      // Actualizar el documento del servicio en Firebase
+      const path = `services/${this.serviceId}`;
+      await this.firebaseSvc.setDocument(path, this.service);
+
+      console.log('Oferta eliminada con éxito.');
+      this.utilsSvc.presentToast({
+        message: 'Oferta eliminada con éxito.',
+        color: 'success',
+      });
+    } catch (error) {
+      console.error('Error al eliminar la oferta:', error);
+      this.utilsSvc.presentToast({
+        message: 'Error al eliminar la oferta.',
+        color: 'danger',
+      });
     }
   }
 
