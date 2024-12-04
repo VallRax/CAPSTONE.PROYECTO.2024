@@ -12,7 +12,9 @@ export class UtilsService {
   toastCtrl = inject(ToastController);
   router = inject(Router);
 
-  // Capturar una imagen con la cámara
+  /**
+   * Captura una imagen con la cámara.
+   */
   async takePictureFromCamera() {
     try {
       return await Camera.getPhoto({
@@ -27,7 +29,9 @@ export class UtilsService {
     }
   }
 
-  // Seleccionar una imagen desde la galería
+  /**
+   * Selecciona una imagen desde la galería.
+   */
   async takePictureFromGallery() {
     try {
       return await Camera.getPhoto({
@@ -42,28 +46,46 @@ export class UtilsService {
     }
   }
 
-  // Recarga
+  /**
+   * Muestra un indicador de carga.
+   */
   loading() {
     return this.loadingCtrl.create({ spinner: 'crescent' });
   }
 
-  // TOAST
+  /**
+   * Muestra un mensaje emergente (toast) con opciones personalizables.
+   * Si no se especifica una duración, se establece un valor predeterminado de 3 segundos.
+   */
   async presentToast(opts?: ToastOptions) {
-    const toast = await this.toastCtrl.create(opts);
-    toast.present();
+    const toast = await this.toastCtrl.create({
+      duration: opts?.duration || 2000, // Duración predeterminada: 2 segundos
+      ...opts, // Conserva otras propiedades pasadas
+    });
+    await toast.present();
   }
 
-  // Enruta a cualquier página disponible
+  /**
+   * Navega a una página específica.
+   * @param url Ruta a la que se quiere redirigir.
+   */
   routerLink(url: string) {
     return this.router.navigateByUrl(url);
   }
 
-  // Guarda un elemento en local storage
+  /**
+   * Guarda un elemento en el almacenamiento local.
+   * @param key Clave para identificar el valor.
+   * @param value Valor que se quiere almacenar.
+   */
   saveInLocalStorage(key: string, value: any) {
     return localStorage.setItem(key, JSON.stringify(value));
   }
 
-  // Obtiene un elemento del localStorage
+  /**
+   * Obtiene un elemento del almacenamiento local.
+   * @param key Clave del valor que se quiere recuperar.
+   */
   getFromLocalStorage(key: string) {
     return JSON.parse(localStorage.getItem(key));
   }
