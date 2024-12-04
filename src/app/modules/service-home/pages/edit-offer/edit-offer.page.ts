@@ -14,6 +14,8 @@ export class EditOfferPage implements OnInit {
   offer: Offer | null = null;
   serviceId: string;
   offerId: string;
+  localImage: string | null = null;
+  imageFile: File | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -57,13 +59,45 @@ export class EditOfferPage implements OnInit {
     }
   }
 
+  async changeImage() {
+    try {
+      // Captura de la imagen
+      const picture = await this.utilsSvc.takePictureFromGallery();
+      const response = await fetch(picture.dataUrl);
+      const blob = await response.blob();
+      this.imageFile = new File([blob], 'offer-image.jpg', { type: blob.type });
+      this.localImage = picture.dataUrl;
+  
+      // Obtén el UID del usuario autenticado
+      const user = await this.firebaseSvc.getAuth().currentUser;
+      if (!user) {
+        throw new Error('Usuario no autenticado.');
+      }
+  
+      // Subir imagen a Firebase Storage
+      if (this.imageFile && this.serviceId && this.offerId) {
+        const imagePath = `offer-images/${user.uid}/offer-${this.offerId}.jpg`; // Usando `user.uid`
+        const imageUrl = await this.firebaseSvc.uploadImage(imagePath, this.imageFile);
+        this.updateField('imageUrl', imageUrl);
+      }
+    } catch (error) {
+      console.error('Error al cambiar la imagen:', error);
+      this.utilsSvc.presentToast({
+        message: 'Error al cambiar la imagen.',
+        color: 'danger',
+      });
+    }
+  }
+  
+  
+
   async openEditAlert(field: keyof Offer, currentValue: string | number) {
     const alert = await this.alertCtrl.create({
-      header: `Editar ${field}`,
+      header: `Editar ${field === 'duration' ? 'Duración' : field}`,
       inputs: [
         {
           name: 'value',
-          type: field === 'description' || field === 'imageUrl' ? 'text' : 'textarea',
+          type: field === 'duration' || field === 'price' ? 'number' : 'text',
           placeholder: `Editar ${field}`,
           value: currentValue.toString(),
         },
@@ -74,9 +108,9 @@ export class EditOfferPage implements OnInit {
           role: 'cancel',
         },
         {
-          text: 'Confirmar',
+          text: 'Guardar',
           handler: (data) => {
-            this.updateField(field, data.value);
+            this.updateField(field, field === 'duration' || field === 'price' ? +data.value : data.value);
           },
         },
       ],

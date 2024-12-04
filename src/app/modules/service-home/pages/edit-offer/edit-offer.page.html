@@ -16,7 +16,9 @@
 
 <ion-content>
   <div class="offer-details" *ngIf="offer">
-    <img [src]="offer.imageUrl || 'https://via.placeholder.com/600x200'" alt="Imagen de la oferta" class="offer-image" />
+    <!-- Imagen de la oferta -->
+    <img [src]="localImage || offer.imageUrl || 'https://via.placeholder.com/600x200'" alt="Imagen de la oferta" class="offer-image" />
+    <ion-button expand="block" (click)="changeImage()">Cambiar Imagen</ion-button>
 
     <ion-list class="editable-list">
       <!-- Nombre de la oferta editable -->
@@ -49,12 +51,12 @@
         </ion-button>
       </ion-item>
 
-      <!-- URL de la imagen editable -->
+      <!-- Duración editable -->
       <ion-item lines="full">
         <ion-label>
-          <p>{{ offer.imageUrl }}</p>
+          <p>{{ offer.duration }} minutos</p>
         </ion-label>
-        <ion-button fill="clear" size="small" slot="end" (click)="openEditAlert('imageUrl', offer.imageUrl)">
+        <ion-button fill="clear" size="small" slot="end" (click)="openEditAlert('duration', offer.duration)">
           <ion-icon name="create"></ion-icon>
         </ion-button>
       </ion-item>

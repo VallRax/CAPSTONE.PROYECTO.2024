@@ -37,6 +37,18 @@ export class AddServicePage {
     { value: 'sunday', label: 'Domingo' },
   ];
 
+  categories = [
+    { name: 'Belleza', icon: 'cut' },
+    { name: 'Veterinaria', icon: 'paw' },
+    { name: 'Salud', icon: 'medkit' },
+    { name: 'Fitness', icon: 'barbell' },
+    { name: 'Hogar', icon: 'home' },
+    { name: 'Tecnología', icon: 'laptop' },
+    { name: 'Comida', icon: 'pizza' },
+    { name: 'Otros', icon: 'ellipsis-horizontal' },
+  ];
+  
+
   constructor(
     private firebaseSvc: FirebaseService,
     private utilsSvc: UtilsService

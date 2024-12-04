@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { FirebaseService } from './firebase.service'; // Asegúrate de que está importado correctamente
-import { Service, Offer} from 'src/app/models/service.model';
+import { FirebaseService } from './firebase.service';
+import { Service, Offer } from 'src/app/models/service.model';
 import { User, UserRole } from 'src/app/models/user.model';
 
 @Injectable({
@@ -9,233 +9,459 @@ import { User, UserRole } from 'src/app/models/user.model';
 export class TestDataService {
   constructor(private firebaseSvc: FirebaseService) {}
 
-  // Genera una URL aleatoria para las imágenes
+  test_users: User[] = [
+    {
+      uid: this.firebaseSvc.createId(),
+      email: 'user1@test.com',
+      password: 'password1',
+      name: 'Juan Pérez',
+      lastName: 'Pérez',
+      rut: '12345678-9',
+      roles: [UserRole.Service],
+      createdAt: new Date().toISOString(),
+    },
+    {
+      uid: this.firebaseSvc.createId(),
+      email: 'user2@test.com',
+      password: 'password2',
+      name: 'María López',
+      lastName: 'López',
+      rut: '98765432-1',
+      roles: [UserRole.Service],
+      createdAt: new Date().toISOString(),
+    },
+    {
+      uid: this.firebaseSvc.createId(),
+      email: 'user3@test.com',
+      password: 'password3',
+      name: 'Carlos García',
+      lastName: 'García',
+      rut: '11223344-5',
+      roles: [UserRole.Service],
+      createdAt: new Date().toISOString(),
+    },
+  ];
+
+  // Genera una URL aleatoria para imágenes
   getRandomImage() {
     const randomNum = Math.floor(Math.random() * 1000);
     return `https://picsum.photos/600/400?random=${randomNum}`;
   }
 
-// Genera datos de prueba
-// async generateTestData() {
-//     try {
-//       // Crear usuarios de prueba
-//       const users: User[] = [
-//         { uid: this.firebaseSvc.createId(), email: 'user1@test.com', password: 'password1', name: 'Juan Pérez', role: UserRole.Service, favorites: []},
-//         { uid: this.firebaseSvc.createId(), email: 'user2@test.com', password: 'password2', name: 'María López', role: UserRole.Service, favorites: []},
-//         { uid: this.firebaseSvc.createId(), email: 'user3@test.com', password: 'password3', name: 'Carlos García', role: UserRole.Service, favorites: []},
-//         { uid: this.firebaseSvc.createId(), email: 'user4@test.com', password: 'password4', name: 'Ana Torres', role: UserRole.Service, favorites: []},
-//         { uid: this.firebaseSvc.createId(), email: 'user5@test.com', password: 'password5', name: 'Luis Gómez', role: UserRole.Service, favorites: []},
-//         { uid: this.firebaseSvc.createId(), email: 'user6@test.com', password: 'password6', name: 'Laura Jiménez', role: UserRole.Service, favorites: []},
-//         { uid: this.firebaseSvc.createId(), email: 'client1@test.com', password: 'password7', name: 'Sofía Díaz', role: UserRole.Client, favorites: []},
-//         { uid: this.firebaseSvc.createId(), email: 'client2@test.com', password: 'password8', name: 'Pedro Sánchez', role: UserRole.Client, favorites: []},
-//       ];
-  
-//       for (const user of users) {
-//         // Crea la cuenta en Firebase Authentication
-//       const authUser = await this.firebaseSvc.signUp(user);
-//       user.uid = authUser.user.uid; // Asigna el UID generado por Firebase Auth
+  // Sube una imagen aleatoria a Firebase y retorna la URL pública
+// Sube una imagen aleatoria a Firebase y retorna la URL pública
+async uploadRandomImage(
+  userId: string,
+  fileName: string,
+  type: 'profile' | 'service' | 'offer',
+  isTest: boolean,
+  retries: number = 3 // Número máximo de reintentos
+): Promise<string> {
+  const imageUrl = this.getRandomImage();
+  const fileSuffix = isTest ? `test-${type}` : type;
+  const folder =
+    type === 'profile' ? 'profile-images' :
+    type === 'service' ? 'service-images' :
+    'offer-images';
 
-//       // Guarda el usuario en Firestore
-//       delete user.password; // No guardes la contraseña en Firestore por seguridad
-//       await this.firebaseSvc.setDocument(`users_test/${user.uid}`, user);
-//       }
+  try {
+    const response = await fetch(imageUrl);
+    const blob = await response.blob();
+    const file = new File([blob], `${fileSuffix}-${fileName}`, { type: blob.type });
+    const uploadedUrl = await this.firebaseSvc.uploadImage(`${folder}/${userId}/${file.name}`, file);
+    return uploadedUrl;
+  } catch (error) {
+    console.error(`Error al subir imagen: ${fileName}, intentando de nuevo...`, error);
+    if (retries > 0) {
+      return this.uploadRandomImage(userId, fileName, type, isTest, retries - 1);
+    } else {
+      console.warn(`No se pudo subir la imagen: ${fileName}. Se usará una URL random.`);
+      return this.getRandomImage(); // Devuelve una URL aleatoria en caso de fallo persistente
+    }
+  }
+}
+
   
-//       console.log('Usuarios creados con éxito.');
+
+  async generateTestData() {
+    try {
+      const users = await this.firebaseSvc.getCollection('users'); // Cargar usuarios existentes
+      if (users.length === 0) {
+        console.log('No hay usuarios. Crea usuarios primero.');
+        return;
+      }
+      await this.generateTestServicesAndOffers(this.test_users);
+    } catch (error) {
+      console.error('Error al generar datos de prueba:', error);
+    }
+  }
   
-//       // Crear servicios de prueba
-//       const services: Service[] = [
-//         {
-//           id: this.firebaseSvc.createId(),
-//           name: 'Glamour Nails Studio',
-//           category: 'Belleza',
-//           description: 'Ofrecemos tratamientos de belleza para uñas, manicura y pedicura profesional.',
-//           providerId: users[0].uid,
-//           providerName: users[0].name,
-//           imageUrl: this.getRandomImage(),
-//           createdAt: new Date().toISOString(),
-//           updatedAt: new Date().toISOString(),
-//           offers: [
-//             { id: this.firebaseSvc.createId(), name: 'Manicure Básico', description: 'Cuidado básico para uñas.', price: 10000, imageUrl: this.getRandomImage() },
-//             { id: this.firebaseSvc.createId(), name: 'Pedicure Completo', description: 'Hidratación y esmaltado.', price: 15000, imageUrl: this.getRandomImage() },
-//             { id: this.firebaseSvc.createId(), name: 'Manicure Gel', description: 'Esmaltado en gel duradero.', price: 12000, imageUrl: this.getRandomImage() },
-//             { id: this.firebaseSvc.createId(), name: 'Tratamiento de Uñas', description: 'Fortalecedor de uñas.', price: 8000, imageUrl: this.getRandomImage() },
-//             { id: this.firebaseSvc.createId(), name: 'Uñas Acrílicas', description: 'Estilo personalizado.', price: 18000, imageUrl: this.getRandomImage() },
-//           ],
-//         },
-//         {
-//           id: this.firebaseSvc.createId(),
-//           name: 'Gimnasio Elite',
-//           category: 'Fitness',
-//           description: 'Un gimnasio de primera clase para todos tus objetivos de fitness.',
-//           providerId: users[1].uid,
-//           providerName: users[1].name,
-//           imageUrl: this.getRandomImage(),
-//           createdAt: new Date().toISOString(),
-//           updatedAt: new Date().toISOString(),
-//           offers: [
-//             { id: this.firebaseSvc.createId(), name: 'Entrenamiento Personal', description: 'Sesión con entrenador.', price: 20000, imageUrl: this.getRandomImage() },
-//             { id: this.firebaseSvc.createId(), name: 'Clases de Yoga', description: 'Clases grupales relajantes.', price: 8000, imageUrl: this.getRandomImage() },
-//             { id: this.firebaseSvc.createId(), name: 'Clases de Spinning', description: 'Ejercicio en bicicleta.', price: 12000, imageUrl: this.getRandomImage() },
-//             { id: this.firebaseSvc.createId(), name: 'CrossFit', description: 'Entrenamiento de alta intensidad.', price: 15000, imageUrl: this.getRandomImage() },
-//             { id: this.firebaseSvc.createId(), name: 'Zumba', description: 'Ejercicio divertido.', price: 10000, imageUrl: this.getRandomImage() },
-//           ],
-//         },
-//         {
-//           id: this.firebaseSvc.createId(),
-//           name: 'TechFix Soluciones',
-//           category: 'Tecnología',
-//           description: 'Reparación y mantenimiento de dispositivos tecnológicos.',
-//           providerId: users[2].uid,
-//           providerName: users[2].name,
-//           imageUrl: this.getRandomImage(),
-//           createdAt: new Date().toISOString(),
-//           updatedAt: new Date().toISOString(),
-//           offers: [
-//             { id: this.firebaseSvc.createId(), name: 'Reparación de Pantalla', description: 'Cambio de pantalla.', price: 50000, imageUrl: this.getRandomImage() },
-//             { id: this.firebaseSvc.createId(), name: 'Formateo de PC', description: 'Optimización del sistema.', price: 20000, imageUrl: this.getRandomImage() },
-//             { id: this.firebaseSvc.createId(), name: 'Limpieza de Virus', description: 'Eliminación de malware.', price: 15000, imageUrl: this.getRandomImage() },
-//             { id: this.firebaseSvc.createId(), name: 'Actualización de Software', description: 'Mejora del sistema operativo.', price: 10000, imageUrl: this.getRandomImage() },
-//             { id: this.firebaseSvc.createId(), name: 'Diagnóstico Técnico', description: 'Análisis del dispositivo.', price: 25000, imageUrl: this.getRandomImage() },
-//           ],
-//         },
-//         {
-//           id: this.firebaseSvc.createId(),
-//           name: 'Pet Paradise',
-//           category: 'Veterinaria',
-//           description: 'El mejor cuidado para tu mascota con servicios personalizados.',
-//           providerId: users[3].uid,
-//           providerName: users[3].name,
-//           imageUrl: this.getRandomImage(),
-//           createdAt: new Date().toISOString(),
-//           updatedAt: new Date().toISOString(),
-//           offers: [
-//             { id: this.firebaseSvc.createId(), name: 'Consulta Veterinaria', description: 'Revisión médica.', price: 25000, imageUrl: this.getRandomImage() },
-//             { id: this.firebaseSvc.createId(), name: 'Vacunación', description: 'Vacunas completas.', price: 15000, imageUrl: this.getRandomImage() },
-//             { id: this.firebaseSvc.createId(), name: 'Peluquería Canina', description: 'Corte y aseo.', price: 30000, imageUrl: this.getRandomImage() },
-//             { id: this.firebaseSvc.createId(), name: 'Guardería', description: 'Cuidado diario.', price: 40000, imageUrl: this.getRandomImage() },
-//             { id: this.firebaseSvc.createId(), name: 'Entrenamiento', description: 'Clases para mascotas.', price: 50000, imageUrl: this.getRandomImage() },
-//           ],
-//         },
-//         {
-//             id: this.firebaseSvc.createId(),
-//             name: 'Clínica Dental Sonrisas',
-//             category: 'Salud',
-//             description: 'Especialistas en el cuidado de tu sonrisa, con tratamientos personalizados.',
-//             providerId: users[4].uid,
-//             providerName: users[4].name,
-//             imageUrl: this.getRandomImage(),
-//             createdAt: new Date().toISOString(),
-//             updatedAt: new Date().toISOString(),
-//             offers: [
-//               { id: this.firebaseSvc.createId(), name: 'Limpieza Dental', description: 'Elimina sarro y manchas.', price: 15000, imageUrl: this.getRandomImage() },
-//               { id: this.firebaseSvc.createId(), name: 'Blanqueamiento Dental', description: 'Blanqueamiento seguro y efectivo.', price: 30000, imageUrl: this.getRandomImage() },
-//               { id: this.firebaseSvc.createId(), name: 'Ortodoncia', description: 'Corrección dental avanzada.', price: 40000, imageUrl: this.getRandomImage() },
-//               { id: this.firebaseSvc.createId(), name: 'Extracción', description: 'Extracción segura de piezas dentales.', price: 20000, imageUrl: this.getRandomImage() },
-//               { id: this.firebaseSvc.createId(), name: 'Implantes Dentales', description: 'Solución para piezas dentales perdidas.', price: 60000, imageUrl: this.getRandomImage() },
-//             ],
-//           },
-//           {
-//             id: this.firebaseSvc.createId(),
-//             name: 'Limpieza Hogar 24/7',
-//             category: 'Hogar',
-//             description: 'Servicios de limpieza profesional para tu hogar u oficina.',
-//             providerId: users[5].uid,
-//             providerName: users[5].name,
-//             imageUrl: this.getRandomImage(),
-//             createdAt: new Date().toISOString(),
-//             updatedAt: new Date().toISOString(),
-//             offers: [
-//               { id: this.firebaseSvc.createId(), name: 'Limpieza Básica', description: 'Limpieza superficial de áreas principales.', price: 18000, imageUrl: this.getRandomImage() },
-//               { id: this.firebaseSvc.createId(), name: 'Limpieza Profunda', description: 'Limpieza completa y detallada.', price: 30000, imageUrl: this.getRandomImage() },
-//               { id: this.firebaseSvc.createId(), name: 'Desinfección', description: 'Elimina gérmenes y bacterias.', price: 25000, imageUrl: this.getRandomImage() },
-//               { id: this.firebaseSvc.createId(), name: 'Limpieza de Ventanas', description: 'Ventanas impecables.', price: 20000, imageUrl: this.getRandomImage() },
-//               { id: this.firebaseSvc.createId(), name: 'Organización de Espacios', description: 'Organización de closets y áreas.', price: 22000, imageUrl: this.getRandomImage() },
-//             ],
-//           },
-//           {
-//             id: this.firebaseSvc.createId(),
-//             name: 'Spa Relax & Wellness',
-//             category: 'Salud',
-//             description: 'Un espacio para relajarte y recuperar energías.',
-//             providerId: users[0].uid,
-//             providerName: users[0].name,
-//             imageUrl: this.getRandomImage(),
-//             createdAt: new Date().toISOString(),
-//             updatedAt: new Date().toISOString(),
-//             offers: [
-//               { id: this.firebaseSvc.createId(), name: 'Masaje Relajante', description: 'Ideal para liberar tensiones.', price: 25000, imageUrl: this.getRandomImage() },
-//               { id: this.firebaseSvc.createId(), name: 'Masaje Descontracturante', description: 'Alivia dolores musculares.', price: 30000, imageUrl: this.getRandomImage() },
-//               { id: this.firebaseSvc.createId(), name: 'Tratamiento Facial', description: 'Rejuvenecimiento y limpieza profunda.', price: 35000, imageUrl: this.getRandomImage() },
-//               { id: this.firebaseSvc.createId(), name: 'Aromaterapia', description: 'Relajación con aceites esenciales.', price: 20000, imageUrl: this.getRandomImage() },
-//               { id: this.firebaseSvc.createId(), name: 'Exfoliación Corporal', description: 'Piel suave y renovada.', price: 30000, imageUrl: this.getRandomImage() },
-//             ],
-//           },
-//           {
-//             id: this.firebaseSvc.createId(),
-//             name: 'Taller Automotriz SpeedFix',
-//             category: 'Automotriz',
-//             description: 'Reparación y mantenimiento de vehículos de todas las marcas.',
-//             providerId: users[1].uid,
-//             providerName: users[1].name,
-//             imageUrl: this.getRandomImage(),
-//             createdAt: new Date().toISOString(),
-//             updatedAt: new Date().toISOString(),
-//             offers: [
-//               { id: this.firebaseSvc.createId(), name: 'Cambio de Aceite', description: 'Cambio de aceite y filtro.', price: 15000, imageUrl: this.getRandomImage() },
-//               { id: this.firebaseSvc.createId(), name: 'Alineación y Balanceo', description: 'Asegura estabilidad en tu auto.', price: 25000, imageUrl: this.getRandomImage() },
-//               { id: this.firebaseSvc.createId(), name: 'Frenos', description: 'Revisión y cambio de frenos.', price: 30000, imageUrl: this.getRandomImage() },
-//               { id: this.firebaseSvc.createId(), name: 'Revisión General', description: 'Diagnóstico completo.', price: 35000, imageUrl: this.getRandomImage() },
-//               { id: this.firebaseSvc.createId(), name: 'Batería', description: 'Cambio de batería.', price: 40000, imageUrl: this.getRandomImage() },
-//             ],
-//           },
-//           {
-//             id: this.firebaseSvc.createId(),
-//             name: 'Academia de Música Harmony',
-//             category: 'Educación',
-//             description: 'Clases de música para niños, jóvenes y adultos.',
-//             providerId: users[2].uid,
-//             providerName: users[2].name,
-//             imageUrl: this.getRandomImage(),
-//             createdAt: new Date().toISOString(),
-//             updatedAt: new Date().toISOString(),
-//             offers: [
-//               { id: this.firebaseSvc.createId(), name: 'Clases de Guitarra', description: 'Aprende a tocar guitarra.', price: 15000, imageUrl: this.getRandomImage() },
-//               { id: this.firebaseSvc.createId(), name: 'Clases de Piano', description: 'Clases personalizadas de piano.', price: 20000, imageUrl: this.getRandomImage() },
-//               { id: this.firebaseSvc.createId(), name: 'Clases de Canto', description: 'Desarrolla tu voz.', price: 25000, imageUrl: this.getRandomImage() },
-//               { id: this.firebaseSvc.createId(), name: 'Clases de Violín', description: 'Clases individuales de violín.', price: 18000, imageUrl: this.getRandomImage() },
-//               { id: this.firebaseSvc.createId(), name: 'Taller de Composición', description: 'Crea tu propia música.', price: 30000, imageUrl: this.getRandomImage() },
-//             ],
-//           },
-//           {
-//             id: this.firebaseSvc.createId(),
-//             name: 'Agencia de Viajes WorldExplorer',
-//             category: 'Turismo',
-//             description: 'Organizamos tus viajes con las mejores experiencias.',
-//             providerId: users[3].uid,
-//             providerName: users[3].name,
-//             imageUrl: this.getRandomImage(),
-//             createdAt: new Date().toISOString(),
-//             updatedAt: new Date().toISOString(),
-//             offers: [
-//               { id: this.firebaseSvc.createId(), name: 'Paquete a Europa', description: 'Tour por las principales ciudades europeas.', price: 1000000, imageUrl: this.getRandomImage() },
-//               { id: this.firebaseSvc.createId(), name: 'Crucero por el Caribe', description: 'Vacaciones en un crucero de lujo.', price: 800000, imageUrl: this.getRandomImage() },
-//               { id: this.firebaseSvc.createId(), name: 'Turismo Aventura', description: 'Excursiones y deportes extremos.', price: 500000, imageUrl: this.getRandomImage() },
-//               { id: this.firebaseSvc.createId(), name: 'Viaje Nacional', description: 'Paquetes económicos dentro del país.', price: 200000, imageUrl: this.getRandomImage() },
-//               { id: this.firebaseSvc.createId(), name: 'Luna de Miel', description: 'Plan perfecto para recién casados.', price: 1200000, imageUrl: this.getRandomImage() },
-//             ],
-//           },
-          
-//         // Agrega 6 servicios más en el mismo formato...
-//       ];
+
+  // Genera datos de prueba
+  async generateTestDataWithUsers() {
+    try {
+      // Crear usuarios de prueba
+      const users: User[] = [
+        {
+          uid: this.firebaseSvc.createId(),
+          email: 'user1@test.com',
+          password: 'password1',
+          name: 'Juan Pérez',
+          lastName: 'Pérez',
+          rut: '12345678-9',
+          roles: [UserRole.Service],
+          createdAt: new Date().toISOString(),
+        },
+        {
+          uid: this.firebaseSvc.createId(),
+          email: 'user2@test.com',
+          password: 'password2',
+          name: 'María López',
+          lastName: 'López',
+          rut: '98765432-1',
+          roles: [UserRole.Service],
+          createdAt: new Date().toISOString(),
+        },
+        {
+          uid: this.firebaseSvc.createId(),
+          email: 'user3@test.com',
+          password: 'password3',
+          name: 'Carlos García',
+          lastName: 'García',
+          rut: '11223344-5',
+          roles: [UserRole.Service],
+          createdAt: new Date().toISOString(),
+        },
+      ];
+
+      for (const user of users) {
+        // Crear cuenta en Firebase Authentication
+        const authUser = await this.firebaseSvc.signUp({ email: user.email, password: user.password });
+        user.uid = authUser.user.uid; // Actualizar el UID generado por Firebase Auth
+
+        // Subir imagen de perfil
+        user.profileImageUrl = await this.uploadRandomImage(user.uid, 'profile.jpg', 'profile', true);
+
+        // Guardar el usuario en Firestore
+        delete user.password; // No guardar la contraseña en Firestore
+        await this.firebaseSvc.setDocument(`users/${user.uid}`, user);
+      }
+
+      console.log('Usuarios creados con éxito.');
+
+      // Crear servicios de prueba
+      const services: Service[] = [
+        {
+          id: this.firebaseSvc.createId(),
+          name: 'Glamour Nails Studio',
+          category: 'Belleza',
+          description: 'Ofrecemos tratamientos de belleza para uñas.',
+          ownerId: users[0].uid,
+          ownerName: users[0].name,
+          imageUrl: await this.uploadRandomImage(users[0].uid, 'service-1.jpg', 'service', true),
+          createdAt: new Date().toISOString(),
+          offers: [
+            {
+              id: this.firebaseSvc.createId(),
+              name: 'Manicure Básico',
+              description: 'Cuidado básico para uñas.',
+              price: 10000,
+              duration: 60,
+              imageUrl: await this.uploadRandomImage(users[0].uid, 'offer-1.jpg', 'offer', true),
+            },
+            {
+              id: this.firebaseSvc.createId(),
+              name: 'Pedicure Completo',
+              description: 'Hidratación y esmaltado.',
+              price: 15000,
+              duration: 90,
+              imageUrl: await this.uploadRandomImage(users[0].uid, 'offer-2.jpg', 'offer', true),
+            },
+          ],
+        },
+        {
+          id: this.firebaseSvc.createId(),
+          name: 'Healthy Life Gym',
+          category: 'Fitness',
+          description: 'Un gimnasio completo para mantenerte en forma.',
+          ownerId: users[1].uid, // Cambiar el usuario propietario según sea necesario
+          ownerName: users[1].name,
+          imageUrl: await this.uploadRandomImage(users[1].uid, 'service-2.jpg', 'service', true),
+          createdAt: new Date().toISOString(),
+          offers: [
+            {
+              id: this.firebaseSvc.createId(),
+              name: 'Entrenamiento Personalizado',
+              description: 'Sesiones personalizadas con un entrenador.',
+              price: 30000,
+              duration: 60,
+              imageUrl: await this.uploadRandomImage(users[1].uid, 'offer-3.jpg', 'offer', true),
+            },
+            {
+              id: this.firebaseSvc.createId(),
+              name: 'Clases Grupales de Yoga',
+              description: 'Relájate y mejora tu flexibilidad con yoga.',
+              price: 15000,
+              duration: 90,
+              imageUrl: await this.uploadRandomImage(users[1].uid, 'offer-4.jpg', 'offer', true),
+            },
+          ],
+        },
+        {
+          id: this.firebaseSvc.createId(),
+          name: 'Luxury Spa Retreat',
+          category: 'Salud',
+          description: 'Un spa de lujo para consentirte.',
+          ownerId: users[2].uid,
+          ownerName: users[2].name,
+          imageUrl: await this.uploadRandomImage(users[2].uid, 'service-3.jpg', 'service', true),
+          createdAt: new Date().toISOString(),
+          offers: [
+            {
+              id: this.firebaseSvc.createId(),
+              name: 'Masaje con Piedras Calientes',
+              description: 'Libera tensiones con este tratamiento relajante.',
+              price: 45000,
+              duration: 60,
+              imageUrl: await this.uploadRandomImage(users[2].uid, 'offer-5.jpg', 'offer', true),
+            },
+            {
+              id: this.firebaseSvc.createId(),
+              name: 'Facial Hidratante',
+              description: 'Rejuvenece tu piel con una hidratación profunda.',
+              price: 30000,
+              duration: 45,
+              imageUrl: await this.uploadRandomImage(users[2].uid, 'offer-6.jpg', 'offer', true),
+            },
+          ],
+        },
+        {
+          id: this.firebaseSvc.createId(),
+          name: 'Pet Paradise Hotel',
+          category: 'Veterinaria',
+          description: 'Cuidado premium para tu mascota mientras estás fuera.',
+          ownerId: users[0].uid,
+          ownerName: users[0].name,
+          imageUrl: await this.uploadRandomImage(users[0].uid, 'service-4.jpg', 'service', true),
+          createdAt: new Date().toISOString(),
+          offers: [
+            {
+              id: this.firebaseSvc.createId(),
+              name: 'Estancia por Día',
+              description: 'Cuida de tu mascota mientras trabajas.',
+              price: 20000,
+              duration: 1440, // Duración en minutos
+              imageUrl: await this.uploadRandomImage(users[0].uid, 'offer-7.jpg', 'offer', true),
+            },
+            {
+              id: this.firebaseSvc.createId(),
+              name: 'Entrenamiento Canino Básico',
+              description: 'Enseña a tu perro comandos básicos.',
+              price: 50000,
+              duration: 120,
+              imageUrl: await this.uploadRandomImage(users[0].uid, 'offer-8.jpg', 'offer', true),
+            },
+          ],
+        },
+        {
+          id: this.firebaseSvc.createId(),
+          name: 'TechFix Express',
+          category: 'Tecnología',
+          description: 'Reparaciones rápidas y eficientes para tus dispositivos.',
+          ownerId: users[1].uid,
+          ownerName: users[1].name,
+          imageUrl: await this.uploadRandomImage(users[1].uid, 'service-5.jpg', 'service', true),
+          createdAt: new Date().toISOString(),
+          offers: [
+            {
+              id: this.firebaseSvc.createId(),
+              name: 'Reparación de Pantallas de Móviles',
+              description: 'Cambio rápido de pantalla para tu móvil.',
+              price: 80000,
+              duration: 60,
+              imageUrl: await this.uploadRandomImage(users[1].uid, 'offer-9.jpg', 'offer', true),
+            },
+            {
+              id: this.firebaseSvc.createId(),
+              name: 'Optimización de Computadoras',
+              description: 'Mejora el rendimiento de tu computadora.',
+              price: 40000,
+              duration: 90,
+              imageUrl: await this.uploadRandomImage(users[1].uid, 'offer-10.jpg', 'offer', true),
+            },
+          ],
+        },
+        // ... Agregar más servicios de prueba aquí
+      ];
+
+      // Guardar los servicios en Firestore
+      for (const service of services) {
+        await this.firebaseSvc.setDocument(`services/${service.id}`, service);
+      }
+
+      
+
+      console.log('Servicios creados con éxito.');
+    } catch (error) {
+      console.error('Error al generar datos de prueba:', error);
+    }
+  }
+
+  async generateTestServicesAndOffers(users: User[]) {
+    try {
+      const services: Service[] = [
+        {
+          id: this.firebaseSvc.createId(),
+          name: 'Glamour Nails Studio',
+          category: 'Belleza',
+          description: 'Ofrecemos tratamientos de belleza para uñas.',
+          ownerId: users[0].uid,
+          ownerName: users[0].name,
+          imageUrl: await this.uploadRandomImage(users[0].uid, 'service-1.jpg', 'service', true),
+          createdAt: new Date().toISOString(),
+          offers: [
+            {
+              id: this.firebaseSvc.createId(),
+              name: 'Manicure Básico',
+              description: 'Cuidado básico para uñas.',
+              price: 10000,
+              duration: 60,
+              imageUrl: await this.uploadRandomImage(users[0].uid, 'offer-1.jpg', 'offer', true),
+            },
+            {
+              id: this.firebaseSvc.createId(),
+              name: 'Pedicure Completo',
+              description: 'Hidratación y esmaltado.',
+              price: 15000,
+              duration: 90,
+              imageUrl: await this.uploadRandomImage(users[0].uid, 'offer-2.jpg', 'offer', true),
+            },
+          ],
+        },
+        {
+          id: this.firebaseSvc.createId(),
+          name: 'Healthy Life Gym',
+          category: 'Fitness',
+          description: 'Un gimnasio completo para mantenerte en forma.',
+          ownerId: users[1].uid, // Cambiar el usuario propietario según sea necesario
+          ownerName: users[1].name,
+          imageUrl: await this.uploadRandomImage(users[1].uid, 'service-2.jpg', 'service', true),
+          createdAt: new Date().toISOString(),
+          offers: [
+            {
+              id: this.firebaseSvc.createId(),
+              name: 'Entrenamiento Personalizado',
+              description: 'Sesiones personalizadas con un entrenador.',
+              price: 30000,
+              duration: 60,
+              imageUrl: await this.uploadRandomImage(users[1].uid, 'offer-3.jpg', 'offer', true),
+            },
+            {
+              id: this.firebaseSvc.createId(),
+              name: 'Clases Grupales de Yoga',
+              description: 'Relájate y mejora tu flexibilidad con yoga.',
+              price: 15000,
+              duration: 90,
+              imageUrl: await this.uploadRandomImage(users[1].uid, 'offer-4.jpg', 'offer', true),
+            },
+          ],
+        },
+        {
+          id: this.firebaseSvc.createId(),
+          name: 'Luxury Spa Retreat',
+          category: 'Salud',
+          description: 'Un spa de lujo para consentirte.',
+          ownerId: users[2].uid,
+          ownerName: users[2].name,
+          imageUrl: await this.uploadRandomImage(users[2].uid, 'service-3.jpg', 'service', true),
+          createdAt: new Date().toISOString(),
+          offers: [
+            {
+              id: this.firebaseSvc.createId(),
+              name: 'Masaje con Piedras Calientes',
+              description: 'Libera tensiones con este tratamiento relajante.',
+              price: 45000,
+              duration: 60,
+              imageUrl: await this.uploadRandomImage(users[2].uid, 'offer-5.jpg', 'offer', true),
+            },
+            {
+              id: this.firebaseSvc.createId(),
+              name: 'Facial Hidratante',
+              description: 'Rejuvenece tu piel con una hidratación profunda.',
+              price: 30000,
+              duration: 45,
+              imageUrl: await this.uploadRandomImage(users[2].uid, 'offer-6.jpg', 'offer', true),
+            },
+          ],
+        },
+        {
+          id: this.firebaseSvc.createId(),
+          name: 'Pet Paradise Hotel',
+          category: 'Veterinaria',
+          description: 'Cuidado premium para tu mascota mientras estás fuera.',
+          ownerId: users[0].uid,
+          ownerName: users[0].name,
+          imageUrl: await this.uploadRandomImage(users[0].uid, 'service-4.jpg', 'service', true),
+          createdAt: new Date().toISOString(),
+          offers: [
+            {
+              id: this.firebaseSvc.createId(),
+              name: 'Estancia por Día',
+              description: 'Cuida de tu mascota mientras trabajas.',
+              price: 20000,
+              duration: 1440, // Duración en minutos
+              imageUrl: await this.uploadRandomImage(users[0].uid, 'offer-7.jpg', 'offer', true),
+            },
+            {
+              id: this.firebaseSvc.createId(),
+              name: 'Entrenamiento Canino Básico',
+              description: 'Enseña a tu perro comandos básicos.',
+              price: 50000,
+              duration: 120,
+              imageUrl: await this.uploadRandomImage(users[0].uid, 'offer-8.jpg', 'offer', true),
+            },
+          ],
+        },
+        {
+          id: this.firebaseSvc.createId(),
+          name: 'TechFix Express',
+          category: 'Tecnología',
+          description: 'Reparaciones rápidas y eficientes para tus dispositivos.',
+          ownerId: users[1].uid,
+          ownerName: users[1].name,
+          imageUrl: await this.uploadRandomImage(users[1].uid, 'service-5.jpg', 'service', true),
+          createdAt: new Date().toISOString(),
+          offers: [
+            {
+              id: this.firebaseSvc.createId(),
+              name: 'Reparación de Pantallas de Móviles',
+              description: 'Cambio rápido de pantalla para tu móvil.',
+              price: 80000,
+              duration: 60,
+              imageUrl: await this.uploadRandomImage(users[1].uid, 'offer-9.jpg', 'offer', true),
+            },
+            {
+              id: this.firebaseSvc.createId(),
+              name: 'Optimización de Computadoras',
+              description: 'Mejora el rendimiento de tu computadora.',
+              price: 40000,
+              duration: 90,
+              imageUrl: await this.uploadRandomImage(users[1].uid, 'offer-10.jpg', 'offer', true),
+            },
+          ],
+        },
+        // Agregar más servicios aquí
+      ];
   
-//       for (const service of services) {
-//         await this.firebaseSvc.setDocument(`services/${service.id}`, service);
-//       }
+      // Guardar los servicios en Firestore
+      for (const service of services) {
+        await this.firebaseSvc.setDocument(`services/${service.id}`, service);
+      }
   
-//       console.log('Servicios creados con éxito.');
-//     } catch (error) {
-//       console.error('Error al generar datos de prueba:', error);
-//     }
-//   }
+      console.log('Servicios y ofertas creados con éxito.');
+    } catch (error) {
+      console.error('Error al generar servicios y ofertas:', error);
+    }
+  }
   
 }

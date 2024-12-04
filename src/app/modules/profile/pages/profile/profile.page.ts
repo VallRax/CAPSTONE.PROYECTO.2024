@@ -25,7 +25,7 @@ export class ProfilePage implements OnInit {
   // Cargar datos del usuario
   async loadUserData(uid: string) {
     try {
-      const userDoc = doc(this.db, 'users_test', uid);
+      const userDoc = doc(this.db, 'users', uid);
       const userSnap = await getDoc(userDoc);
       if (userSnap.exists()) {
         this.userData = userSnap.data();
@@ -108,7 +108,7 @@ export class ProfilePage implements OnInit {
       const imageUrl = await this.firebaseSvc.uploadImage(filePath, file);
   
       // Guardar la URL en Firestore bajo el documento del usuario
-      const userDocRef = doc(this.db, 'users_test', this.auth.currentUser?.uid);
+      const userDocRef = doc(this.db, 'users', this.auth.currentUser?.uid);
       await setDoc(userDocRef, { profileImageUrl: imageUrl }, { merge: true });
   
       // Actualizar la vista del perfil con la nueva URL

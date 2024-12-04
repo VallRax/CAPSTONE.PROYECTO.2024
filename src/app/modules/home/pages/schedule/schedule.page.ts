@@ -60,15 +60,55 @@ export class SchedulePage implements OnInit {
   async updateAvailability() {
     if (!this.service || !this.selectedDate || !this.offer) return;
 
-    this.selectedDate = new Date(this.selectedDate).toISOString().split('T')[0];
+    const selectedDateObj = new Date(this.selectedDate);
+    this.selectedDate = selectedDateObj.toISOString().split('T')[0];
 
-    const startTime = this.service.availableHours[0]?.startTime || '09:00';
-    const endTime = this.service.availableHours[0]?.endTime || '18:00';
-    const duration = this.offer.duration;
+    const selectedDay = selectedDateObj.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+
+    if (!this.service.availableDays?.includes(selectedDay)) {
+      this.availableTimes = [];
+      this.utilsSvc.presentToast({
+        message: `El servicio no está disponible el ${selectedDay}.`,
+        color: 'warning',
+      });
+      return;
+    }
+
+    const hoursForDay = this.service.availableHours?.filter(hours => hours.days.includes(selectedDay));
+
+    if (!hoursForDay || hoursForDay.length === 0) {
+      this.availableTimes = [];
+      this.utilsSvc.presentToast({
+        message: `El servicio no tiene horarios configurados para el ${selectedDay}.`,
+        color: 'warning',
+      });
+      return;
+    }
 
     const bookings = await this.loadBookingsForDate(this.selectedDate);
+    const isToday = this.selectedDate === this.today;
+    const currentTime = isToday ? this.formatTime(new Date()) : null;
 
-    this.availableTimes = this.calculateTimeBlocks(startTime, endTime, duration, this.selectedDate, bookings);
+    this.availableTimes = [];
+    for (const hours of hoursForDay) {
+      const blocks = this.calculateTimeBlocks(
+        hours.startTime,
+        hours.endTime,
+        this.offer.duration,
+        this.selectedDate,
+        bookings,
+        currentTime
+      );
+      this.availableTimes.push(...blocks);
+    }
+
+    if (this.availableTimes.length === 0) {
+      this.utilsSvc.presentToast({
+        message: 'No hay horarios disponibles para el día seleccionado.',
+        color: 'warning',
+      });
+    }
+
     this.selectedTime = null;
   }
 
@@ -77,7 +117,8 @@ export class SchedulePage implements OnInit {
     endTime: string,
     duration: number,
     selectedDate: string,
-    bookings: Booking[]
+    bookings: Booking[],
+    currentTime?: string
   ): { label: string; startTime: string; available: boolean; selected?: boolean }[] {
     const start = this.parseTime(startTime);
     const end = this.parseTime(endTime);
@@ -92,14 +133,13 @@ export class SchedulePage implements OnInit {
       const slotStart = this.formatTime(current);
       const slotEnd = this.formatTime(next);
 
-      const isBooked = bookings.some(
-        (booking) => booking.startTime === slotStart
-      );
+      const isBooked = bookings.some((booking) => booking.startTime === slotStart);
+      const isPast = currentTime && this.selectedDate === this.today && slotStart < currentTime;
 
       slots.push({
         label: `${slotStart} - ${slotEnd}`,
         startTime: slotStart,
-        available: !isBooked,
+        available: !isBooked && !isPast,
       });
 
       current = next;
@@ -123,7 +163,7 @@ export class SchedulePage implements OnInit {
       });
       return;
     }
-
+  
     const currentUser = JSON.parse(localStorage.getItem('user'));
     if (!currentUser) {
       this.utilsSvc.presentToast({
@@ -132,7 +172,10 @@ export class SchedulePage implements OnInit {
       });
       return;
     }
-
+  
+    // Validar que ownerName esté definido
+    const providerName = this.service.ownerName || 'Proveedor no especificado';
+  
     const booking: Booking = {
       id: this.firebaseSvc.createId(),
       serviceId: this.service.id,
@@ -140,7 +183,7 @@ export class SchedulePage implements OnInit {
       clientId: currentUser.uid,
       clientName: currentUser.name,
       providerId: this.service.ownerId,
-      providerName: this.service.ownerName,
+      providerName: providerName, // Asignar un valor válido
       serviceName: this.service.name,
       date: this.selectedDate,
       startTime: this.selectedTime.startTime,
@@ -148,7 +191,7 @@ export class SchedulePage implements OnInit {
       status: 'pending',
       createdAt: new Date().toISOString(),
     };
-
+  
     try {
       await this.firebaseSvc.setDocument(`bookings/${booking.id}`, booking);
       this.utilsSvc.presentToast({
@@ -164,6 +207,8 @@ export class SchedulePage implements OnInit {
       });
     }
   }
+  
+  
 
   parseTime(time: string): Date {
     const [hours, minutes] = time.split(':').map(Number);

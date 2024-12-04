@@ -19,8 +19,13 @@
 
     <ion-item>
       <ion-label position="stacked">Categoría</ion-label>
-      <ion-input formControlName="category"></ion-input>
+      <ion-select formControlName="category" placeholder="Seleccione una categoría">
+        <ion-select-option *ngFor="let category of categories" [value]="category.name">
+          {{ category.name }}
+        </ion-select-option>
+      </ion-select>
     </ion-item>
+    
 
     <ion-item>
       <ion-label position="stacked">Descripción</ion-label>
