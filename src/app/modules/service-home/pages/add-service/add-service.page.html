@@ -1,66 +1,140 @@
 <ion-header>
   <ion-toolbar class="header">
     <ion-title>Agregar Servicio</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <form [formGroup]="form" (ngSubmit)="submit()">
-
-    <app-custom-input 
-      icon="home-outline"
-      [control]="form.controls.name"
-      type="name"
-      label="Nombre del Servicio">
-    </app-custom-input>
-
-    <app-custom-input 
-      icon="pricetag-outline"
-      [control]="form.controls.category"
-      type="category"
-      label="Categoria">
-    </app-custom-input>
-
-    <app-custom-input 
-      icon="information-circle-outline"
-      [control]="form.controls.description"
-      type="description"
-      label="Descripción">
-    </app-custom-input>
-
-  <!-- Días disponibles -->
-  <ion-item>
-    <ion-label position="stacked">Días Disponibles</ion-label>
-    <ion-select formControlName="availableDays" multiple="true">
-      <ion-select-option value="monday">Lunes</ion-select-option>
-      <ion-select-option value="tuesday">Martes</ion-select-option>
-      <ion-select-option value="wednesday">Miércoles</ion-select-option>
-      <ion-select-option value="thursday">Jueves</ion-select-option>
-      <ion-select-option value="friday">Viernes</ion-select-option>
-      <ion-select-option value="saturday">Sábado</ion-select-option>
-      <ion-select-option value="sunday">Domingo</ion-select-option>
-    </ion-select>
-  </ion-item>
-
-    <!-- Horarios disponibles -->
+    <!-- Información Básica -->
     <ion-item>
-      <ion-label position="stacked">Horarios Disponibles</ion-label>
-      <ion-button expand="block" color="medium" (click)="addAvailableHour()">Añadir Horario</ion-button>
+      <ion-label position="stacked">Nombre del Servicio</ion-label>
+      <ion-input formControlName="name"></ion-input>
     </ion-item>
 
-    <!-- Muestra los horarios ingresados -->
+    <ion-item>
+      <ion-label position="stacked">Categoría</ion-label>
+      <ion-input formControlName="category"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Descripción</ion-label>
+      <ion-textarea formControlName="description"></ion-textarea>
+    </ion-item>
+
+    <!-- Foto del Servicio -->
+    <ion-item>
+      <ion-label position="stacked">Foto del Servicio</ion-label>
+      <ion-button expand="block" (click)="selectPhoto()">Seleccionar Imagen</ion-button>
+    </ion-item>
+    <ion-item *ngIf="localImage">
+      <img [src]="localImage" alt="Imagen del Servicio" style="width: 100%; border-radius: 8px;" />
+    </ion-item>
+
+    <!-- Días de Atención -->
+    <ion-item>
+      <ion-label position="stacked">Días de Atención</ion-label>
+      <ion-select formControlName="availableDays" multiple="true">
+        <ion-select-option value="monday">Lunes</ion-select-option>
+        <ion-select-option value="tuesday">Martes</ion-select-option>
+        <ion-select-option value="wednesday">Miércoles</ion-select-option>
+        <ion-select-option value="thursday">Jueves</ion-select-option>
+        <ion-select-option value="friday">Viernes</ion-select-option>
+        <ion-select-option value="saturday">Sábado</ion-select-option>
+        <ion-select-option value="sunday">Domingo</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <!-- Horarios Disponibles -->
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6">
+          <ion-item>
+            <ion-label position="stacked">Hora de Apertura</ion-label>
+            <ion-input type="time" formControlName="startTime"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="6">
+          <ion-item>
+            <ion-label position="stacked">Hora de Cierre</ion-label>
+            <ion-input type="time" formControlName="endTime"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-button 
+      expand="block" 
+      (click)="addAvailableHour()" 
+      [disabled]="isAddHourDisabled">
+      Añadir Horario
+    </ion-button>
+
     <ion-list>
       <ion-item *ngFor="let hour of availableHours; let i = index">
-        <ion-label>{{ hour.startTime }} - {{ hour.endTime }}</ion-label>
+        <ion-label>{{ hour.startTime }} - {{ hour.endTime }} ({{ hour.days.join(', ') }})</ion-label>
         <ion-button fill="clear" color="danger" (click)="removeAvailableHour(i)">
           <ion-icon name="trash-outline"></ion-icon>
         </ion-button>
       </ion-item>
     </ion-list>
 
-    <ion-button class="orange-button" shape="round" expand="block" type="submit" [disabled]="form.invalid"> 
-      <!-- || !imageFile"> -->
-      Guardar
+    <!-- Bloqueos de Horarios -->
+    <ion-item>
+      <ion-label position="stacked">Fecha de Bloqueo</ion-label>
+      <ion-input type="date" formControlName="blockDate"></ion-input>
+    </ion-item>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6">
+          <ion-item>
+            <ion-label position="stacked">Hora de Inicio</ion-label>
+            <ion-input type="time" formControlName="blockStartTime"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="6">
+          <ion-item>
+            <ion-label position="stacked">Hora de Fin</ion-label>
+            <ion-input type="time" formControlName="blockEndTime"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-item>
+      <ion-label position="stacked">Motivo</ion-label>
+      <ion-textarea formControlName="reason"></ion-textarea>
+    </ion-item>
+
+    <ion-button 
+      expand="block" 
+      (click)="addBlockedTimeSlot()" 
+      [disabled]="isAddBlockDisabled">
+      Añadir Bloqueo
+    </ion-button>
+
+    <ion-list>
+      <ion-item *ngFor="let block of blockedTimeSlots; let i = index">
+        <ion-label>
+          {{ block.blockDate }}: {{ block.blockStartTime }} - {{ block.blockEndTime }} ({{ block.reason }})
+        </ion-label>
+        <ion-button fill="clear" color="danger" (click)="removeBlockedTimeSlot(i)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-list>
+
+    <!-- Botón Guardar Servicio -->
+    <ion-button 
+      expand="block" 
+      type="submit" 
+      [disabled]="form.invalid || availableHours.length === 0">
+      Guardar Servicio
     </ion-button>
   </form>
 </ion-content>
