@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController, NavController } from '@ionic/angular';
+import { ActivatedRoute } from '@angular/router';
+import { NavController, AlertController } from '@ionic/angular';
 import { FirebaseService } from 'src/app/core/services/firebase.service';
 import { UtilsService } from 'src/app/core/services/utils.service';
 import { Service } from 'src/app/models/service.model';
@@ -11,16 +11,18 @@ import { Service } from 'src/app/models/service.model';
   styleUrls: ['./edit-service.page.scss'],
 })
 export class EditServicePage implements OnInit {
-  service: Service | null = null; // Datos del servicio
+  service: Service | null = null;
   serviceId: string;
+  localImage: string | null = null;
+  imageFile: File | null = null;
+  defaultImageUrl = 'assets/no-image.jpg';
 
   constructor(
     private route: ActivatedRoute,
     private firebaseSvc: FirebaseService,
     private utilsSvc: UtilsService,
     private alertCtrl: AlertController,
-    private navCtrl: NavController,
-    private router: Router // Para redirigir a otras páginas
+    private navCtrl: NavController
   ) {}
 
   ngOnInit() {
@@ -28,46 +30,81 @@ export class EditServicePage implements OnInit {
     if (!this.serviceId) {
       this.utilsSvc.presentToast({
         message: 'Error: No se pudo cargar el servicio.',
-        duration: 3000,
         color: 'danger',
       });
-      this.utilsSvc.routerLink('/service-home');
+      this.navCtrl.back();
       return;
     }
     this.loadService();
   }
 
-  /**
-   * Carga el servicio desde Firebase.
-   */
   async loadService() {
     try {
       const path = `services/${this.serviceId}`;
       this.service = (await this.firebaseSvc.getDocument(path)) as Service;
-
-      if (!this.service) {
-        throw new Error('El servicio no existe.');
-      }
     } catch (error) {
       console.error('Error al cargar el servicio:', error);
       this.utilsSvc.presentToast({
         message: 'Error al cargar el servicio.',
         color: 'danger',
       });
-      this.utilsSvc.routerLink('/service-home');
     }
   }
 
-  /**
-   * Abre un cuadro de diálogo para editar un campo del servicio.
-   */
-  async openEditAlert(field: keyof Service, currentValue: string) {
+  async selectPhoto() {
+    try {
+      const picture = await this.utilsSvc.takePictureFromGallery();
+      const response = await fetch(picture.dataUrl);
+      const blob = await response.blob();
+      this.imageFile = new File([blob], 'service-image.jpg', { type: blob.type });
+      this.localImage = picture.dataUrl;
+    } catch (error) {
+      console.error('Error al seleccionar la imagen:', error);
+    }
+  }
+
+  async saveImage() {
+    if (this.imageFile) {
+      const filePath = `service-images/${this.service.ownerId}/service-${this.serviceId}.jpg`;
+      this.service.imageUrl = await this.firebaseSvc.uploadImage(filePath, this.imageFile);
+    }
+  }
+
+  async deleteService() {
+    try {
+      if (!this.serviceId) {
+        this.utilsSvc.presentToast({
+          message: 'No se encontró el ID del servicio.',
+          color: 'danger',
+        });
+        return;
+      }
+
+      const path = `services/${this.serviceId}`;
+      await this.firebaseSvc.deleteDocument(path);
+
+      this.utilsSvc.presentToast({
+        message: 'Servicio eliminado con éxito.',
+        color: 'success',
+      });
+
+      this.navCtrl.back();
+    } catch (error) {
+      console.error('Error al eliminar el servicio:', error);
+      this.utilsSvc.presentToast({
+        message: 'Error al eliminar el servicio.',
+        color: 'danger',
+      });
+    }
+  }
+
+  async openEditAlert<K extends keyof Service>(field: K, currentValue: Service[K]) {
     const alert = await this.alertCtrl.create({
       header: `Editar ${field}`,
       inputs: [
         {
           name: 'value',
-          type: field === 'description' ? 'textarea' : 'text',
+          type: 'text',
           placeholder: `Editar ${field}`,
           value: currentValue,
         },
@@ -78,157 +115,49 @@ export class EditServicePage implements OnInit {
           role: 'cancel',
         },
         {
-          text: 'Confirmar',
+          text: 'Guardar',
           handler: (data) => {
-            this.updateField(field, data.value);
+            if (this.service) {
+              this.service[field] = data.value as Service[K]; // Ajuste al tipo correcto
+              this.saveChanges();
+            }
           },
         },
       ],
     });
-
+  
     await alert.present();
   }
-
-  /**
-   * Actualiza un campo del servicio en Firebase.
-   */
-  async updateField<T extends keyof Service>(field: T, value: Service[T]) {
-    if (this.service) {
-      // Actualiza el valor del campo específico
-      this.service[field] = value;
   
-      try {
-        const path = `services/${this.serviceId}`;
-        await this.firebaseSvc.setDocument(path, this.service);
-        this.utilsSvc.presentToast({
-          message: `${field} actualizado con éxito.`,
-          color: 'success',
-        });
-      } catch (error) {
-        console.error(`Error al actualizar ${field}:`, error);
-        this.utilsSvc.presentToast({
-          message: `Error al actualizar ${field}.`,
-          color: 'danger',
-        });
-      }
-    }
-  }
-  
-  
-
-  /**
-   * Elimina una oferta específica del servicio.
-   */
-  async deleteOffer(index: number) {
-    if (!this.service) {
-      console.error('El servicio no está definido.');
-      return;
-    }
-
-    try {
-      // Eliminar la oferta del array
-      this.service.offers.splice(index, 1);
-
-      // Actualizar el documento del servicio en Firebase
-      const path = `services/${this.serviceId}`;
-      await this.firebaseSvc.setDocument(path, this.service);
-
-      console.log('Oferta eliminada con éxito.');
-      this.utilsSvc.presentToast({
-        message: 'Oferta eliminada con éxito.',
-        color: 'success',
-      });
-    } catch (error) {
-      console.error('Error al eliminar la oferta:', error);
-      this.utilsSvc.presentToast({
-        message: 'Error al eliminar la oferta.',
-        color: 'danger',
-      });
-    }
-  }
-
-  /**
-   * Redirige a la página de edición de una oferta.
-   */
-  editOffer(offerId: string) {
-    this.router.navigate(['/service-home/edit-offer', this.serviceId, offerId]);
-  }
-
-  /**
-   * Elimina el servicio actual.
-   */
-  async deleteService() {
-    if (!this.serviceId) {
-      this.utilsSvc.presentToast({
-        message: 'No se puede eliminar el servicio: ID no encontrado.',
-        color: 'danger',
-      });
-      return;
-    }
-
-    try {
-      const path = `services/${this.serviceId}`;
-      await this.firebaseSvc.deleteDocument(path);
-      this.utilsSvc.presentToast({
-        message: 'Servicio eliminado con éxito.',
-        color: 'success',
-      });
-      this.navCtrl.back(); // Regresa a la página anterior
-    } catch (error) {
-      console.error('Error al eliminar el servicio:', error);
-      this.utilsSvc.presentToast({
-        message: 'Error al eliminar el servicio.',
-        color: 'danger',
-      });
-    }
-  }
-
-  /**
-   * Redirige a la página anterior.
-   */
-  goBack() {
-    this.navCtrl.back();
-  }
 
   async updateDays(event: any) {
     if (this.service) {
       this.service.availableDays = event.detail.value;
-
-      await this.saveChanges('availableDays');
+      this.saveChanges();
     }
   }
 
-  async editAvailableHour() {
+  async editAvailableHours() {
     const alert = await this.alertCtrl.create({
-      header: 'Editar Horario de Atención',
+      header: 'Añadir Horario',
       inputs: [
-        {
-          name: 'startTime',
-          type: 'time',
-          value: this.service?.availableHours[0]?.startTime || '',
-          placeholder: 'Hora de inicio',
-        },
-        {
-          name: 'endTime',
-          type: 'time',
-          value: this.service?.availableHours[0]?.endTime || '',
-          placeholder: 'Hora de cierre',
-        },
+        { name: 'startTime', type: 'time', placeholder: 'Hora de Inicio' },
+        { name: 'endTime', type: 'time', placeholder: 'Hora de Fin' },
+        { name: 'days', type: 'text', placeholder: 'Días (e.g., monday,tuesday)' },
       ],
       buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-        },
+        { text: 'Cancelar', role: 'cancel' },
         {
           text: 'Guardar',
           handler: (data) => {
             if (data.startTime && data.endTime && this.service) {
-              this.service.availableHours[0] = {
+              const daysArray = data.days?.split(',').map((day: string) => day.trim()) || [];
+              this.service.availableHours.push({
                 startTime: data.startTime,
                 endTime: data.endTime,
-              };
-              this.saveChanges('availableHours');
+                days: daysArray,
+              });
+              this.saveChanges();
             }
           },
         },
@@ -236,23 +165,66 @@ export class EditServicePage implements OnInit {
     });
     await alert.present();
   }
+  
 
-  async saveChanges(field: keyof Service) {
-    try {
-      const path = `services/${this.serviceId}`;
-      await this.firebaseSvc.setDocument(path, this.service);
-      this.utilsSvc.presentToast({
-        message: `${field} actualizado con éxito.`,
-        color: 'success',
-      });
-    } catch (error) {
-      console.error(`Error al actualizar ${field}:`, error);
-      this.utilsSvc.presentToast({
-        message: `Error al actualizar ${field}.`,
-        color: 'danger',
-      });
+  async editBlockedTimeSlots() {
+    const alert = await this.alertCtrl.create({
+      header: 'Añadir Bloqueo',
+      inputs: [
+        { name: 'days', type: 'text', placeholder: 'Días (e.g., monday,tuesday)' },
+        { name: 'startTime', type: 'time', placeholder: 'Hora de Inicio' },
+        { name: 'endTime', type: 'time', placeholder: 'Hora de Fin' },
+        { name: 'reason', type: 'text', placeholder: 'Motivo' },
+      ],
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Guardar',
+          handler: (data) => {
+            if (data.days && data.startTime && data.endTime && this.service) {
+              const daysArray = data.days.split(',').map((day: string) => day.trim()); // Convertir a string[]
+              this.service.blockedTimeSlots.push({
+                days: daysArray,
+                startTime: data.startTime,
+                endTime: data.endTime,
+                reason: data.reason || 'Sin motivo',
+              });
+              this.saveChanges();
+            }
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+  
+
+  async removeAvailableHour(index: number) {
+    if (this.service) {
+      this.service.availableHours.splice(index, 1);
+      this.saveChanges();
     }
   }
 
+  async removeBlockedTimeSlot(index: number) {
+    if (this.service) {
+      this.service.blockedTimeSlots.splice(index, 1);
+      this.saveChanges();
+    }
+  }
 
+  async saveChanges() {
+    try {
+      const path = `services/${this.serviceId}`;
+      await this.firebaseSvc.setDocument(path, this.service);
+      this.utilsSvc.presentToast({ message: 'Cambios guardados.', color: 'success' });
+    } catch (error) {
+      console.error('Error al guardar cambios:', error);
+      this.utilsSvc.presentToast({ message: 'Error al guardar cambios.', color: 'danger' });
+    }
+  }
+
+  goBack() {
+    this.navCtrl.back();
+  }
 }

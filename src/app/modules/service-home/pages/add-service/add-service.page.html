@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar class="header">
+  <ion-toolbar>
     <ion-title>Agregar Servicio</ion-title>
     <ion-buttons slot="start">
       <ion-button (click)="goBack()">
@@ -36,21 +36,16 @@
       <img [src]="localImage" alt="Imagen del Servicio" style="width: 100%; border-radius: 8px;" />
     </ion-item>
 
-    <!-- Días de Atención -->
+    <!-- Horarios Disponibles -->
     <ion-item>
       <ion-label position="stacked">Días de Atención</ion-label>
       <ion-select formControlName="availableDays" multiple="true">
-        <ion-select-option value="monday">Lunes</ion-select-option>
-        <ion-select-option value="tuesday">Martes</ion-select-option>
-        <ion-select-option value="wednesday">Miércoles</ion-select-option>
-        <ion-select-option value="thursday">Jueves</ion-select-option>
-        <ion-select-option value="friday">Viernes</ion-select-option>
-        <ion-select-option value="saturday">Sábado</ion-select-option>
-        <ion-select-option value="sunday">Domingo</ion-select-option>
+        <ion-select-option *ngFor="let day of allDays" [value]="day.value">
+          {{ day.label }}
+        </ion-select-option>
       </ion-select>
     </ion-item>
 
-    <!-- Horarios Disponibles -->
     <ion-grid>
       <ion-row>
         <ion-col size="6">
@@ -68,27 +63,16 @@
       </ion-row>
     </ion-grid>
 
-    <ion-button 
-      expand="block" 
-      (click)="addAvailableHour()" 
-      [disabled]="isAddHourDisabled">
-      Añadir Horario
-    </ion-button>
-
-    <ion-list>
-      <ion-item *ngFor="let hour of availableHours; let i = index">
-        <ion-label>{{ hour.startTime }} - {{ hour.endTime }} ({{ hour.days.join(', ') }})</ion-label>
-        <ion-button fill="clear" color="danger" (click)="removeAvailableHour(i)">
-          <ion-icon name="trash-outline"></ion-icon>
-        </ion-button>
-      </ion-item>
-    </ion-list>
-
     <!-- Bloqueos de Horarios -->
     <ion-item>
-      <ion-label position="stacked">Fecha de Bloqueo</ion-label>
-      <ion-input type="date" formControlName="blockDate"></ion-input>
+      <ion-label position="stacked">Días para Bloqueo</ion-label>
+      <ion-select formControlName="blockDays" multiple="true">
+        <ion-select-option *ngFor="let day of allDays" [value]="day.value">
+          {{ day.label }}
+        </ion-select-option>
+      </ion-select>
     </ion-item>
+
     <ion-grid>
       <ion-row>
         <ion-col size="6">
@@ -111,17 +95,16 @@
       <ion-textarea formControlName="reason"></ion-textarea>
     </ion-item>
 
-    <ion-button 
-      expand="block" 
-      (click)="addBlockedTimeSlot()" 
-      [disabled]="isAddBlockDisabled">
+    <ion-button expand="block" (click)="addBlockedTimeSlot()" [disabled]="isAddBlockDisabled">
       Añadir Bloqueo
     </ion-button>
 
     <ion-list>
       <ion-item *ngFor="let block of blockedTimeSlots; let i = index">
         <ion-label>
-          {{ block.blockDate }}: {{ block.blockStartTime }} - {{ block.blockEndTime }} ({{ block.reason }})
+          {{ block.days.join(', ') }}: {{ block.startTime }} - {{ block.endTime }}
+          <br />
+          <small>Motivo: {{ block.reason }}</small>
         </ion-label>
         <ion-button fill="clear" color="danger" (click)="removeBlockedTimeSlot(i)">
           <ion-icon name="trash-outline"></ion-icon>
@@ -129,11 +112,7 @@
       </ion-item>
     </ion-list>
 
-    <!-- Botón Guardar Servicio -->
-    <ion-button 
-      expand="block" 
-      type="submit" 
-      [disabled]="form.invalid || availableHours.length === 0">
+    <ion-button expand="block" type="submit" [disabled]="isFormInvalid">
       Guardar Servicio
     </ion-button>
   </form>
