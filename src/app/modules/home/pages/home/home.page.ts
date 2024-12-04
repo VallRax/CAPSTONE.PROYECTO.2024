@@ -4,6 +4,8 @@ import { FirebaseService } from 'src/app/core/services/firebase.service';
 import { UtilsService } from 'src/app/core/services/utils.service';
 import { Service } from 'src/app/models/service.model';
 import { User } from 'src/app/models/user.model';
+import { ModalController } from '@ionic/angular'; 
+import { CategoryModalComponent } from 'src/app/shared/components/category-modal/category-modal.component';
 
 @Component({
   selector: 'app-home',
@@ -25,7 +27,7 @@ export class homePage implements OnInit {
   services: Service[] = [];
   currentUser: User;
 
-  constructor(private firebaseSvc: FirebaseService, private utilsSvc: UtilsService, private router: Router) {}
+  constructor(private firebaseSvc: FirebaseService, private utilsSvc: UtilsService, private router: Router, private modalCtrl: ModalController) {}
 
   async ngOnInit() {
     await this.loadCurrentUser();
@@ -140,4 +142,16 @@ async loadCurrentUser() {
     this.router.navigate([`/home/service/${serviceId}`]);
   }
   
+
+   // Método para abrir el modal de categoría
+   async openCategoryModal(category: { name: string; icon: string }) {
+    const modal = await this.modalCtrl.create({
+      component: CategoryModalComponent,
+      componentProps: {
+        selectedCategory: category,
+        services: this.services,
+      },
+    });
+    await modal.present();
+  }
 }
