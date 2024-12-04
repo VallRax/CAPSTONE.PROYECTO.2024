@@ -21,7 +21,11 @@ export class ScheduledServicesPage implements OnInit {
     status: string;
   }[] = [];
 
-  constructor(private firebaseSvc: FirebaseService, private utilsSvc: UtilsService, private navCtrl: NavController) {}
+  constructor(
+    private firebaseSvc: FirebaseService,
+    private utilsSvc: UtilsService,
+    private navCtrl: NavController
+  ) {}
 
   async ngOnInit() {
     await this.loadBookings();
@@ -31,23 +35,32 @@ export class ScheduledServicesPage implements OnInit {
     try {
       const localUser = this.utilsSvc.getFromLocalStorage('user');
       if (!localUser?.uid) {
-        throw new Error('Usuario no autenticado');
+        throw new Error('Usuario no autenticado.');
       }
 
-      // Cargar las reservas del usuario
+      // Obtener las reservas del usuario
       const userBookings = await this.firebaseSvc.getCollectionWithFilter<Booking>(
         'bookings',
-        'userId',
+        'clientId',
         '==',
         localUser.uid
       );
 
-      // Cargar los detalles de cada servicio y oferta
+      // Obtener detalles de servicios y ofertas
       this.bookings = await Promise.all(
         userBookings.map(async (booking) => {
-          const service = await this.firebaseSvc.getDocument(`services/${booking.serviceId}`) as Service;
+          const service = (await this.firebaseSvc.getDocument(`services/${booking.serviceId}`)) as Service;
           const offer = service.offers.find((o) => o.id === booking.offerId);
-          return { ...booking, service, offer };
+
+          if (!offer) {
+            console.warn(`La oferta con ID ${booking.offerId} no se encontró para el servicio ${booking.serviceId}`);
+          }
+
+          return {
+            ...booking,
+            service,
+            offer,
+          };
         })
       );
     } catch (error) {
@@ -55,6 +68,7 @@ export class ScheduledServicesPage implements OnInit {
     }
   }
 
+  // Método para determinar la clase CSS según el estado
   getStatusClass(status: string): string {
     switch (status) {
       case 'pending':
@@ -66,6 +80,26 @@ export class ScheduledServicesPage implements OnInit {
       default:
         return '';
     }
+  }
+
+  // Método para traducir el estado a texto amigable
+  getStatusText(status: string): string {
+    switch (status) {
+      case 'pending':
+        return 'Pendiente';
+      case 'confirmed':
+        return 'Confirmada';
+      case 'cancelled':
+        return 'Cancelada';
+      default:
+        return 'Desconocido';
+    }
+  }
+
+  // Método para formatear la fecha a día - mes - año
+  formatDate(date: string): string {
+    const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    return new Date(date).toLocaleDateString('es-ES', options);
   }
 
   goBack() {

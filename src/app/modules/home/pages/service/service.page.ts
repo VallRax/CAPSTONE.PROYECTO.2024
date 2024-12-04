@@ -38,7 +38,7 @@ export class ServicePage implements OnInit {
         throw new Error('Usuario no encontrado en el almacenamiento local.');
       }
 
-      const userDoc = await this.firebaseSvc.getDocument(`users_test/${localUser.uid}`);
+      const userDoc = await this.firebaseSvc.getDocument(`users/${localUser.uid}`);
       if (!userDoc) {
         throw new Error('Documento de usuario no encontrado en Firebase.');
       }
@@ -66,7 +66,7 @@ export class ServicePage implements OnInit {
         ? this.currentUser.favorites.filter((id) => id !== this.service.id)
         : [...this.currentUser.favorites, this.service.id];
 
-      await this.firebaseSvc.setDocument(`users_test/${this.currentUser.uid}`, {
+      await this.firebaseSvc.setDocument(`users/${this.currentUser.uid}`, {
         ...this.currentUser,
         favorites: updatedFavorites,
       });

@@ -151,7 +151,7 @@
   <!-- Sección de Ofertas -->
   <div *ngIf="segmentValue === 'offers'">
     <ion-list *ngIf="service?.offers?.length">
-      <ion-item-sliding *ngFor="let offer of service.offers; let i = index">
+      <ion-item-sliding *ngFor="let offer of service.offers; let i = index"(click)="editOffer(offer.id)">
         <ion-item>
           <ion-label>
             <strong>{{ offer.name }}</strong><br />

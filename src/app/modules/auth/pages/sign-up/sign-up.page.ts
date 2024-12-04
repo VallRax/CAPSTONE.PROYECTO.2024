@@ -109,7 +109,7 @@ export class SignUpPage implements OnInit {
           reviews: [],
         };
 
-        await this.firebaseSvc.setDocument(`users_test/${uid}`, newUser);
+        await this.firebaseSvc.setDocument(`users/${uid}`, newUser);
         this.utilsSvc.saveInLocalStorage('user', newUser);
 
         this.utilsSvc.presentToast({
