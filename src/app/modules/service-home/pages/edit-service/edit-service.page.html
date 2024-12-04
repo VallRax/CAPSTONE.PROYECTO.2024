@@ -16,7 +16,9 @@
 
 <ion-content>
   <div class="service-details" *ngIf="service">
-    <img [src]="service.imageUrl" alt="Imagen del servicio" class="service-image" />
+    <!-- Imagen del servicio con botón para editar -->
+    <img [src]="localImage || service.imageUrl || defaultImageUrl" alt="Imagen del servicio" class="service-image" />
+    <ion-button expand="block" (click)="selectPhoto()">Cambiar Imagen</ion-button>
 
     <ion-list class="editable-list">
       <!-- Nombre del servicio editable -->
@@ -65,47 +67,39 @@
 
       <!-- Horarios disponibles -->
       <ion-item lines="full">
-        <ion-label>Horario de Atención</ion-label>
-        <ion-button fill="clear" slot="end" (click)="editAvailableHour()">Editar Horario</ion-button>
+        <ion-label>Horarios de Atención</ion-label>
+        <ion-button fill="clear" slot="end" (click)="editAvailableHours()">Editar/Añadir</ion-button>
       </ion-item>
-
-      <ion-item *ngIf="service.availableHours">
-        <ion-label>
-          {{ service.availableHours[0].startTime }} - {{ service.availableHours[0].endTime }}
-        </ion-label>
+      
+      <ion-list>
+        <ion-item *ngFor="let hour of service.availableHours; let i = index">
+          <ion-label>
+            {{ hour.days?.join(', ') || 'Sin días asignados' }}: {{ hour.startTime }} - {{ hour.endTime }}
+          </ion-label>
+          <ion-button fill="clear" color="danger" slot="end" (click)="removeAvailableHour(i)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>
+      
+      
+      <ion-item lines="full">
+        <ion-label>Bloqueos de Horario</ion-label>
+        <ion-button fill="clear" slot="end" (click)="editBlockedTimeSlots()">Editar/Añadir</ion-button>
       </ion-item>
+      
+      <ion-list>
+        <ion-item *ngFor="let block of service.blockedTimeSlots; let i = index">
+          <ion-label>
+            {{ block.days?.join(', ') || 'Sin días asignados' }}: {{ block.startTime }} - {{ block.endTime }}
+            <br />
+            <small>Motivo: {{ block.reason }}</small>
+          </ion-label>
+          <ion-button fill="clear" color="danger" slot="end" (click)="removeBlockedTimeSlot(i)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>      
     </ion-list>
   </div>
-
-  <!-- Listado de ofertas -->
-  <ion-list *ngIf="service?.offers?.length">
-    <ion-item-sliding *ngFor="let offer of service.offers; let i = index">
-      <ion-item (click)="editOffer(offer.id)">
-        <ion-label>
-          <strong>{{ offer.name }}</strong><br />
-          <ion-text>{{ offer.price | currency:'CLP': '$' }}</ion-text><br />
-          <ion-note color="medium" class="ion-text-wrap">{{ offer.description }}</ion-note>
-        </ion-label>
-        <ion-icon slot="end" name="arrow-forward"></ion-icon>
-      </ion-item>
-      <ion-item-options slot="end">
-        <ion-item-option color="primary" expandable="true" (click)="editOffer(offer.id)">
-          <ion-icon slot="icon-only" name="create"></ion-icon>
-        </ion-item-option>
-        <ion-item-option color="danger" expandable="true" (click)="deleteOffer(i)">
-          <ion-icon slot="icon-only" name="trash"></ion-icon>
-        </ion-item-option>
-      </ion-item-options>
-    </ion-item-sliding>
-  </ion-list>
-
-  <!-- Botón para añadir nueva oferta -->
-  <ion-fab class="fabs" slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button *ngIf="service" [routerLink]="['/service-home/add-offer', service.id]" class="fab-orange">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
 </ion-content>
-
-<!-- BOTTOM BAR -->
-<app-bottom-nav></app-bottom-nav>
