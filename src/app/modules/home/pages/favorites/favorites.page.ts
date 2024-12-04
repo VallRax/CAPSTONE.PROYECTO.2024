@@ -60,6 +60,7 @@ export class FavoritesPage implements OnInit {
       );
 
       console.log('Servicios favoritos cargados:', this.favoriteServices);
+      
     } catch (error) {
       console.error('Error al cargar servicios favoritos:', error);
     }
@@ -68,35 +69,40 @@ export class FavoritesPage implements OnInit {
   async toggleFavorite(service: Service) {
     try {
       if (!this.currentUser) throw new Error('Usuario no definido.');
-
+  
       const isFavorite = this.currentUser.favorites?.includes(service.id) || false;
       const updatedFavorites = isFavorite
         ? this.currentUser.favorites.filter((id) => id !== service.id)
         : [...(this.currentUser?.favorites || []), service.id];
-
+  
       await this.firebaseSvc.setDocument(`users_test/${this.currentUser.uid}`, {
         ...this.currentUser,
         favorites: updatedFavorites,
       });
-
+  
       this.currentUser.favorites = updatedFavorites;
-
+  
       // Actualizar la lista de servicios favoritos
       this.favoriteServices = this.favoriteServices.filter((fav) =>
         updatedFavorites.includes(fav.id)
       );
-
+  
+      // Mostrar mensaje con duración automática
       this.utilsSvc.presentToast({
         message: isFavorite
           ? 'Servicio eliminado de favoritos.'
           : 'Servicio añadido a favoritos.',
         color: 'success',
+        duration: 3000, // Mensaje desaparece en 3 segundos
       });
     } catch (error) {
       console.error('Error al actualizar favoritos:', error);
+  
+      // Mostrar mensaje de error con duración automática
       this.utilsSvc.presentToast({
         message: 'Error al actualizar favoritos.',
         color: 'danger',
+        duration: 3000, // Mensaje desaparece en 3 segundos
       });
     }
   }
