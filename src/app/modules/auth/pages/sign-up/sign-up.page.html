@@ -33,13 +33,16 @@
 
       <!-- RUT -->
       <app-custom-input
-        autocomplete="off"
-        icon="information-circle-outline"
-        [control]="form.controls.rut"
-        type="text"
-        label="RUT"
-        placeholder="Ej. 12.345.678-9"
+      autocomplete="off"
+      icon="information-circle-outline"
+      [control]="form.controls.rut"
+      type="text"
+      label="RUT"
+      placeholder="Ej. 12.345.678-9"
+      maxlength="12"
       ></app-custom-input>
+
+
 
       <!-- Email -->
       <app-custom-input
