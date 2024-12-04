@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { FirebaseService } from 'src/app/core/services/firebase.service';
 import { User, UserRole } from 'src/app/models/user.model';
 
@@ -11,12 +11,20 @@ import { User, UserRole } from 'src/app/models/user.model';
 export class SideMenuComponent implements OnInit {
   currentUser: User | null = null;
   activeRole: UserRole; // Variable para gestionar el rol activo
+  disableMenu = false;
 
   constructor(private router: Router, private firebaseSvc: FirebaseService) {}
 
   ngOnInit() {
     this.loadUserFromStorage();
     this.setInitialRole();
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        // Deshabilitar el menú en rutas de autenticación
+        const authRoutes = ['/auth/login', '/auth/sign-up', '/auth/forgot-password'];
+        this.disableMenu = authRoutes.some((route) => event.url.startsWith(route));
+      }
+    });
   }
 
   // Cargar usuario desde el almacenamiento local
