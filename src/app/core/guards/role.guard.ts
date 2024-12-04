@@ -12,30 +12,17 @@ import {
 export class RoleGuard implements CanActivate {
   constructor(private router: Router) {}
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): boolean {
-    let user: any; // Declarar la variable fuera del bloque try
-    try {
-      const allowedRoles: string[] = route.data['roles'] as string[]; // Roles permitidos para la ruta
-      user = JSON.parse(localStorage.getItem('user'));
+  canActivate(route: ActivatedRouteSnapshot): boolean {
+    const allowedRoles: string[] = route.data['roles'] as string[];
+    const user = JSON.parse(localStorage.getItem('user'));
 
-      // Verifica si el usuario tiene algún rol permitido
-      if (
-        user &&
-        Array.isArray(user.roles) &&
-        user.roles.some((role) => allowedRoles.includes(role))
-      ) {
-        return true;
-      }
-    } catch (error) {
-      console.error('Error parsing user data:', error);
+    if (user && allowedRoles.some((role) => user.roles.includes(role))) {
+      return true;
     }
 
-    // Redirige si el usuario no tiene permisos
-    const redirectRoute = user?.roles?.includes('service') ? '/service-home' : '/home';
-    this.router.navigate([redirectRoute]);
+    // Redirige al home según el primer rol del usuario
+    const redirectPath = user?.roles.includes('client') ? '/home' : '/service-home';
+    this.router.navigate([redirectPath]);
     return false;
   }
 }

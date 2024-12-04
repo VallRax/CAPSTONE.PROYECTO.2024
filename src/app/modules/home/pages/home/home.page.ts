@@ -4,6 +4,8 @@ import { FirebaseService } from 'src/app/core/services/firebase.service';
 import { UtilsService } from 'src/app/core/services/utils.service';
 import { Service } from 'src/app/models/service.model';
 import { User } from 'src/app/models/user.model';
+import { ModalController } from '@ionic/angular'; 
+import { CategoryModalComponent } from 'src/app/shared/components/category-modal/category-modal.component';
 
 @Component({
   selector: 'app-home',
@@ -25,7 +27,7 @@ export class homePage implements OnInit {
   services: Service[] = [];
   currentUser: User;
 
-  constructor(private firebaseSvc: FirebaseService, private utilsSvc: UtilsService, private router: Router) {}
+  constructor(private firebaseSvc: FirebaseService, private utilsSvc: UtilsService, private router: Router, private modalCtrl: ModalController) {}
 
   async ngOnInit() {
     await this.loadCurrentUser();
@@ -44,7 +46,7 @@ async loadCurrentUser() {
     }
 
     // Busca el usuario en Firebase
-    const userDoc = await this.firebaseSvc.getDocument(`users_test/${localUser.uid}`);
+    const userDoc = await this.firebaseSvc.getDocument(`users/${localUser.uid}`);
     if (!userDoc) {
       throw new Error('Documento de usuario no encontrado en Firebase.');
     }
@@ -85,7 +87,7 @@ async loadCurrentUser() {
         if (validFavorites.length !== this.currentUser.favorites.length) {
           this.currentUser.favorites = validFavorites;
   
-          await this.firebaseSvc.setDocument(`users_test/${this.currentUser.uid}`, {
+          await this.firebaseSvc.setDocument(`users/${this.currentUser.uid}`, {
             ...this.currentUser,
             favorites: validFavorites,
           });
@@ -114,7 +116,7 @@ async loadCurrentUser() {
   
       console.log('Favoritos actualizados:', updatedFavorites);
   
-      await this.firebaseSvc.setDocument(`users_test/${this.currentUser.uid}`, {
+      await this.firebaseSvc.setDocument(`users/${this.currentUser.uid}`, {
         ...this.currentUser,
         favorites: updatedFavorites,
       });
@@ -140,4 +142,16 @@ async loadCurrentUser() {
     this.router.navigate([`/home/service/${serviceId}`]);
   }
   
+
+   // Método para abrir el modal de categoría
+   async openCategoryModal(category: { name: string; icon: string }) {
+    const modal = await this.modalCtrl.create({
+      component: CategoryModalComponent,
+      componentProps: {
+        selectedCategory: category,
+        services: this.services,
+      },
+    });
+    await modal.present();
+  }
 }

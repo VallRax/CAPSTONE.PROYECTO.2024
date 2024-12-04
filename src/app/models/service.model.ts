@@ -24,8 +24,8 @@ export interface Service {
 
   /* DISPONIBILIDAD */
   availableDays?: string[]; // Días disponibles (e.g., ["monday", "tuesday"])
-  availableHours?: { startTime: string; endTime: string }[]; // Horarios de apertura y cierre
-  blockedTimeSlots?: { date: string; startTime: string; endTime: string; reason: string }[]; // Horarios no disponibles
+  availableHours?: { days:string[]; startTime: string; endTime: string }[]; // Horarios de apertura y cierre
+  blockedTimeSlots?: { days: string[]; startTime: string; endTime: string; reason: string }[]; // Horarios no disponibles
 }
 
 export interface Offer {

@@ -14,26 +14,71 @@ export class SignUpPage implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
     name: new FormControl('', [Validators.required, Validators.minLength(4)]),
-    lastName: new FormControl('', [Validators.required, Validators.minLength(2)]), // Campo apellido
-    rut: new FormControl('', [Validators.required, Validators.pattern(/^\d{1,2}\.\d{3}\.\d{3}-[\dkK]{1}$/)]), // Validación de RUT
-    role: new FormControl('client', Validators.required), // Rol predeterminado como Cliente
+    lastName: new FormControl('', [Validators.required, Validators.minLength(2)]),
+    rut: new FormControl('', [
+      Validators.required,
+      this.rutValidator,
+    ]),
+    role: new FormControl('client', Validators.required),
     contactNumber: new FormControl('', [Validators.required]),
     location: new FormGroup({
       region: new FormControl('', [Validators.required]),
-      comuna: new FormControl('', [Validators.required]), // Nuevo campo comuna
+      comuna: new FormControl('', [Validators.required]),
       address: new FormControl('', [Validators.required]),
       addressNumber: new FormControl(''),
       department: new FormControl(''),
     }),
   });
-  
-  
-  
 
   firebaseSvc = inject(FirebaseService);
   utilsSvc = inject(UtilsService);
 
-  ngOnInit() {}
+  private readonly RUT_MAX_LENGTH = 12; // Máximo de caracteres formateados (99.999.999-9)
+
+  ngOnInit() {
+    this.form.get('rut')?.valueChanges.subscribe((value) => {
+      if (!value) return;
+
+      const cleaned = value.replace(/[^0-9kK]/g, ''); // Elimina caracteres no válidos
+      if (cleaned.length > 9) {
+        const trimmedCleaned = cleaned.slice(0, 9); // Limita a 9 caracteres
+        const formattedRut = this.formatRut(trimmedCleaned); // Aplica el formato al RUT limpio
+        this.form.get('rut')?.setValue(formattedRut, { emitEvent: false });
+        return;
+      }
+      const formattedRut = this.formatRut(cleaned); // Aplica formato al RUT
+      // Si excede el límite máximo, corta el valor
+      if (formattedRut.length > this.RUT_MAX_LENGTH) {
+        this.form.get('rut')?.setValue(formattedRut.slice(0, this.RUT_MAX_LENGTH), { emitEvent: false });
+      } else {
+        this.form.get('rut')?.setValue(formattedRut, { emitEvent: false });
+      }
+    });
+      
+  }
+
+  formatRut(value: string): string {
+    if (!value) return '';
+    const cleaned = value.replace(/[^0-9kK]/g, '').toUpperCase(); // Elimina caracteres no válidos
+    if (cleaned.length <= 1) return cleaned;
+
+    // Dividir en cuerpo y dígito verificador
+    const body = cleaned.slice(0, -1);
+    const verifier = cleaned.slice(-1);
+
+    // Formatear el cuerpo del RUT con puntos
+    const formattedBody = body.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return `${formattedBody}-${verifier}`;
+  }
+
+  rutValidator(control: FormControl) {
+    const value = control.value;
+    if (!value) return null;
+
+    // Validación del formato completo del RUT
+    const rutRegex = /^\d{1,2}(\.\d{3}){2}-[\dkK]{1}$/; // Formato para RUT válidos
+    return rutRegex.test(value) ? null : { invalidRut: true };
+  }
 
   async submit() {
     if (this.form.valid) {
@@ -43,34 +88,28 @@ export class SignUpPage implements OnInit {
       try {
         const { email, password, name, lastName, rut, role, contactNumber, location } = this.form.value;
 
-        // Crear usuario en Firebase Authentication
         const userCredential = await this.firebaseSvc.signUp({ email, password });
-
         const uid = userCredential.user.uid;
 
-        // Crear objeto del usuario basado en el modelo
         const newUser: User = {
-        uid,
-        email,
-        name,
-        lastName,
-        rut,
-        roles: [role as UserRole], // Convertir a un array con un único rol
-        contactNumber,
-        location,
-        profileImageUrl: '', // Imagen predeterminada
-        createdAt: new Date().toISOString(),
-        favorites: [],
-        bookings: [],
-        servicesOffered: [],
-        ratingAverage: 0,
-        reviews: [],
+          uid,
+          email,
+          name,
+          lastName,
+          rut,
+          roles: [role as UserRole],
+          contactNumber,
+          location,
+          profileImageUrl: '',
+          createdAt: new Date().toISOString(),
+          favorites: [],
+          bookings: [],
+          servicesOffered: [],
+          ratingAverage: 0,
+          reviews: [],
         };
 
-        // Guardar usuario en Firestore
-        await this.firebaseSvc.setDocument(`users_test/${uid}`, newUser);
-
-        // Guardar usuario en localStorage
+        await this.firebaseSvc.setDocument(`users/${uid}`, newUser);
         this.utilsSvc.saveInLocalStorage('user', newUser);
 
         this.utilsSvc.presentToast({
@@ -90,5 +129,4 @@ export class SignUpPage implements OnInit {
       }
     }
   }
-
 }

@@ -43,14 +43,14 @@ export class ServiceHomePage implements OnInit {
     });
   }
 
-  // async generateTestData() {
-  //   try {
-  //     await this.testDataService.generateTestData();
-  //     console.log('Datos de prueba generados con éxito.');
-  //     alert('Datos de prueba generados correctamente.');
-  //   } catch (error) {
-  //     console.error('Error al generar datos de prueba:', error);
-  //     alert('Error al generar datos de prueba.');
-  //   }
-  // }
+  async generateTestData() {
+    try {
+      await this.testDataService.generateTestData();
+      console.log('Datos de prueba generados con éxito.');
+      alert('Datos de prueba generados correctamente.');
+    } catch (error) {
+      console.error('Error al generar datos de prueba:', error);
+      alert('Error al generar datos de prueba.');
+    }
+  }
 }
