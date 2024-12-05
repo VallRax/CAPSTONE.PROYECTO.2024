@@ -16,6 +16,7 @@ import { ServicePage } from './pages/service/service.page';
 import { SchedulePage } from './pages/schedule/schedule.page';
 import { FavoritesPage } from './pages/favorites/favorites.page';
 import { ScheduledServicesPage } from './pages/scheduled-services/scheduled-services.page';
+import { CategoryPage } from './pages/category/category.page';
 
 
 
@@ -33,6 +34,7 @@ import { ScheduledServicesPage } from './pages/scheduled-services/scheduled-serv
     SchedulePage,
     FavoritesPage,
     ScheduledServicesPage,
+    CategoryPage,
   ]
 })
 export class HomeModule { }
