@@ -173,10 +173,14 @@
     <ion-text *ngIf="!service?.offers?.length" color="medium">
       <p class="ion-padding">No hay ofertas disponibles.</p>
     </ion-text>
-    <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-      <ion-fab-button [routerLink]="['/service-home/add-offer', serviceId]">
+    <ion-fab class="fabs" slot="fixed" vertical="bottom" horizontal="end">
+      <ion-fab-button [routerLink]="['/service-home/add-offer', serviceId]" class="fab-orange">
         <ion-icon name="add"></ion-icon>
       </ion-fab-button>
     </ion-fab>
   </div>
 </ion-content>
+
+
+<!-- BOTTOM BAR -->
+<app-bottom-nav></app-bottom-nav>

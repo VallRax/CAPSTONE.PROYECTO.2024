@@ -154,4 +154,9 @@ async loadCurrentUser() {
     });
     await modal.present();
   }
+
+  goToCategory(category: string) {
+    this.router.navigate(['/home/category'], { queryParams: { category } });
+  }
+  
 }

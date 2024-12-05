@@ -2,17 +2,18 @@ ion-content {
     --padding-bottom: 60px;
   }
   
-  /* Encabezado */
-  .header {
+/* Encabezado */
+.header {
     --background: #FF7043;
     --color: white;
-  }
-  
-  .header ion-icon {
+    }
+    
+    .header ion-icon {
     color: white;
-  }
+    }
 
-.category-list {
+  // CATEGORIES CIRCLES
+  .category-list {
     display: flex;
     overflow-x: auto;
     padding: 10px;
@@ -58,11 +59,12 @@ ion-content {
     color: #FF7043;
   }
   
+  // SEVICES CARDS
   .service-list {
     background-color: #f6f6f6;
   }
   
-  .service-list-tittle h1 {
+  .service-list-tittle h1{
     font-size: 20px;
     margin-top: 5px;
     margin-bottom: 0px;
@@ -75,50 +77,50 @@ ion-content {
   }
   
   .service img {
-    width: 100%;
-    height: 100px;
-    object-fit: cover;
-    object-position: center;
-  }
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      object-position: center;
+  } 
   
   .service-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-  }
-  
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+    
   .service-title ion-card-title {
-    flex: 1;
-  }
-  
+      flex: 1;
+    }
+    
   .service-fav {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-  }
-  
+      position: absolute;
+      right: 10px;
+      top: 10px;
+    }
+    
   .service-fav ion-icon {
-    color: #FF7043;
-    font-size: 24px;
-    flex: 2;
-  }
-
-  .no-fav-message {
-    text-align: center;
-    margin-top: 50px;
-    padding: 20px;
-    color: #555;
-  
-    h2 {
-      font-size: 20px;
-      font-weight: bold;
-      color: #999;
+      color: #FF7043;
+      font-size: 24px;
+      flex: 2;
     }
-  
-    p {
-      font-size: 16px;
-      color: #aaa;
+    
+    .no-services-message {
+      text-align: center;
+      margin-top: 50px;
+      padding: 20px;
+      color: #555;
+    
+      h2 {
+        font-size: 20px;
+        font-weight: bold;
+        color: #999;
+      }
+    
+      p {
+        font-size: 16px;
+        color: #aaa;
+      }
     }
-  }
-  
+    

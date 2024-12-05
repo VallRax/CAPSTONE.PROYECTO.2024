@@ -69,7 +69,7 @@
     </ion-grid>
 
     <!-- Bloqueos de Horarios -->
-    <ion-item>
+    <!-- <ion-item>
       <ion-label position="stacked">Días para Bloqueo</ion-label>
       <ion-select formControlName="blockDays" multiple="true">
         <ion-select-option *ngFor="let day of allDays" [value]="day.value">
@@ -115,10 +115,14 @@
           <ion-icon name="trash-outline"></ion-icon>
         </ion-button>
       </ion-item>
-    </ion-list>
+    </ion-list> -->
 
     <ion-button expand="block" type="submit" [disabled]="isFormInvalid">
       Guardar Servicio
     </ion-button>
   </form>
 </ion-content>
+
+
+<!-- BOTTOM BAR -->
+<app-bottom-nav></app-bottom-nav>
