@@ -7,6 +7,7 @@ import { Service } from 'src/app/models/service.model';
 @Component({
   selector: 'app-add-service',
   templateUrl: './add-service.page.html',
+  styleUrls: ['./add-service.page.scss'],
 })
 export class AddServicePage {
   form = new FormGroup({
