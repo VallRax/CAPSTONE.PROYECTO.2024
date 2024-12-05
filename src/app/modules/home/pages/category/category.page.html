@@ -6,19 +6,25 @@
         <ion-icon name="arrow-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-
   </ion-toolbar>
 </ion-header>
 
-
-<!-- CONTENIDO -->
 <ion-content [fullscreen]="true">
+  <!-- TÍTULO DE SERVICIOS DE LA CATEGORÍA -->
+  <div class="service-list-tittle">
+    <h1>Todos los Servicios de {{ selectedCategory }}</h1>
+  </div>
 
-  <!-- CARDS DE SERVICIOS -->
-  <ion-list class="service-list" lines="none">
-    <div class="service-list-tittle">
-      <h1>Todos los Servicios de {{ selectedCategory }}</h1>
-    </div>
+  <!-- MENSAJE SI NO HAY SERVICIOS -->
+  <div *ngIf="!isLoading && filteredServices.length === 0" class="no-services-message">
+    <ion-text color="medium">
+      <h2>Aún no tenemos servicios en esta categoría.</h2>
+      <p>Lo sentimos, por favor revisa otras categorías.</p>
+    </ion-text>
+  </div>
+
+  <!-- LISTADO DE SERVICIOS -->
+  <ion-list *ngIf="filteredServices.length > 0" class="service-list" lines="none">
     <ion-card class="service" *ngFor="let service of filteredServices" (click)="goToServiceDetails(service.id)">
       <img [src]="service.imageUrl" alt="Imagen del servicio" />
       <ion-card-header class="service-tittle">
@@ -39,7 +45,5 @@
   </ion-list>
 </ion-content>
 
-
 <!-- BOTTOM BAR -->
 <app-bottom-nav></app-bottom-nav>
-

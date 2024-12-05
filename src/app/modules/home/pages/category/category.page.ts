@@ -16,6 +16,7 @@ export class CategoryPage implements OnInit {
   filteredServices: Service[] = [];
   allServices: Service[] = [];
   currentUser: User;
+  isLoading: boolean = true; // Bandera para verificar si los datos están cargando
 
   constructor(
     private route: ActivatedRoute,
@@ -26,6 +27,9 @@ export class CategoryPage implements OnInit {
   ) {}
 
   async ngOnInit() {
+    // Inicia la carga
+    this.isLoading = true;
+
     // Cargar usuario actual
     await this.loadCurrentUser();
 
@@ -36,6 +40,7 @@ export class CategoryPage implements OnInit {
     this.route.queryParams.subscribe((params) => {
       this.selectedCategory = params['category'] || 'Otros';
       this.filterServicesByCategory();
+      this.isLoading = false; // Finaliza la carga
     });
   }
 
@@ -55,6 +60,7 @@ export class CategoryPage implements OnInit {
 
       // Inicializa favoritos si no existen
       if (!this.currentUser.favorites) {
+       
         this.currentUser.favorites = [];
       }
     } catch (error) {
