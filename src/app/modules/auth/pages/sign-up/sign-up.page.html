@@ -38,6 +38,25 @@
       <!-- Número de contacto -->
       <app-custom-input [control]="form.controls.contactNumber" icon="call-outline" type="text"
         label="Número de Contacto"></app-custom-input>
+        
+        <!-- Región -->
+      
+        <ion-select  label="Región" label-placement="floating" fill="outline" [formControl]="form.controls.location.controls.region" (ionChange)="onRegionChange($event)">
+          <ion-select-option *ngFor="let region of regions" [value]="region.name">
+            {{ region.name }}
+          </ion-select-option>
+        </ion-select>
+    
+
+      <!-- Comuna -->
+      
+        
+        <ion-select  label="Comuna" label-placement="floating" fill="outline"  [formControl]="form.controls.location.controls.comuna" [disabled]="!availableCommunes.length">
+          <ion-select-option *ngFor="let comuna of availableCommunes" [value]="comuna">
+            {{ comuna }}
+          </ion-select-option>
+        </ion-select>
+      
 
 
       <!-- Dirección -->
@@ -52,25 +71,6 @@
       <app-custom-input [control]="form.controls.location.controls.department" icon="home-outline" type="text"
         label="Departamento (opcional)" placeholder="Ej. Apto 4"></app-custom-input>
 
-      <!-- Región -->
-      <ion-item>
-        <ion-label>Región</ion-label>
-        <ion-select  label-placement="floating" [formControl]="form.controls.location.controls.region" (ionChange)="onRegionChange($event)">
-          <ion-select-option *ngFor="let region of regions" [value]="region.name">
-            {{ region.name }}
-          </ion-select-option>
-        </ion-select>
-      </ion-item>
-
-      <!-- Comuna -->
-      <ion-item>
-        <ion-label>Comuna</ion-label>
-        <ion-select [formControl]="form.controls.location.controls.comuna" [disabled]="!availableCommunes.length">
-          <ion-select-option *ngFor="let comuna of availableCommunes" [value]="comuna">
-            {{ comuna }}
-          </ion-select-option>
-        </ion-select>
-      </ion-item>
 
       <!-- Roles -->
       <ion-item lines="none">
