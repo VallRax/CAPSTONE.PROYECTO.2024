@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FirebaseService } from 'src/app/core/services/firebase.service';
 import { UtilsService } from 'src/app/core/services/utils.service';
-import { ActionSheetController, LoadingController } from '@ionic/angular';
+import { ActionSheetController, LoadingController, NavController } from '@ionic/angular';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 import { Capacitor } from '@capacitor/core';
@@ -20,7 +20,7 @@ export class ProfilePage implements OnInit {
   actionSheetCtrl = inject(ActionSheetController);
   loadingCtrl = inject(LoadingController);
 
-  constructor() {}
+  constructor(private navCtrl: NavController) {}
 
   // Cargar datos del usuario
   async loadUserData(uid: string) {
@@ -144,5 +144,9 @@ export class ProfilePage implements OnInit {
         console.warn('No hay un usuario autenticado.');
       }
     });
+  }
+
+  goBack() {
+    this.navCtrl.back();
   }
 }

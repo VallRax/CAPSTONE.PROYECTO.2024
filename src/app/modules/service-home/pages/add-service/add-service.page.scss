@@ -1,19 +1,16 @@
+ion-content {
+  --padding-bottom: 60px;
+}
+
+/* Encabezado */
 .header {
-    --background: #FF7043;
-    --color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .header ion-title {
-    text-align: center;
-    width: 100%; /* Asegura que el título ocupe el 100% del ancho del contenedor */
-  }
-  
-  .header ion-icon {
-    color: white;
-  }
+  --background: #FF7043;
+  --color: white;
+}
+
+.header ion-icon {
+  color: white;
+}
 
 form {
     padding: 0px 10px;
