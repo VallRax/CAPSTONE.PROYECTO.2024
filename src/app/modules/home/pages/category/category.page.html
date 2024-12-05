@@ -1,13 +1,45 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>category</ion-title>
+<ion-header>
+  <ion-toolbar class="header">
+    <ion-title> Categoría </ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 
+
+<!-- CONTENIDO -->
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">category</ion-title>
-    </ion-toolbar>
-  </ion-header>
+
+  <!-- CARDS DE SERVICIOS -->
+  <ion-list class="service-list" lines="none">
+    <div class="service-list-tittle">
+      <h1>Todos los Servicios de {{ selectedCategory }}</h1>
+    </div>
+    <ion-card class="service" *ngFor="let service of filteredServices" (click)="goToServiceDetails(service.id)">
+      <img [src]="service.imageUrl" alt="Imagen del servicio" />
+      <ion-card-header class="service-tittle">
+        <ion-card-title>{{ service.name }}</ion-card-title>
+        <ion-card-subtitle>{{ service.category }}</ion-card-subtitle>
+        <ion-buttons class="service-fav">
+          <ion-button (click)="toggleFavorite(service); $event.stopPropagation()">
+            <ion-icon
+              [name]="currentUser?.favorites?.includes(service.id) ? 'heart' : 'heart-outline'"
+            ></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-card-header>
+      <ion-card-content>
+        {{ service.description }}
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
 </ion-content>
+
+
+<!-- BOTTOM BAR -->
+<app-bottom-nav></app-bottom-nav>
+

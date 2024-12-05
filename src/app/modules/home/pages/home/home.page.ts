@@ -156,7 +156,7 @@ async loadCurrentUser() {
   }
 
   goToCategory(category: string) {
-    this.router.navigate(['/category'], { queryParams: { category } });
+    this.router.navigate(['/home/category'], { queryParams: { category } });
   }
   
 }
