@@ -40,10 +40,25 @@ export class BottomNavComponent implements OnInit {
     }
   }
 
-  navigateTo(tab: string) {
-    this.router.navigate([`/${tab}`]);
-    this.closeModal();
+  async navigateTo(tab: string) {
+    try {
+      // Cierra el menú lateral si está abierto
+      if (await this.menuCtrl.isOpen()) {
+        await this.menuCtrl.close();
+      }
+  
+      // Cierra cualquier modal que esté abierto
+      await this.modalController.dismiss().catch(() => {
+        console.warn('No modals to close');
+      });
+  
+      // Navega a la nueva página y reinicia el historial
+      await this.router.navigate([`/${tab}`], { replaceUrl: true });
+    } catch (error) {
+      console.error('Error during navigation:', error);
+    }
   }
+  
 
   private syncActiveTab(url: string) {
     // Actualizar la pestaña activa basado en la ruta
@@ -57,23 +72,6 @@ export class BottomNavComponent implements OnInit {
       this.activeTab = 'profile';
     } else {
       this.activeTab = ''; // Si no coincide, ninguna pestaña activa
-    }
-  }
-  
-
-  async openMenu() {
-    try {
-      await this.menuCtrl.open('main-menu');
-    } catch (error) {
-      console.error('Error al abrir el menú:', error);
-    }
-  }
-
-  private async closeModal() {
-    try {
-      await this.modalController.dismiss();
-    } catch (error) {
-      console.warn('No modal to close:', error);
     }
   }
 }
