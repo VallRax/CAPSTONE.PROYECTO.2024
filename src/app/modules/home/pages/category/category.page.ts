@@ -1,22 +1,25 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
-import { Router } from '@angular/router';
-import { FirebaseService } from 'src/app/core/services/firebase.service';
-import { UtilsService } from 'src/app/core/services/utils.service';
 import { Service } from 'src/app/models/service.model';
+import { FirebaseService } from 'src/app/core/services/firebase.service';
 import { User } from 'src/app/models/user.model';
+import { UtilsService } from 'src/app/core/services/utils.service';
 
 @Component({
-  selector: 'app-favorites',
-  templateUrl: './favorites.page.html',
-  styleUrls: ['./favorites.page.scss'],
+  selector: 'app-category',
+  templateUrl: './category.page.html',
+  styleUrls: ['./category.page.scss'],
 })
-export class FavoritesPage implements OnInit {
-  favoriteServices: Service[] = [];
+export class CategoryPage implements OnInit {
+  selectedCategory: string;
+  filteredServices: Service[] = [];
+  allServices: Service[] = [];
   currentUser: User;
-  isLoading: boolean = true; // Indica si los datos están cargando
+  isLoading: boolean = true; // Bandera para verificar si los datos están cargando
 
   constructor(
+    private route: ActivatedRoute,
     private firebaseSvc: FirebaseService,
     private utilsSvc: UtilsService,
     private router: Router,
@@ -24,10 +27,21 @@ export class FavoritesPage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.isLoading = true; // Inicia la carga
+    // Inicia la carga
+    this.isLoading = true;
+
+    // Cargar usuario actual
     await this.loadCurrentUser();
-    await this.loadFavoriteServices();
-    this.isLoading = false; // Finaliza la carga
+
+    // Cargar servicios desde Firebase
+    await this.loadServices();
+
+    // Obtener la categoría seleccionada de los parámetros de la URL
+    this.route.queryParams.subscribe((params) => {
+      this.selectedCategory = params['category'] || 'Otros';
+      this.filterServicesByCategory();
+      this.isLoading = false; // Finaliza la carga
+    });
   }
 
   async loadCurrentUser() {
@@ -44,35 +58,54 @@ export class FavoritesPage implements OnInit {
 
       this.currentUser = userDoc as User;
 
+      // Inicializa favoritos si no existen
       if (!this.currentUser.favorites) {
+       
         this.currentUser.favorites = [];
       }
-
-      console.log('Usuario cargado:', this.currentUser);
     } catch (error) {
       console.error('Error al cargar el usuario:', error);
       this.utilsSvc.routerLink('/auth/login');
     }
   }
 
-  async loadFavoriteServices() {
+  async loadServices() {
     try {
-      const allServices = await this.firebaseSvc.getCollection('services');
-      this.favoriteServices = allServices.filter((service) =>
-        this.currentUser.favorites.includes(service.id)
-      );
-
-      console.log('Servicios favoritos cargados:', this.favoriteServices);
+      this.allServices = await this.firebaseSvc.getCollection('services');
+      this.filterServicesByCategory();
     } catch (error) {
-      console.error('Error al cargar servicios favoritos:', error);
+      console.error('Error al cargar servicios:', error);
+    }
+  }
+
+  // Filtrar los servicios por categoría
+  filterServicesByCategory() {
+    if (this.selectedCategory === 'Otros') {
+      const predefinedCategories = [
+        'Belleza',
+        'Veterinaria',
+        'Salud',
+        'Fitness',
+        'Hogar',
+        'Tecnología',
+        'Comida',
+      ];
+      this.filteredServices = this.allServices.filter(
+        (service) => !predefinedCategories.includes(service.category)
+      );
+    } else {
+      this.filteredServices = this.allServices.filter(
+        (service) => service.category === this.selectedCategory
+      );
     }
   }
 
   async toggleFavorite(service: Service) {
     try {
       if (!this.currentUser) throw new Error('Usuario no definido.');
-  
+
       const isFavorite = this.currentUser.favorites?.includes(service.id) || false;
+
       const updatedFavorites = isFavorite
         ? this.currentUser.favorites.filter((id) => id !== service.id)
         : [...(this.currentUser?.favorites || []), service.id];
@@ -81,29 +114,20 @@ export class FavoritesPage implements OnInit {
         ...this.currentUser,
         favorites: updatedFavorites,
       });
-  
+
       this.currentUser.favorites = updatedFavorites;
-  
-      // Actualizar la lista de servicios favoritos
-      this.favoriteServices = this.favoriteServices.filter((fav) =>
-        updatedFavorites.includes(fav.id)
-      );
-  
-      // Mostrar mensaje con duración automática
+
       this.utilsSvc.presentToast({
         message: isFavorite
           ? 'Servicio eliminado de favoritos.'
           : 'Servicio añadido a favoritos.',
         color: 'success',
-        duration: 3000,
       });
     } catch (error) {
       console.error('Error al actualizar favoritos:', error);
-  
       this.utilsSvc.presentToast({
         message: 'Error al actualizar favoritos.',
         color: 'danger',
-        duration: 3000,
       });
     }
   }

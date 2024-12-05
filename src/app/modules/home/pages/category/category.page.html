@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar class="header">
-    <ion-title>Favoritos</ion-title>
+    <ion-title> Categoría </ion-title>
     <ion-buttons slot="start">
       <ion-button (click)="goBack()">
         <ion-icon name="arrow-back-outline"></ion-icon>
@@ -10,26 +10,22 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <!-- TÍTULO -->
+  <!-- TÍTULO DE SERVICIOS DE LA CATEGORÍA -->
   <div class="service-list-tittle">
-    <h1>Servicios Favoritos</h1>
+    <h1>Todos los Servicios de {{ selectedCategory }}</h1>
   </div>
 
-  <!-- MENSAJE SI NO HAY FAVORITOS -->
-  <div *ngIf="!isLoading && favoriteServices.length === 0" class="no-fav-message">
+  <!-- MENSAJE SI NO HAY SERVICIOS -->
+  <div *ngIf="!isLoading && filteredServices.length === 0" class="no-services-message">
     <ion-text color="medium">
-      <h2>Aún no tienes favoritos.</h2>
-      <p>Vuelve al Home y conoce los servicios disponibles.</p>
+      <h2>Aún no tenemos servicios en esta categoría.</h2>
+      <p>Lo sentimos, por favor revisa otras categorías.</p>
     </ion-text>
   </div>
 
-  <!-- LISTA DE SERVICIOS FAVORITOS -->
-  <ion-list *ngIf="favoriteServices.length > 0" class="service-list" lines="none">
-    <ion-card
-      class="service"
-      *ngFor="let service of favoriteServices"
-      (click)="goToServiceDetails(service.id)"
-    >
+  <!-- LISTADO DE SERVICIOS -->
+  <ion-list *ngIf="filteredServices.length > 0" class="service-list" lines="none">
+    <ion-card class="service" *ngFor="let service of filteredServices" (click)="goToServiceDetails(service.id)">
       <img [src]="service.imageUrl" alt="Imagen del servicio" />
       <ion-card-header class="service-tittle">
         <ion-card-title>{{ service.name }}</ion-card-title>

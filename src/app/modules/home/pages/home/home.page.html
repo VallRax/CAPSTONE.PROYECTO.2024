@@ -6,12 +6,12 @@
 
   <!-- CIRCULOS DE CATEGORÍAS -->
   <div class="category-list">
-    <div class="category-item" *ngFor="let category of categories" (click)="openCategoryModal(category)">
+    <div class="category-item" *ngFor="let category of categories" (click)="goToCategory(category.name)">
       <div class="category-icon">
         <ion-icon [name]="category.icon"></ion-icon>
       </div>
       <p>{{ category.name }}</p>
-    </div>
+    </div>    
   </div>
 
   <!-- CARDS DE SERVICIOS -->
