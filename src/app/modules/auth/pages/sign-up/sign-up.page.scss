@@ -2,6 +2,10 @@
     --background: #FF7043;
     --color: white;
   }
+
+  ion-item {
+    --color: #666; /* Texto e icono en naranja */
+  }
   
   .header ion-icon {
     color: white;
