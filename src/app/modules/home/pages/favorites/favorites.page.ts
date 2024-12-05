@@ -14,6 +14,7 @@ import { User } from 'src/app/models/user.model';
 export class FavoritesPage implements OnInit {
   favoriteServices: Service[] = [];
   currentUser: User;
+  isLoading: boolean = true; // Indica si los datos están cargando
 
   constructor(
     private firebaseSvc: FirebaseService,
@@ -23,8 +24,10 @@ export class FavoritesPage implements OnInit {
   ) {}
 
   async ngOnInit() {
+    this.isLoading = true; // Inicia la carga
     await this.loadCurrentUser();
     await this.loadFavoriteServices();
+    this.isLoading = false; // Finaliza la carga
   }
 
   async loadCurrentUser() {
@@ -60,7 +63,6 @@ export class FavoritesPage implements OnInit {
       );
 
       console.log('Servicios favoritos cargados:', this.favoriteServices);
-      
     } catch (error) {
       console.error('Error al cargar servicios favoritos:', error);
     }
@@ -93,16 +95,15 @@ export class FavoritesPage implements OnInit {
           ? 'Servicio eliminado de favoritos.'
           : 'Servicio añadido a favoritos.',
         color: 'success',
-        duration: 3000, // Mensaje desaparece en 3 segundos
+        duration: 3000,
       });
     } catch (error) {
       console.error('Error al actualizar favoritos:', error);
   
-      // Mostrar mensaje de error con duración automática
       this.utilsSvc.presentToast({
         message: 'Error al actualizar favoritos.',
         color: 'danger',
-        duration: 3000, // Mensaje desaparece en 3 segundos
+        duration: 3000,
       });
     }
   }

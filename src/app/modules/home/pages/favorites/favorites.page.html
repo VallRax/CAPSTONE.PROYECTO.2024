@@ -6,7 +6,6 @@
         <ion-icon name="arrow-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-
   </ion-toolbar>
 </ion-header>
 
@@ -16,8 +15,16 @@
     <h1>Servicios Favoritos</h1>
   </div>
 
+  <!-- MENSAJE SI NO HAY FAVORITOS -->
+  <div *ngIf="!isLoading && favoriteServices.length === 0" class="no-fav-message">
+    <ion-text color="medium">
+      <h2>Aún no tienes favoritos.</h2>
+      <p>Vuelve al Home y conoce los servicios disponibles.</p>
+    </ion-text>
+  </div>
+
   <!-- LISTA DE SERVICIOS FAVORITOS -->
-  <ion-list class="service-list" lines="none">
+  <ion-list *ngIf="favoriteServices.length > 0" class="service-list" lines="none">
     <ion-card
       class="service"
       *ngFor="let service of favoriteServices"
