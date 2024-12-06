@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar class="header">
     <ion-title>Agregar Oferta</ion-title>
     <ion-buttons slot="start">
       <ion-button (click)="goBack()">
@@ -10,50 +10,73 @@
 </ion-header>
 
 <ion-content>
-  <form [formGroup]="form" (ngSubmit)="submit()">
+  <ion-grid class="main-container">
+    <!-- Título principal -->
+    <ion-row>
+      <ion-col size="12">
+        <h1 class="main-title">Información de la Oferta</h1>
+      </ion-col>
+    </ion-row>
 
-    <app-custom-input 
-      icon="home-outline"
-      [control]="form.controls.name"
-      type="text"
-      label="Nombre de la Oferta">
-    </app-custom-input>
+    <!-- Formulario Detalles de la Oferta -->
+    <ion-row>
+      <ion-col size="12">
+        <div class="section">
+          <h2 class="section-title">Detalles de la Oferta</h2>
+          <form [formGroup]="form" class="form-container">
+            <ion-item>
+              <ion-icon slot="start" name="pricetag-outline"></ion-icon>
+              <ion-label position="stacked">Nombre de la Oferta</ion-label>
+              <ion-input formControlName="name"></ion-input>
+            </ion-item>
 
-    <app-custom-input 
-      icon="information-circle-outline"
-      [control]="form.controls.description"
-      type="text"
-      label="Descripción">
-    </app-custom-input>
+            <ion-item>
+              <ion-icon slot="start" name="document-text-outline"></ion-icon>
+              <ion-label position="stacked">Descripción</ion-label>
+              <ion-textarea formControlName="description"></ion-textarea>
+            </ion-item>
 
-    <app-custom-input 
-      icon="cash-outline"
-      [control]="form.controls.price"
-      type="number"
-      label="Precio">
-    </app-custom-input>
+            <ion-item>
+              <ion-icon slot="start" name="cash-outline"></ion-icon>
+              <ion-label position="stacked">Precio</ion-label>
+              <ion-input type="number" formControlName="price"></ion-input>
+            </ion-item>
 
-    <app-custom-input 
-      icon="alarm-outline"
-      [control]="form.controls.duration"
-      type="number"
-      label="Duración">
-    </app-custom-input>
+            <ion-item>
+              <ion-icon slot="start" name="time-outline"></ion-icon>
+              <ion-label position="stacked">Duración (minutos)</ion-label>
+              <ion-input type="number" formControlName="duration"></ion-input>
+            </ion-item>
+          </form>
+        </div>
+      </ion-col>
+    </ion-row>
 
-    <!-- Vista previa de la imagen seleccionada -->
-    <div *ngIf="imagePreview" class="image-preview">
-      <img [src]="imagePreview" alt="Vista previa de la imagen" />
-    </div>
+    <!-- Sección Imagen de la Oferta -->
+    <ion-row>
+      <ion-col size="12">
+        <div class="section">
+          <h2 class="section-title">Imagen de la Oferta</h2>
+          <div class="photo-container">
+            <ion-avatar *ngIf="imagePreview" class="offer-avatar">
+              <img [src]="imagePreview" alt="Vista previa de la imagen" />
+            </ion-avatar>
+            <ion-icon class="image-icon" *ngIf="!imagePreview" name="image-outline"></ion-icon>
+            <ion-button class="custom-button" size="small" (click)="selectImage()">Subir Imagen</ion-button>
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
 
-    <!-- Botón para seleccionar o tomar una foto -->
-    <ion-button expand="block" color="primary" (click)="selectImage()">Seleccionar Imagen</ion-button>
-
-    <ion-button class="orange-button" shape="round" expand="block" type="submit" [disabled]="form.invalid"> 
-      Guardar
-    </ion-button>
-  </form>
+    <!-- Botón Guardar -->
+    <ion-row>
+      <ion-col size="12">
+        <ion-button expand="block" type="submit" class="save-button" (click)="submit()" [disabled]="form.invalid">
+          Guardar Oferta
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
 
-
-<!-- BOTTOM BAR -->
 <app-bottom-nav></app-bottom-nav>

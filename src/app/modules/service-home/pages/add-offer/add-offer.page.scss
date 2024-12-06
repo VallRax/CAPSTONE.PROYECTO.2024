@@ -1,27 +1,84 @@
 .header {
-    --background: #FF7043;
-    --color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .header ion-title {
-    text-align: center;
-    width: 100%;
-  }
-  
-  .header ion-icon {
-    color: white;
-  }
-  
-  form {
-    padding: 0px 10px;
-  }
-  
-  .orange-button {
-    --background: #FF7043; /* Tu color naranja */
-    --background-hover: #e66139; /* Color más oscuro para el hover */
-    --background-activated: #ff9170; /* Color al hacer clic */
-  }
-  
+  --background: #FF7043;
+  --color: white;
+}
+
+.main-container {
+  padding: 16px;
+  padding-bottom: 70px; /* Ajuste para evitar superposición con el navbar */
+}
+
+.main-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #FF7043;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.section {
+  margin-bottom: 15px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.photo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.offer-avatar {
+  width: 150px;
+  height: 150px;
+  --border-radius: 15px;
+  object-fit: cover;
+  border: 2px solid #FF7043;
+}
+
+.image-icon {
+  font-size: 90px;
+  opacity: 30%;
+}
+
+.custom-button {
+  --background: #FF7043;
+  --background-hover: #e66139;
+  --border-radius: 20px;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+ion-item {
+  --background: #f9f9f9;
+  --border-radius: 10px;
+  margin: 8px 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  align-items: center; /* Centra los íconos verticalmente */
+}
+
+ion-icon[slot="start"] {
+  font-size: 20px;
+  margin-top: auto;
+  margin-bottom: auto;
+  color: #555;
+}
+
+ion-label {
+  font-weight: bold;
+  color: #555;
+}
+
+.save-button {
+  --background: #FF7043;
+  --background-hover: #e66139;
+  --border-radius: 25px;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 15px;
+}

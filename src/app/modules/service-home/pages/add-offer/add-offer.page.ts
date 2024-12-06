@@ -68,8 +68,8 @@ export class AddOfferPage {
       const image = await this.utilsSvc.takePictureFromGallery();
       const response = await fetch(image.dataUrl);
       const blob = await response.blob();
-
-      // Actualizar vista previa y archivo
+  
+      // Actualizar la vista previa y el archivo seleccionado
       this.imagePreview = image.dataUrl;
       this.imageFile = new File([blob], `offer-image-${Date.now()}.jpg`, { type: blob.type });
     } catch (error) {
@@ -81,6 +81,9 @@ export class AddOfferPage {
       });
     }
   }
+  
+  
+  
 
   // Método para guardar la oferta
   async submit() {

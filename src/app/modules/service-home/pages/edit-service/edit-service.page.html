@@ -6,6 +6,11 @@
         <ion-icon name="arrow-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="deleteService()">
+        <ion-icon name="trash"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -25,35 +30,38 @@
     <div class="service-details" *ngIf="service">
       <!-- Imagen del servicio con botón para editar -->
       <img [src]="localImage || service.imageUrl || defaultImageUrl" alt="Imagen del servicio" class="service-image" />
-      <ion-button expand="block" (click)="selectPhoto()">Cambiar Imagen</ion-button>
+      <ion-button class="photo-button" expand="block" (click)="selectPhoto()">Cambiar Imagen</ion-button>
   
       <ion-list class="editable-list">
         <!-- Nombre del servicio editable -->
         <ion-item lines="full">
+          <ion-label slot="start" class="pseudo-title">Nombre del Servicio</ion-label>
           <ion-label>
             <h2>{{ service.name }}</h2>
           </ion-label>
-          <ion-button fill="clear" size="small" slot="end" (click)="openEditAlert('name', service.name)">
+          <ion-button class="edit-button" fill="clear" size="small" slot="end" (click)="openEditAlert('name', service.name)">
             <ion-icon name="create"></ion-icon>
           </ion-button>
         </ion-item>
   
         <!-- Categoría editable -->
         <ion-item lines="full">
+          <ion-label slot="start" class="pseudo-title">Categoría</ion-label>
           <ion-label>
             <p>{{ service.category }}</p>
           </ion-label>
-          <ion-button fill="clear" size="small" slot="end" (click)="openEditAlert('category', service.category)">
+          <ion-button class="edit-button" fill="clear" size="small" slot="end" (click)="openCategoryEditAlert()">
             <ion-icon name="create"></ion-icon>
           </ion-button>
         </ion-item>
   
         <!-- Descripción editable -->
         <ion-item lines="full">
+          <ion-label slot="start" class="pseudo-title">Descripción</ion-label>
           <ion-label>
             <p>{{ service.description }}</p>
           </ion-label>
-          <ion-button fill="clear" size="small" slot="end" (click)="openEditAlert('description', service.description)">
+          <ion-button class="edit-button" fill="clear" size="small" slot="end" (click)="openEditAlert('description', service.description)">
             <ion-icon name="create"></ion-icon>
           </ion-button>
         </ion-item>
@@ -72,7 +80,7 @@
             <ion-col size="6">
               <ion-item>
                 <ion-label>Hora de Apertura</ion-label>
-                <ion-button expand="block" (click)="editHours('startTime')">
+                <ion-button class="photo-button" expand="block" (click)="editHours('startTime')">
                   {{ availableStartTime || 'Seleccionar' }}
                 </ion-button>
               </ion-item>
@@ -80,70 +88,13 @@
             <ion-col size="6">
               <ion-item>
                 <ion-label>Hora de Cierre</ion-label>
-                <ion-button expand="block" (click)="editHours('endTime')">
+                <ion-button class="photo-button" expand="block" (click)="editHours('endTime')">
                   {{ availableEndTime || 'Seleccionar' }}
                 </ion-button>
               </ion-item>
             </ion-col>
           </ion-row>
         </ion-grid>
-  
-        <!-- Bloqueos de horario -->
-        <ion-item>
-          <ion-label>Bloqueos de Horario</ion-label>
-        </ion-item>
-  
-        <!-- Selección de días para bloqueo -->
-        <ion-item>
-          <ion-label position="stacked">Días para Bloqueo</ion-label>
-          <ion-select formControlName="blockDays" multiple="true">
-            <ion-select-option *ngFor="let day of allDays" [value]="day.value">{{ day.label }}</ion-select-option>
-          </ion-select>
-        </ion-item>
-  
-        <!-- Selección de horario para bloqueo -->
-        <ion-grid>
-          <ion-row>
-            <ion-col size="6">
-              <ion-item>
-                <ion-label position="stacked">Hora de Inicio</ion-label>
-                <ion-input type="time" formControlName="blockStartTime"></ion-input>
-              </ion-item>
-            </ion-col>
-            <ion-col size="6">
-              <ion-item>
-                <ion-label position="stacked">Hora de Fin</ion-label>
-                <ion-input type="time" formControlName="blockEndTime"></ion-input>
-              </ion-item>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-  
-        <ion-item>
-          <ion-label position="stacked">Razón del Bloqueo</ion-label>
-          <ion-input type="text" formControlName="reason" placeholder="Ingrese una razón"></ion-input>
-        </ion-item>
-        
-  
-        <!-- Botón para añadir bloqueo -->
-        <ion-button expand="block" (click)="addBlockedTimeSlot()" [disabled]="isAddBlockDisabled">
-          Añadir Bloqueo
-        </ion-button>
-        
-  
-        <!-- Lista de bloqueos -->
-        <ion-list>
-          <ion-item *ngFor="let block of service.blockedTimeSlots; let i = index">
-            <ion-label>
-              {{ block.days.join(', ') }}: {{ block.startTime }} - {{ block.endTime }}
-              <br />
-              <small>Motivo: {{ block.reason }}</small>
-            </ion-label>
-            <ion-button fill="clear" color="danger" slot="end" (click)="removeBlockedTimeSlot(i)">
-              <ion-icon name="trash-outline"></ion-icon>
-            </ion-button>
-          </ion-item>
-        </ion-list>
       </ion-list>
     </div>
   </div>

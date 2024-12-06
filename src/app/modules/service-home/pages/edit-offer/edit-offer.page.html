@@ -18,51 +18,56 @@
   <div class="offer-details" *ngIf="offer">
     <!-- Imagen de la oferta -->
     <img [src]="localImage || offer.imageUrl || 'https://via.placeholder.com/600x200'" alt="Imagen de la oferta" class="offer-image" />
-    <ion-button expand="block" (click)="changeImage()">Cambiar Imagen</ion-button>
+    <ion-button class="photo-button" expand="block" (click)="changeImage()">Cambiar Imagen</ion-button>
 
     <ion-list class="editable-list">
       <!-- Nombre de la oferta editable -->
       <ion-item lines="full">
+        <ion-label slot="start" class="pseudo-title">Nombre</ion-label>
         <ion-label>
           <h2>{{ offer.name }}</h2>
         </ion-label>
-        <ion-button fill="clear" size="small" slot="end" (click)="openEditAlert('name', offer.name)">
+        <ion-button class="edit-button" fill="clear" size="small" slot="end" (click)="openEditAlert('name', offer.name)">
           <ion-icon name="create"></ion-icon>
         </ion-button>
       </ion-item>
 
       <!-- Descripción editable -->
       <ion-item lines="full">
+        <ion-label slot="start" class="pseudo-title">Descripción</ion-label>
         <ion-label>
           <p>{{ offer.description }}</p>
         </ion-label>
-        <ion-button fill="clear" size="small" slot="end" (click)="openEditAlert('description', offer.description)">
+        <ion-button class="edit-button" fill="clear" size="small" slot="end" (click)="openEditAlert('description', offer.description)">
           <ion-icon name="create"></ion-icon>
         </ion-button>
       </ion-item>
 
       <!-- Precio editable -->
       <ion-item lines="full">
+        <ion-label slot="start" class="pseudo-title">Precio</ion-label>
         <ion-label>
           <p>{{ offer.price | currency: 'CLP' }}</p>
         </ion-label>
-        <ion-button fill="clear" size="small" slot="end" (click)="openEditAlert('price', offer.price)">
+        <ion-button class="edit-button" fill="clear" size="small" slot="end" (click)="openEditAlert('price', offer.price)">
           <ion-icon name="create"></ion-icon>
         </ion-button>
       </ion-item>
 
       <!-- Duración editable -->
       <ion-item lines="full">
+        <ion-label slot="start" class="pseudo-title">Duración</ion-label>
         <ion-label>
           <p>{{ offer.duration }} minutos</p>
         </ion-label>
-        <ion-button fill="clear" size="small" slot="end" (click)="openEditAlert('duration', offer.duration)">
+        <ion-button class="edit-button" fill="clear" size="small" slot="end" (click)="openEditAlert('duration', offer.duration)">
           <ion-icon name="create"></ion-icon>
         </ion-button>
       </ion-item>
     </ion-list>
   </div>
 </ion-content>
+
 
 <!-- BOTTOM BAR -->
 <app-bottom-nav></app-bottom-nav>

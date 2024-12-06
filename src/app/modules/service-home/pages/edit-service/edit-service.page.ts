@@ -34,6 +34,17 @@ export class EditServicePage implements OnInit {
     { label: 'Domingo', value: 'sunday' },
   ];
 
+  categories = [
+    { name: 'Belleza', icon: 'cut' },
+    { name: 'Veterinaria', icon: 'paw' },
+    { name: 'Salud', icon: 'medkit' },
+    { name: 'Fitness', icon: 'barbell' },
+    { name: 'Hogar', icon: 'home' },
+    { name: 'Tecnología', icon: 'laptop' },
+    { name: 'Comida', icon: 'pizza' },
+    { name: 'Otros', icon: 'ellipsis-horizontal' },
+  ];
+
   constructor(
     private route: ActivatedRoute,
     private firebaseSvc: FirebaseService,
@@ -156,6 +167,38 @@ export class EditServicePage implements OnInit {
 
     await alert.present();
   }
+
+  async openCategoryEditAlert() {
+    const alert = await this.alertCtrl.create({
+      header: 'Editar Categoría',
+      cssClass: 'custom-alert', // Clase personalizada
+      inputs: this.categories.map(category => ({
+        type: 'radio',
+        label: category.name,
+        value: category.name,
+        checked: category.name === this.service?.category,
+      })),
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Guardar',
+          handler: (data) => {
+            if (this.service) {
+              this.service.category = data;
+              this.saveChanges();
+            }
+          },
+        },
+      ],
+    });
+  
+    await alert.present();
+  }
+  
+  
 
   async updateDays(event: any) {
     if (this.service) {
