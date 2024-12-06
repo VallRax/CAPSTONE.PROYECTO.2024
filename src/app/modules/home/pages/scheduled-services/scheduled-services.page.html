@@ -1,37 +1,87 @@
 <ion-header>
-  <ion-toolbar class="header">
-    <ion-title>Mis Citas</ion-title>
+  <ion-toolbar class="header-toolbar">
     <ion-buttons slot="start">
       <ion-button (click)="goBack()">
-        <ion-icon name="arrow-back-outline"></ion-icon>
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
+    <ion-title>Mis Citas</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <!-- TÍTULO -->
-  <div class="service-list-title">
-    <h1>Servicios Agendados</h1>
+  <!-- Indicador de carga -->
+  <div *ngIf="isLoading" class="loading-spinner">
+    <ion-spinner name="crescent"></ion-spinner>
   </div>
 
-  <!-- LISTA DE RESERVAS -->
-  <ion-list class="service-list" lines="none">
-    <ion-card class="service" *ngFor="let booking of bookings">
-      <img [src]="booking.service.imageUrl" alt="Imagen del servicio" />
-      <ion-card-header class="service-title">
-        <ion-card-title>{{ booking.service.name }}</ion-card-title>
-        <ion-card-subtitle>{{ booking.service.category }}</ion-card-subtitle>
+  <!-- Lista de reservas -->
+  <ion-list *ngIf="!isLoading && bookings.length > 0; else noBookings" class="service-list">
+    <ion-card *ngFor="let booking of bookings" class="service-card">
+      <!-- Imagen de la oferta o servicio -->
+      <img
+        [src]="booking.offer.imageUrl || booking.service.imageUrl || 'assets/default-service.png'"
+        alt="Imagen del servicio"
+      />
+
+      <!-- Información del servicio -->
+      <ion-card-header>
+        <ion-card-title>{{ booking.offer.name }}</ion-card-title>
+        <ion-card-subtitle>{{ booking.service.name }} - {{ booking.service.category }}</ion-card-subtitle>
       </ion-card-header>
+
+      <!-- Detalles -->
       <ion-card-content>
-        <p>Oferta: {{ booking.offer.name }}</p>
-        <p>Fecha: {{ formatDate(booking.date) }}</p>
-        <p>Horario: {{ booking.startTime }} - {{ booking.endTime }}</p>
-        <p [class]="getStatusClass(booking.status)">Estado: {{ getStatusText(booking.status) }}</p>
+        <!-- Fecha y horario -->
+        <div class="date-time">
+          <p><strong>Fecha:</strong> {{ formatDate(booking.date) }}</p>
+          <p><strong>Horario:</strong> {{ booking.startTime }} - {{ booking.endTime }}</p>
+        </div>
+
+        <!-- Teléfono -->
+        <div class="contact-info-row">
+          <p><strong>Teléfono:</strong> {{ booking.provider.contactNumber || 'No disponible' }}</p>
+        </div>
+
+        <!-- Correo -->
+        <div class="contact-info-row">
+          <p><strong>Correo:</strong> {{ booking.provider.email || 'No disponible' }}</p>
+        </div>
+
+        <!-- Dirección -->
+        <div class="address-row">
+          <p><strong>Dirección:</strong> {{ booking.provider.location?.address || 'No disponible' }}
+            {{ booking.provider.location?.addressNumber || '' }},
+            {{ booking.provider.location?.comuna || '' }}
+          </p>
+        </div>
+
+        <!-- Estado -->
+        <p [class]="getStatusClass(booking.status)">
+          <strong>Estado:</strong> {{ getStatusText(booking.status) }}
+        </p>
+
+        <!-- Botón para cancelar -->
+        <ion-button
+          *ngIf="canCancelBooking(booking)"
+          expand="block"
+          color="danger"
+          (click)="cancelBooking(booking.id)"
+        >
+          Cancelar Cita
+        </ion-button>
       </ion-card-content>
     </ion-card>
   </ion-list>
+
+  <!-- Mensaje si no hay citas -->
+  <ng-template #noBookings>
+    <div class="no-bookings">
+      <ion-icon name="calendar-outline"></ion-icon>
+      <p>No tienes citas agendadas.</p>
+    </div>
+  </ng-template>
 </ion-content>
 
-<!-- BOTTOM NAV -->
+
 <app-bottom-nav></app-bottom-nav>

@@ -142,6 +142,9 @@ export class AddOfferPage {
           color: 'success',
         });
         this.utilsSvc.routerLink(`/service-home/edit-service/${this.serviceId}`); // Redirigir al detalle del servicio
+        setTimeout(() => {
+          window.location.reload(); // Forzar recarga
+        }, 500);
       } catch (error) {
         console.error('Error al añadir la oferta:', error);
         this.utilsSvc.presentToast({

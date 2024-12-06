@@ -1,3 +1,8 @@
+ion-content {
+  --padding-bottom: 60px;
+  background-color: #f9f9f9;
+}
+
 .header {
     --background: #FF7043;
     --color: white;
@@ -82,5 +87,21 @@
     --background: #FF7043;
     --border-radius: 0;
     width: 100%;
+  }
+  
+  .datetime-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f4f4; /* Color de fondo gris claro */
+    padding: 16px;
+    border-radius: 12px;
+    margin: 16px 0;
+  }
+  
+  ion-datetime {
+    width: 100%;
+    max-width: 300px; /* Ajustar ancho máximo */
+    text-align: center;
   }
   

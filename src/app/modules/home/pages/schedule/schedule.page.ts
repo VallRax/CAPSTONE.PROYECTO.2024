@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { FirebaseService } from 'src/app/core/services/firebase.service';
 import { UtilsService } from 'src/app/core/services/utils.service';
@@ -24,21 +24,32 @@ export class SchedulePage implements OnInit {
     private route: ActivatedRoute,
     private firebaseSvc: FirebaseService,
     private utilsSvc: UtilsService,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private router: Router // Inyección del Router
   ) {}
 
   async ngOnInit() {
     const date = new Date();
     date.setMonth(date.getMonth() + 6);
     this.maxDate = date.toISOString().split('T')[0];
-
+  
+    // Inicializa la fecha seleccionada con el valor actual (hoy)
+    this.selectedDate = this.today;
+  
     const serviceId = this.route.snapshot.paramMap.get('serviceId');
     const offerId = this.route.snapshot.paramMap.get('offerId');
-
+  
     if (serviceId && offerId) {
       await this.loadService(serviceId, offerId);
+  
+      // Carga la disponibilidad inicial
+      await this.updateAvailability();
     }
   }
+
+  selectedDaySpanish: string;
+  selectedDateFormatted: string;
+
 
   async loadService(serviceId: string, offerId: string) {
     try {
@@ -57,38 +68,66 @@ export class SchedulePage implements OnInit {
     }
   }
 
+  getDayInSpanish(date: Date): string {
+    const daysInSpanish = [
+      'domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado',
+    ];
+    return daysInSpanish[date.getDay()];
+  }
+  
+  getDayInEnglish(date: Date): string {
+    const daysInEnglish = [
+      'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday',
+    ];
+    return daysInEnglish[date.getDay()];
+  }
+  
+
   async updateAvailability() {
     if (!this.service || !this.selectedDate || !this.offer) return;
-
+  
     const selectedDateObj = new Date(this.selectedDate);
     this.selectedDate = selectedDateObj.toISOString().split('T')[0];
+  
+    // Obtén el nombre del día en español
+    this.selectedDaySpanish = this.getDayInSpanish(selectedDateObj);
+    const selectedDayEnglish = this.getDayInEnglish(selectedDateObj);
 
-    const selectedDay = selectedDateObj.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
-
-    if (!this.service.availableDays?.includes(selectedDay)) {
+    // Formatea la fecha para mostrar en el subtítulo
+    const options: Intl.DateTimeFormatOptions = {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    };
+    this.selectedDateFormatted = selectedDateObj.toLocaleDateString('es-ES', options);
+  
+    if (!this.service.availableDays?.includes(selectedDayEnglish)) {
       this.availableTimes = [];
       this.utilsSvc.presentToast({
-        message: `El servicio no está disponible el ${selectedDay}.`,
+        message: `El servicio no está disponible el ${this.selectedDaySpanish}.`,
         color: 'warning',
       });
       return;
     }
+  
+    const hoursForDay = this.service.availableHours?.filter(hours =>
+        hours.days.includes(selectedDayEnglish)
+      );
 
-    const hoursForDay = this.service.availableHours?.filter(hours => hours.days.includes(selectedDay));
-
+  
     if (!hoursForDay || hoursForDay.length === 0) {
       this.availableTimes = [];
       this.utilsSvc.presentToast({
-        message: `El servicio no tiene horarios configurados para el ${selectedDay}.`,
+        message: `El servicio no tiene horarios configurados para el ${this.selectedDaySpanish}.`,
         color: 'warning',
       });
       return;
     }
-
+  
     const bookings = await this.loadBookingsForDate(this.selectedDate);
     const isToday = this.selectedDate === this.today;
     const currentTime = isToday ? this.formatTime(new Date()) : null;
-
+  
     this.availableTimes = [];
     for (const hours of hoursForDay) {
       const blocks = this.calculateTimeBlocks(
@@ -101,16 +140,18 @@ export class SchedulePage implements OnInit {
       );
       this.availableTimes.push(...blocks);
     }
-
+  
     if (this.availableTimes.length === 0) {
       this.utilsSvc.presentToast({
         message: 'No hay horarios disponibles para el día seleccionado.',
         color: 'warning',
       });
     }
-
+  
     this.selectedTime = null;
   }
+  
+  
 
   calculateTimeBlocks(
     startTime: string,
@@ -198,7 +239,9 @@ export class SchedulePage implements OnInit {
         message: 'Cita agendada con éxito.',
         color: 'success',
       });
-      this.navCtrl.back();
+      this.router.navigate(['/home/scheduled-services'], { replaceUrl: true }).then(() => {
+        window.location.reload();
+      });
     } catch (error) {
       console.error('Error al agendar la cita:', error);
       this.utilsSvc.presentToast({

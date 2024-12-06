@@ -17,6 +17,7 @@ export class ServiceAppointmentsPage implements OnInit {
     category: string;
     bookings: Booking[];
   }[] = [];
+  isLoading = true; // Control de la rueda de carga
 
   constructor(
     private firebaseSvc: FirebaseService,
@@ -30,6 +31,7 @@ export class ServiceAppointmentsPage implements OnInit {
 
   async loadServicesWithBookings() {
     try {
+      this.isLoading = true; // Mostrar la rueda de carga
       const localUser = this.utilsSvc.getFromLocalStorage('user');
       if (!localUser?.uid) throw new Error('Usuario no autenticado.');
 
@@ -74,6 +76,8 @@ export class ServiceAppointmentsPage implements OnInit {
         message: 'Error al cargar los servicios con reservas.',
         color: 'danger',
       });
+    } finally {
+      this.isLoading = false; // Ocultar la rueda de carga
     }
   }
 

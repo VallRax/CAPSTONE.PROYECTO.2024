@@ -67,6 +67,9 @@ export class loginPage implements OnInit {
         this.utilsSvc.saveInLocalStorage('user', user);
   
         this.utilsSvc.routerLink('home');
+        setTimeout(() => {
+          window.location.reload(); // Forzar recarga
+        }, 500);
         this.form.reset();
   
         this.utilsSvc.presentToast({

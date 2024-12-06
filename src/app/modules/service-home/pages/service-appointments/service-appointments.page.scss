@@ -8,6 +8,13 @@ ion-content {
     --color: white;
     font-weight: bold;
   }
+
+  .loading-spinner {
+    display: block;
+    margin: 50px auto;
+    text-align: center;
+  }
+  
   
   /* Contenedor principal */
   .container {

@@ -11,8 +11,11 @@
 
 <ion-content [fullscreen]="true">
   <div class="container">
+    <!-- Indicador de carga -->
+    <ion-spinner *ngIf="isLoading" class="loading-spinner" name="crescent"></ion-spinner>
+
     <!-- Lista de servicios con reservas -->
-    <ion-list *ngIf="servicesWithBookings.length > 0; else noBookings" class="service-list">
+    <ion-list *ngIf="!isLoading && servicesWithBookings.length > 0; else noBookings" class="service-list">
       <ion-card *ngFor="let service of servicesWithBookings" class="service-card">
         <!-- Header del Servicio -->
         <ion-card-header>
@@ -64,7 +67,7 @@
 
     <!-- Mensaje si no hay citas -->
     <ng-template #noBookings>
-      <div class="no-bookings">
+      <div class="no-bookings" *ngIf="!isLoading">
         <ion-icon name="calendar-outline"></ion-icon>
         <p>No hay citas agendadas para tus servicios.</p>
       </div>

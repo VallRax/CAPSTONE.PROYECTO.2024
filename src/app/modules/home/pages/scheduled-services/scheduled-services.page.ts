@@ -4,6 +4,13 @@ import { FirebaseService } from 'src/app/core/services/firebase.service';
 import { UtilsService } from 'src/app/core/services/utils.service';
 import { Booking } from 'src/app/models/booking.model';
 import { Service, Offer } from 'src/app/models/service.model';
+import { User } from 'src/app/models/user.model';
+
+type BookingWithDetails = Booking & {
+  service: Service;
+  offer: Offer;
+  provider: User;
+};
 
 @Component({
   selector: 'app-scheduled-services',
@@ -11,15 +18,8 @@ import { Service, Offer } from 'src/app/models/service.model';
   styleUrls: ['./scheduled-services.page.scss'],
 })
 export class ScheduledServicesPage implements OnInit {
-  bookings: {
-    id: string;
-    service: Service;
-    offer: Offer;
-    date: string;
-    startTime: string;
-    endTime: string;
-    status: string;
-  }[] = [];
+  bookings: BookingWithDetails[] = [];
+  isLoading = true;
 
   constructor(
     private firebaseSvc: FirebaseService,
@@ -33,6 +33,7 @@ export class ScheduledServicesPage implements OnInit {
 
   async loadBookings() {
     try {
+      this.isLoading = true;
       const localUser = this.utilsSvc.getFromLocalStorage('user');
       if (!localUser?.uid) {
         throw new Error('Usuario no autenticado.');
@@ -46,29 +47,41 @@ export class ScheduledServicesPage implements OnInit {
         localUser.uid
       );
 
-      // Obtener detalles de servicios y ofertas
       this.bookings = await Promise.all(
         userBookings.map(async (booking) => {
+          // Obtener información del servicio
           const service = (await this.firebaseSvc.getDocument(`services/${booking.serviceId}`)) as Service;
-          const offer = service.offers.find((o) => o.id === booking.offerId);
 
-          if (!offer) {
-            console.warn(`La oferta con ID ${booking.offerId} no se encontró para el servicio ${booking.serviceId}`);
-          }
+          // Obtener información del proveedor (usuario de tipo service)
+          const provider = (await this.firebaseSvc.getDocument(`users/${service.ownerId}`)) as User;
+
+          // Obtener la oferta relacionada
+          const offer = service.offers.find((o) => o.id === booking.offerId);
 
           return {
             ...booking,
             service,
             offer,
+            provider,
           };
         })
       );
     } catch (error) {
       console.error('Error al cargar las reservas:', error);
+      this.utilsSvc.presentToast({
+        message: 'Error al cargar las reservas.',
+        color: 'danger',
+      });
+    } finally {
+      this.isLoading = false;
     }
   }
 
-  // Método para determinar la clase CSS según el estado
+  formatDate(date: string): string {
+    const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    return new Date(date).toLocaleDateString('es-ES', options);
+  }
+
   getStatusClass(status: string): string {
     switch (status) {
       case 'pending':
@@ -82,7 +95,6 @@ export class ScheduledServicesPage implements OnInit {
     }
   }
 
-  // Método para traducir el estado a texto amigable
   getStatusText(status: string): string {
     switch (status) {
       case 'pending':
@@ -96,10 +108,30 @@ export class ScheduledServicesPage implements OnInit {
     }
   }
 
-  // Método para formatear la fecha a día - mes - año
-  formatDate(date: string): string {
-    const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
-    return new Date(date).toLocaleDateString('es-ES', options);
+  canCancelBooking(booking: BookingWithDetails): boolean {
+    const now = new Date();
+    const bookingDate = new Date(booking.date);
+    const hoursDifference = (bookingDate.getTime() - now.getTime()) / 3600000;
+    return booking.status === 'pending' && hoursDifference > 72;
+  }
+
+  async cancelBooking(bookingId: string) {
+    try {
+      await this.firebaseSvc.setDocument(`bookings/${bookingId}`, { status: 'cancelled' });
+      this.bookings = this.bookings.map((b) =>
+        b.id === bookingId ? { ...b, status: 'cancelled' } : b
+      );
+      this.utilsSvc.presentToast({
+        message: 'La cita ha sido cancelada.',
+        color: 'success',
+      });
+    } catch (error) {
+      console.error('Error al cancelar la cita:', error);
+      this.utilsSvc.presentToast({
+        message: 'No se pudo cancelar la cita.',
+        color: 'danger',
+      });
+    }
   }
 
   goBack() {
