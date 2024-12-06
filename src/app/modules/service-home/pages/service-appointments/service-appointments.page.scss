@@ -1,0 +1,99 @@
+ion-content {
+    --padding-bottom: 50px;
+  }
+
+/* Header con fondo naranjo */
+.header-toolbar {
+    --background: #FF5722;
+    --color: white;
+    font-weight: bold;
+  }
+  
+  /* Contenedor principal */
+  .container {
+    padding: 16px;
+  }
+  
+  /* Lista de servicios */
+  .service-list {
+    margin-top: 16px;
+  }
+  
+  /* Card de servicio */
+  .service-card {
+    margin-bottom: 16px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    background-color: #fffaf0;
+  }
+  
+  /* Título y categoría del servicio */
+  .service-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .service-category {
+    font-size: 14px;
+    color: #666;
+  }
+  
+  /* Contenedor de reservas */
+  .booking-container {
+    margin-bottom: 16px;
+    padding: 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #fff;
+  }
+  
+  /* Información del cliente */
+  .booking-info p {
+    margin: 6px 0;
+    font-size: 15px;
+    color: #444;
+  }
+  
+  /* Distribución de fecha y horario */
+  .date-time {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  /* Dropdown */
+  .status-select {
+    margin-top: 8px;
+    min-width: 150px;
+  }
+  
+  /* Colores por estado */
+  .status-pending {
+    color: #ffa726; /* Naranja */
+    font-weight: bold;
+  }
+  
+  .status-confirmed {
+    color: #66bb6a; /* Verde */
+    font-weight: bold;
+  }
+  
+  .status-cancelled {
+    color: #ef5350; /* Rojo */
+    font-weight: bold;
+  }
+  
+  /* Mensaje sin reservas */
+  .no-bookings {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 16px;
+    color: #888;
+  }
+  
+  .no-bookings ion-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    color: #ccc;
+  }
+  

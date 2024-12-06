@@ -40,6 +40,16 @@
       <ion-label>Servicios</ion-label>
     </ion-tab-button>
 
+    <!-- Citas Agendadas para proveedores -->
+    <ion-tab-button
+      *ngIf="!isClient"
+      tab="appointments-management"
+      (click)="navigateTo('/service-home/service-appointments', $event)"
+      [class.active]="activeTab === 'appointments-management'">
+      <ion-icon name="calendar-outline"></ion-icon>
+      <ion-label>Agendados</ion-label>
+    </ion-tab-button>
+
     <!-- Perfil -->
     <ion-tab-button
       tab="profile"

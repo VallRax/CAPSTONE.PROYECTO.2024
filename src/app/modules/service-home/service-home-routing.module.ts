@@ -8,6 +8,7 @@ import { AddServicePage } from './pages/add-service/add-service.page';
 import { EditServicePage } from './pages/edit-service/edit-service.page';
 import { AddOfferPage } from './pages/add-offer/add-offer.page';
 import { EditOfferPage } from './pages/edit-offer/edit-offer.page';
+import { ServiceAppointmentsPage } from './pages/service-appointments/service-appointments.page';
 
 const routes: Routes = [
   {
@@ -37,6 +38,12 @@ const routes: Routes = [
   {
     path: 'edit-offer/:serviceId/:offerId',
     component: EditOfferPage,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['service'] },
+  },
+  {
+    path: 'service-appointments',
+    component: ServiceAppointmentsPage,
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['service'] },
   },
