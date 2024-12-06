@@ -159,7 +159,11 @@ export class AddServicePage {
         message: 'Servicio creado con éxito.',
         color: 'success',
       });
+      // Redirigir y forzar recarga
       this.utilsSvc.routerLink('/service-home');
+      setTimeout(() => {
+        window.location.reload(); // Forzar recarga
+      }, 500);
     } catch (error) {
       console.error('Error al guardar el servicio:', error);
       this.utilsSvc.presentToast({

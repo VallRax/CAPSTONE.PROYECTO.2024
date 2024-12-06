@@ -1,55 +1,214 @@
 ion-content {
-    --padding-bottom: 60px;
-  }
-  
-  /* Encabezado */
-  .header {
-    --background: #FF7043;
-    --color: white;
-  }
-  
-  .header ion-icon {
-    color: white;
-  }
+  --padding-bottom: 60px;
+  background-color: #f9f9f9;
+}
 
-.service-list-tittle h1 {
-    font-size: 24px;
-    margin: 16px 0;
-    text-align: center;
-  }
-  
-  .service {
-    margin: 10px;
-  }
-  
-  .service img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-  }
-  
-  .service-tittle {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .service-tittle ion-card-title {
-    flex: 1;
-  }
-  
-  .status-pending {
-    color: orange;
-    font-weight: bold;
-  }
-  
-  .status-confirmed {
-    color: green;
-    font-weight: bold;
-  }
-  
-  .status-cancelled {
-    color: red;
-    font-weight: bold;
-  }
-  
+.header {
+  --background: #FF7043;
+  --color: white;
+}
+
+.header ion-icon {
+  color: white;
+}
+
+.service-card {
+  margin-bottom: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Imagen de la oferta */
+.service-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+/* Encabezado del servicio */
+ion-card-header {
+  background-color: #fffaf0;
+  padding: 10px 16px;
+  border-bottom: 1px solid #eeeeee;
+}
+
+ion-card-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+ion-card-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin-top: 4px;
+}
+
+/* Contenido */
+ion-card-content {
+  padding: 16px;
+  font-size: 14px;
+  color: #555;
+}
+
+.date-time,
+.contact-info {
+  margin-bottom: 12px;
+}
+
+.date-time p,
+.contact-info p {
+  margin: 4px 0;
+}
+
+
+/* Estados */
+.status-pending {
+  color: #ff9800;
+  font-weight: bold;
+}
+
+.status-confirmed {
+  color: #4caf50;
+  font-weight: bold;
+}
+
+.status-cancelled {
+  color: #f44336;
+  font-weight: bold;
+}
+
+/* Mensaje sin citas */
+.no-bookings {
+  text-align: center;
+  margin-top: 50px;
+  color: #888;
+}
+
+.no-bookings ion-icon {
+  font-size: 60px;
+  color: #ccc;
+  margin-bottom: 10px;
+}
+
+/* Contenedor de fecha y hora en una fila */
+.date-time {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.date-time p {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Información de contacto en una fila */
+.contact-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.contact-info-row p {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+  flex: 1;
+}
+
+/* Dirección en una fila */
+.address-row p {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Contenedor de fecha y hora en una fila */
+.date-time {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.date-time p {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Información de contacto en filas separadas */
+.contact-info-row {
+  margin-bottom: 12px;
+}
+
+.contact-info-row p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Dirección en una fila */
+.address-row p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Botón más pequeño *
+
+/* Encabezado */
+.header-toolbar {
+  --background: #ff7043;
+  --color: white;
+}
+
+.header-toolbar ion-icon {
+  color: white;
+}
+
+/* Estados */
+.status-pending {
+  color: #ff9800;
+  font-weight: bold;
+}
+
+.status-confirmed {
+  color: #4caf50;
+  font-weight: bold;
+}
+
+.status-cancelled {
+  color: #f44336;
+  font-weight: bold;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Ocupa todo el contenido disponible */
+}
+
+.no-bookings {
+  text-align: center;
+  margin-top: 50px;
+  color: #888;
+}
+
+.no-bookings ion-icon {
+  font-size: 60px;
+  color: #ccc;
+  margin-bottom: 10px;
+}

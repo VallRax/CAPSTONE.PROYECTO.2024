@@ -109,3 +109,102 @@ ion-content {
     --background-hover: #e66139; /* Color más oscuro para el hover */
     --background-activated: #ff9170; /* Color al hacer clic */
   }  
+
+  ion-segment {
+    --indicator-color: #FF7043; /* Indicador naranja */
+    --indicator-height: 4px; /* Ajustar grosor */
+    --background: white;
+  }
+  
+  ion-segment-button {
+    --color-checked: #FF7043; /* Texto activo naranja */
+    --color: #555; /* Texto inactivo */
+    --color-focused: #FF7043; /* Texto al enfocarse */
+  }
+  
+  .fab-orange {
+    --background: #FF7043; /* Naranja principal */
+    --background-hover: #e66139; /* Hover oscuro */
+    --background-activated: #ff9170; /* Activado */
+  }
+
+  .edit-button{
+    color: #FF7043;
+  }
+  
+  .service-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    object-position: center;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    margin-bottom: 10px; /* Margen reducido */
+  }
+  
+  .photo-button {
+    --background: #FF7043; /* Color principal */
+    --background-hover: #e66139; /* Hover más oscuro */
+    --background-activated: #ff9170; /* Color activado */
+    --color: white; /* Texto blanco */
+  }
+  
+  .loading-spinner {
+    --spinner-color: #FF7043; /* Color del spinner */
+  }
+  
+  
+  .editable-list ion-item {
+    --background: #f9f9f9; /* Fondo claro */
+    --border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 8px; /* Espaciado reducido */
+  }
+  
+  ion-item-sliding {
+    --background: white;
+    --border-radius: 8px;
+  }
+  
+  ion-item-option[color="primary"] {
+    --background: #FF7043; /* Botón editar naranja */
+  }
+  
+  ion-item-option[color="danger"] {
+    --background: #e66139; /* Botón eliminar rojo */
+  }
+  
+  .pseudo-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #FF7043; /* Naranja de la app */
+    margin-right: 10px;
+    flex-shrink: 0; /* Asegura que no se reduzca el tamaño */
+  }
+  
+  .custom-alert {
+    --background: #fff; /* Fondo blanco */
+    --color: #FF7043; /* Texto naranja */
+  
+    .alert-title {
+      color: #FF7043; /* Color del título */
+      font-weight: bold;
+    }
+  
+    .alert-radio-label {
+      color: #333; /* Texto de las opciones */
+    }
+  
+    .alert-button {
+      --color: #FF7043; /* Botones principales */
+    }
+  
+    .alert-button-role-cancel {
+      --color: #e66139; /* Botón cancelar */
+    }
+  
+    .alert-radio-icon {
+      --color: #FF7043; /* Iconos de las opciones seleccionadas */
+    }
+  }
+  

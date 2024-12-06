@@ -5,6 +5,7 @@ import { NavController, AlertController } from '@ionic/angular';
 import { FirebaseService } from 'src/app/core/services/firebase.service';
 import { UtilsService } from 'src/app/core/services/utils.service';
 import { Service } from 'src/app/models/service.model';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-edit-service',
@@ -34,7 +35,21 @@ export class EditServicePage implements OnInit {
     { label: 'Domingo', value: 'sunday' },
   ];
 
+  categories = [
+    { name: 'Belleza', icon: 'cut' },
+    { name: 'Veterinaria', icon: 'paw' },
+    { name: 'Salud', icon: 'medkit' },
+    { name: 'Fitness', icon: 'barbell' },
+    { name: 'Hogar', icon: 'home' },
+    { name: 'Tecnología', icon: 'laptop' },
+    { name: 'Comida', icon: 'pizza' },
+    { name: 'Otros', icon: 'ellipsis-horizontal' },
+  ];
+
+  isUploading = false; // Estado de carga
+
   constructor(
+    private loadingCtrl: LoadingController,
     private route: ActivatedRoute,
     private firebaseSvc: FirebaseService,
     private utilsSvc: UtilsService,
@@ -79,17 +94,60 @@ export class EditServicePage implements OnInit {
   }
   
 
+  async showLoading() {
+    const loading = await this.loadingCtrl.create({
+      message: 'Subiendo imagen...', // Mensaje de carga
+      spinner: 'crescent', // Estilo del spinner
+      cssClass: 'loading-spinner',
+    });
+
+    await loading.present(); // Mostrar el loading
+    return loading;
+  }
+
   async selectPhoto() {
+    let loading;
     try {
+      // Mostrar el loader
+      loading = await this.utilsSvc.loading();
+      await loading.present();
+  
+      // Seleccionar imagen de la galería
       const picture = await this.utilsSvc.takePictureFromGallery();
       const response = await fetch(picture.dataUrl);
       const blob = await response.blob();
-      this.imageFile = new File([blob], 'service-image.jpg', { type: blob.type });
-      this.localImage = picture.dataUrl;
+      const file = new File([blob], `service-${this.serviceId}.jpg`, { type: blob.type });
+  
+      // Subir la imagen al Storage
+      const userId = this.firebaseSvc.getAuth().currentUser?.uid;
+      const filePath = `service-images/${userId}/service-${this.serviceId}.jpg`;
+
+      const imageUrl = await this.firebaseSvc.uploadImage(filePath, file);
+  
+      // Actualizar Firestore
+      if (this.service) {
+        this.service.imageUrl = imageUrl;
+        await this.saveChanges();
+      }
+  
+      // Mensaje de éxito
+      this.utilsSvc.presentToast({
+        message: 'Imagen del servicio actualizada correctamente.',
+        color: 'success',
+      });
     } catch (error) {
-      console.error('Error al seleccionar la imagen:', error);
+      console.error('Error al actualizar la imagen:', error);
+      this.utilsSvc.presentToast({
+        message: 'No se pudo actualizar la imagen. Verifica tu conexión o permisos.',
+        color: 'danger',
+      });
+    } finally {
+      // Ocultar el loader
+      if (loading) await loading.dismiss();
     }
   }
+  
+  
 
   async saveImage() {
     if (this.imageFile) {
@@ -156,6 +214,38 @@ export class EditServicePage implements OnInit {
 
     await alert.present();
   }
+
+  async openCategoryEditAlert() {
+    const alert = await this.alertCtrl.create({
+      header: 'Editar Categoría',
+      cssClass: 'custom-alert', // Clase personalizada
+      inputs: this.categories.map(category => ({
+        type: 'radio',
+        label: category.name,
+        value: category.name,
+        checked: category.name === this.service?.category,
+      })),
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Guardar',
+          handler: (data) => {
+            if (this.service) {
+              this.service.category = data;
+              this.saveChanges();
+            }
+          },
+        },
+      ],
+    });
+  
+    await alert.present();
+  }
+  
+  
 
   async updateDays(event: any) {
     if (this.service) {
@@ -295,6 +385,7 @@ export class EditServicePage implements OnInit {
       this.utilsSvc.presentToast({ message: 'Error al guardar cambios.', color: 'danger' });
     }
   }
+  
 
   editOffer(offerId: string) {
     this.router.navigate(['/service-home/edit-offer', this.serviceId, offerId]);
@@ -327,6 +418,71 @@ export class EditServicePage implements OnInit {
       });
     }
   }
+
+  async changeImage() {
+    let loading;
+    try {
+      // Mostrar spinner de carga
+      loading = await this.loadingCtrl.create({
+        message: 'Subiendo imagen...',
+        spinner: 'crescent',
+      });
+      await loading.present();
+  
+      // Seleccionar imagen
+      const picture = await this.utilsSvc.takePictureFromGallery();
+  
+      // Si el usuario no selecciona una imagen, salir del proceso sin error
+      if (!picture?.dataUrl) {
+        console.log('Selección de imagen cancelada por el usuario.');
+        return;
+      }
+  
+      const response = await fetch(picture.dataUrl);
+      const blob = await response.blob();
+      this.imageFile = new File([blob], `service-${this.serviceId}.jpg`, { type: blob.type });
+      this.localImage = picture.dataUrl;
+  
+      // Obtener UID del usuario
+      const userId = this.firebaseSvc.getAuth().currentUser?.uid;
+      if (!userId) {
+        throw new Error('Usuario no autenticado.');
+      }
+  
+      // Subir imagen a Firebase Storage
+      const imagePath = `service-images/${userId}/service-${this.serviceId}.jpg`; // Ruta correcta
+      const imageUrl = await this.firebaseSvc.uploadImage(imagePath, this.imageFile);
+  
+      // Actualizar Firestore
+      if (this.service) {
+        this.service.imageUrl = imageUrl;
+        await this.saveChanges();
+      }
+  
+      // Mostrar mensaje de éxito
+      this.utilsSvc.presentToast({
+        message: 'Imagen del servicio actualizada correctamente.',
+        color: 'success',
+      });
+    } catch (error) {
+      // Mostrar mensaje solo si es un error real
+      console.error('Error al cambiar la imagen:', error);
+      this.utilsSvc.presentToast({
+        message: 'No se pudo cambiar la imagen. Verifica tu conexión o permisos.',
+        color: 'danger',
+      });
+    } finally {
+      if (loading) {
+        await loading.dismiss();
+      }
+    }
+  }
+  
+  
+  
+  
+  
+  
 
   goBack() {
     this.navCtrl.back();

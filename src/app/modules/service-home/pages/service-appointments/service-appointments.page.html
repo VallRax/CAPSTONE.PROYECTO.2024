@@ -1,0 +1,78 @@
+<ion-header>
+  <ion-toolbar class="header-toolbar">
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Gestión de Citas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="container">
+    <!-- Indicador de carga -->
+    <ion-spinner *ngIf="isLoading" class="loading-spinner" name="crescent"></ion-spinner>
+
+    <!-- Lista de servicios con reservas -->
+    <ion-list *ngIf="!isLoading && servicesWithBookings.length > 0; else noBookings" class="service-list">
+      <ion-card *ngFor="let service of servicesWithBookings" class="service-card">
+        <!-- Header del Servicio -->
+        <ion-card-header>
+          <ion-card-title class="service-title">{{ service.name }}</ion-card-title>
+          <ion-card-subtitle class="service-category">{{ service.category }}</ion-card-subtitle>
+        </ion-card-header>
+
+        <!-- Detalles de las reservas -->
+        <ion-card-content>
+          <div *ngFor="let booking of service.bookings" class="booking-container">
+            <!-- Información del cliente -->
+            <div class="booking-info">
+              <p><strong>Nombre del Cliente:</strong> {{ booking['clientName'] }} {{ booking['clientLastName'] }}</p>
+              <p><strong>RUT Cliente:</strong> {{ booking['clientRut'] }}</p>
+            </div>
+
+            <!-- Fecha y Horario -->
+            <div class="date-time">
+              <p><strong>Fecha:</strong> {{ formatDate(booking.date) }}</p>
+              <p><strong>Horario:</strong> {{ booking.startTime }} - {{ booking.endTime }}</p>
+            </div>
+
+            <!-- Estado -->
+            <p [class]="getStatusClass(booking.status)">
+              <strong>Estado:</strong> {{ translateStatus(booking.status) }}
+            </p>
+
+            <!-- Cambiar Estado -->
+            <ion-select
+              *ngIf="canModifyStatus(booking)"
+              placeholder="Cambiar estado"
+              class="status-select"
+              (ionChange)="updateBookingStatus(service.id, booking, $event)"
+            >
+              <ion-select-option value="confirmed" [disabled]="booking.status === 'confirmed'">
+                Confirmar
+              </ion-select-option>
+              <ion-select-option value="cancelled" [disabled]="!canCancelBooking(booking)">
+                Cancelar
+              </ion-select-option>
+              <ion-select-option value="finalized" [disabled]="!canFinalizeBooking(booking)">
+                Finalizar
+              </ion-select-option>
+            </ion-select>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </ion-list>
+
+    <!-- Mensaje si no hay citas -->
+    <ng-template #noBookings>
+      <div class="no-bookings" *ngIf="!isLoading">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <p>No hay citas agendadas para tus servicios.</p>
+      </div>
+    </ng-template>
+  </div>
+</ion-content>
+
+<app-bottom-nav></app-bottom-nav>

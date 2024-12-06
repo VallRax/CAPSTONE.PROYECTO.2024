@@ -59,17 +59,19 @@ export class BottomNavComponent implements OnInit {
   
 
   private syncActiveTab(url: string) {
-    // Actualizar la pestaña activa basado en la ruta
     if (url.includes('/home/favorites')) {
       this.activeTab = 'favorites';
     } else if (url.includes('/home/scheduled-services')) {
       this.activeTab = 'scheduled-services';
-    } else if (url.includes('/home')) {
-      this.activeTab = 'home';
+    } else if (url.includes('/service-home')) {
+      this.activeTab = 'service-home';
+    } else if (url.includes('/service-home/service-appointments')) {
+      this.activeTab = 'appointments-management';
     } else if (url.includes('/profile')) {
       this.activeTab = 'profile';
     } else {
-      this.activeTab = ''; // Si no coincide, ninguna pestaña activa
+      this.activeTab = ''; // Sin pestaña activa si no coincide
     }
   }
+  
 }

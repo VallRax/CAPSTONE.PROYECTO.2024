@@ -16,7 +16,9 @@
     <p class="instruction">Seleccione la fecha y hora de su cita.</p>
 
     <!-- Selección de Fecha -->
-    <ion-datetime
+    <div class="datetime-container">
+
+      <ion-datetime
       [preferWheel]="true"
       displayFormat="DD MMMM YYYY"
       [(ngModel)]="selectedDate"
@@ -27,12 +29,22 @@
       placeholder="Selecciona una fecha"
       (ionChange)="updateAvailability()">
     </ion-datetime>
+  </div>
 
     <!-- Lista de Horarios Disponibles -->
     <div class="hours-list-tittle">
       <h2>Horas Disponibles</h2>
+      <p class="subtitle" *ngIf="selectedDateFormatted">
+        para el día {{ selectedDaySpanish }}, {{ selectedDateFormatted }}
+      </p>
     </div>
-    <ion-list>
+    
+    <div *ngIf="availableTimes.length === 0" class="no-availability">
+      <p>No hay horarios disponibles para el día seleccionado.</p>
+    </div>
+    
+    <!-- Mostrar lista de horarios si están disponibles -->
+    <ion-list *ngIf="availableTimes.length > 0">
       <ion-item *ngFor="let time of availableTimes" [disabled]="!time.available">
         <ion-checkbox
           slot="start"
@@ -46,8 +58,9 @@
     
     
   </div>
+
+  <ion-button expand="full" class="confirm-button" (click)="scheduleService()">Confirmar Agendamiento</ion-button>
 </ion-content>
 
-<ion-footer>
-  <ion-button expand="full" class="confirm-button" (click)="scheduleService()">Confirmar Agendamiento</ion-button>
-</ion-footer>
+
+<app-bottom-nav></app-bottom-nav>

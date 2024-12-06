@@ -10,6 +10,7 @@ import { EditServicePage } from './pages/edit-service/edit-service.page';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { AddOfferPage } from './pages/add-offer/add-offer.page';
 import { EditOfferPage } from './pages/edit-offer/edit-offer.page';
+import { ServiceAppointmentsPage } from './pages/service-appointments/service-appointments.page';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { EditOfferPage } from './pages/edit-offer/edit-offer.page';
     EditServicePage,
     AddOfferPage,
     EditOfferPage,
+    ServiceAppointmentsPage,
   ],
   imports: [
     CommonModule,

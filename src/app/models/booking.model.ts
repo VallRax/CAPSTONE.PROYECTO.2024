@@ -14,7 +14,7 @@ export interface Booking {
   endTime: string; // Hora de fin
 
   /* ESTADO DE LA RESERVA */
-  status: 'pending' | 'confirmed' | 'cancelled'; // Estado actual de la reserva
+  status: 'pending' | 'confirmed' | 'cancelled'| 'finalized'; // Estado actual de la reserva
 
   /* DATOS TEMPORALES */
   createdAt: string; // Fecha de creación de la reserva

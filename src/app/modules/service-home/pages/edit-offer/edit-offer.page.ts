@@ -60,9 +60,21 @@ export class EditOfferPage implements OnInit {
   }
 
   async changeImage() {
+    let loading;
     try {
+      // Mostrar el spinner de carga
+      loading = await this.utilsSvc.loading();
+      await loading.present();
+  
       // Captura de la imagen
       const picture = await this.utilsSvc.takePictureFromGallery();
+  
+      // Si no se selecciona ninguna imagen, salir sin errores
+      if (!picture?.dataUrl) {
+        console.log('Selección de imagen cancelada por el usuario.');
+        return;
+      }
+  
       const response = await fetch(picture.dataUrl);
       const blob = await response.blob();
       this.imageFile = new File([blob], 'offer-image.jpg', { type: blob.type });
@@ -78,16 +90,30 @@ export class EditOfferPage implements OnInit {
       if (this.imageFile && this.serviceId && this.offerId) {
         const imagePath = `offer-images/${user.uid}/offer-${this.offerId}.jpg`; // Usando `user.uid`
         const imageUrl = await this.firebaseSvc.uploadImage(imagePath, this.imageFile);
+  
+        // Actualizar Firestore
         this.updateField('imageUrl', imageUrl);
       }
+  
+      // Mensaje de éxito
+      this.utilsSvc.presentToast({
+        message: 'Imagen de la oferta actualizada correctamente.',
+        color: 'success',
+      });
     } catch (error) {
       console.error('Error al cambiar la imagen:', error);
       this.utilsSvc.presentToast({
-        message: 'Error al cambiar la imagen.',
+        message: 'Error al cambiar la imagen. Verifica tu conexión o permisos.',
         color: 'danger',
       });
+    } finally {
+      // Ocultar el spinner de carga
+      if (loading) {
+        await loading.dismiss();
+      }
     }
   }
+  
   
   
 
