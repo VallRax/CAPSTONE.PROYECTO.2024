@@ -35,6 +35,87 @@ export class SignUpPage implements OnInit {
 
   private readonly RUT_MAX_LENGTH = 12; // Máximo de caracteres formateados (99.999.999-9)
 
+  // Lista de regiones y comunas de Chile
+  regions = [
+    {
+      name: 'Arica y Parinacota',
+      communes: ['Arica', 'Camarones', 'Putre', 'General Lagos'],
+    },
+    {
+      name: 'Tarapacá',
+      communes: ['Iquique', 'Alto Hospicio', 'Pozo Almonte', 'Huara', 'Camiña', 'Colchane', 'Pica'],
+    },
+    {
+      name: 'Antofagasta',
+      communes: ['Antofagasta', 'Mejillones', 'Sierra Gorda', 'Taltal', 'Calama', 'Ollagüe', 'San Pedro de Atacama'],
+    },
+    {
+      name: 'Atacama',
+      communes: ['Copiapó', 'Caldera', 'Tierra Amarilla', 'Chañaral', 'Diego de Almagro', 'Vallenar', 'Huasco'],
+    },
+    {
+      name: 'Coquimbo',
+      communes: [
+        'La Serena', 'Coquimbo', 'Andacollo', 'La Higuera', 'Paihuano', 'Vicuña', 'Illapel', 'Canela', 
+        'Los Vilos', 'Salamanca', 'Ovalle', 'Combarbalá', 'Monte Patria', 'Punitaqui', 'Río Hurtado'
+      ],
+    },
+    {
+      name: 'Valparaíso',
+      communes: [
+        'Valparaíso', 'Viña del Mar', 'Concón', 'Quintero', 'Puchuncaví', 'Quilpué', 'Villa Alemana', 
+        'Casablanca', 'San Antonio', 'Cartagena', 'El Quisco', 'El Tabo', 'Algarrobo', 'Los Andes', 
+        'San Esteban', 'Calle Larga', 'Rinconada', 'San Felipe', 'Putaendo', 'Santa María', 'Panquehue', 
+        'Llaillay', 'Catemu', 'Quillota', 'La Calera', 'Hijuelas', 'Nogales', 'Zapallar', 'Papudo', 
+        'La Ligua', 'Petorca', 'Cabildo',
+      ],
+    },
+    {
+      name: 'Metropolitana',
+      communes: [
+        'Santiago Centro', 'Providencia', 'Las Condes', 'Ñuñoa', 'La Florida', 'Maipú', 'Puente Alto', 
+        'Pudahuel', 'Recoleta', 'Independencia', 'Cerrillos', 'El Bosque', 'La Pintana', 'Lo Espejo', 
+        'Lo Prado', 'Quilicura', 'Renca', 'San Joaquín', 'San Miguel', 'San Ramón', 'Vitacura',
+      ],
+    },
+    {
+      name: 'Biobío',
+      communes: [
+        'Concepción', 'Talcahuano', 'Los Ángeles', 'Chiguayante', 'Coronel', 'Hualpén', 'Lota',
+      ],
+    },
+    {
+      name: 'La Araucanía',
+      communes: [
+        'Temuco', 'Padre Las Casas', 'Villarrica', 'Pucón', 'Nueva Imperial', 'Angol', 'Victoria',
+      ],
+    },
+    {
+      name: 'Los Lagos',
+      communes: [
+        'Puerto Montt', 'Puerto Varas', 'Ancud', 'Castro', 'Chaitén', 'Osorno', 'Purranque',
+      ],
+    },
+    {
+      name: 'Magallanes',
+      communes: [
+        'Punta Arenas', 'Puerto Natales', 'Porvenir', 'Cabo de Hornos', 'Primavera', 'Timaukel',
+      ],
+    },
+    {
+      name: 'Aysén',
+      communes: [
+        'Coyhaique', 'Puerto Aysén', 'Cisnes', 'Chile Chico', 'Río Ibáñez', 'Lago Verde',
+      ],
+    },
+    {
+      name: 'Ñuble',
+      communes: ['Chillán', 'Bulnes', 'San Carlos', 'Coihueco', 'Yungay'],
+    },
+  ];
+
+  availableCommunes: string[] = []; // Lista dinámica de comunas según la región seleccionada
+
   ngOnInit() {
     this.form.get('rut')?.valueChanges.subscribe((value) => {
       if (!value) return;
@@ -47,14 +128,26 @@ export class SignUpPage implements OnInit {
         return;
       }
       const formattedRut = this.formatRut(cleaned); // Aplica formato al RUT
-      // Si excede el límite máximo, corta el valor
       if (formattedRut.length > this.RUT_MAX_LENGTH) {
         this.form.get('rut')?.setValue(formattedRut.slice(0, this.RUT_MAX_LENGTH), { emitEvent: false });
       } else {
         this.form.get('rut')?.setValue(formattedRut, { emitEvent: false });
       }
     });
-      
+  }
+
+  // Maneja el cambio de región para filtrar comunas
+  onRegionChange(event: any): void {
+    const selectedRegion = event.detail.value;
+
+    // Busca las comunas de la región seleccionada
+    const regionData = this.regions.find(region => region.name === selectedRegion);
+
+    // Actualiza la lista de comunas disponibles
+    this.availableCommunes = regionData ? regionData.communes : [];
+
+    // Limpia la comuna seleccionada si cambia la región
+    this.form.controls.location.controls.comuna.setValue('');
   }
 
   formatRut(value: string): string {
