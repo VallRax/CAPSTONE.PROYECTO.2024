@@ -1,3 +1,21 @@
+
+.header {
+  --background: #FF7043;
+  --color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header ion-title {
+  text-align: center;
+  width: 100%;
+}
+
+.header ion-icon {
+  color: white;
+}
+
 .profile-container {
   display: flex;
   flex-direction: column;

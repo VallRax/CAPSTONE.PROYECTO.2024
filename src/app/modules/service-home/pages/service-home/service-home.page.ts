@@ -3,6 +3,7 @@ import { FirebaseService } from 'src/app/core/services/firebase.service';
 import { Service } from 'src/app/models/service.model';
 
 import { TestDataService } from 'src/app/core/services/test-data.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-service-home',
@@ -14,7 +15,8 @@ export class ServiceHomePage implements OnInit {
 
   constructor(
     private testDataService: TestDataService,
-    private firebaseSvc: FirebaseService
+    private firebaseSvc: FirebaseService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -53,4 +55,11 @@ export class ServiceHomePage implements OnInit {
       alert('Error al generar datos de prueba.');
     }
   }
+
+  navigateToAddService(event: Event) {
+    event.stopPropagation(); // Detener la propagación
+    console.log('Navegando a: AddService');
+    this.router.navigate(['/service-home/add-service']);
+  }
+  
 }

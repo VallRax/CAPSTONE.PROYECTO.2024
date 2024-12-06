@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar class="header">
     <ion-title>Agregar Servicio</ion-title>
     <ion-buttons slot="start">
       <ion-button (click)="goBack()">
@@ -10,119 +10,113 @@
 </ion-header>
 
 <ion-content>
-  <form [formGroup]="form" (ngSubmit)="submit()">
-    <!-- Información Básica -->
-    <ion-item>
-      <ion-label position="stacked">Nombre del Servicio</ion-label>
-      <ion-input formControlName="name"></ion-input>
-    </ion-item>
+  <ion-grid class="main-container">
+    <!-- Título principal -->
+    <ion-row>
+      <ion-col size="12">
+        <h1 class="main-title">Información del Servicio</h1>
+      </ion-col>
+    </ion-row>
 
-    <ion-item>
-      <ion-label position="stacked">Categoría</ion-label>
-      <ion-select formControlName="category" placeholder="Seleccione una categoría">
-        <ion-select-option *ngFor="let category of categories" [value]="category.name">
-          {{ category.name }}
-        </ion-select-option>
-      </ion-select>
-    </ion-item>
-    
+    <!-- Formulario Detalles del Servicio -->
+    <ion-row>
+      <ion-col size="12">
+        <div class="section">
+          <h2 class="section-title">Detalles del Servicio</h2>
+          <form [formGroup]="form" class="form-container">
+            <ion-item>
+              <ion-icon slot="start" name="pricetag-outline"></ion-icon>
+              <ion-label position="stacked">Nombre del Servicio</ion-label>
+              <ion-input formControlName="name"></ion-input>
+            </ion-item>
 
-    <ion-item>
-      <ion-label position="stacked">Descripción</ion-label>
-      <ion-textarea formControlName="description"></ion-textarea>
-    </ion-item>
+            <ion-item>
+              <ion-icon slot="start" name="list-outline"></ion-icon>
+              <ion-label position="stacked">Categoría</ion-label>
+              <ion-select formControlName="category" placeholder="Seleccione una categoría">
+                <ion-select-option *ngFor="let category of categories" [value]="category.name">
+                  {{ category.name }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
 
-    <!-- Foto del Servicio -->
-    <ion-item>
-      <ion-label position="stacked">Foto del Servicio</ion-label>
-      <ion-button expand="block" (click)="selectPhoto()">Seleccionar Imagen</ion-button>
-    </ion-item>
-    <ion-item *ngIf="localImage">
-      <img [src]="localImage" alt="Imagen del Servicio" style="width: 100%; border-radius: 8px;" />
-    </ion-item>
+            <ion-item>
+              <ion-icon slot="start" name="document-text-outline"></ion-icon>
+              <ion-label position="stacked">Descripción</ion-label>
+              <ion-textarea formControlName="description"></ion-textarea>
+            </ion-item>
+          </form>
+        </div>
+      </ion-col>
+    </ion-row>
 
-    <!-- Horarios Disponibles -->
-    <ion-item>
-      <ion-label position="stacked">Días de Atención</ion-label>
-      <ion-select formControlName="availableDays" multiple="true">
-        <ion-select-option *ngFor="let day of allDays" [value]="day.value">
-          {{ day.label }}
-        </ion-select-option>
-      </ion-select>
-    </ion-item>
+    <!-- Sección Imagen del Servicio -->
+    <ion-row>
+      <ion-col size="12">
+        <div class="section">
+          <h2 class="section-title">Imagen del Servicio</h2>
+          <div class="photo-container">
+            <ion-avatar *ngIf="localImage" class="service-avatar">
+              <img [src]="localImage" alt="Imagen del Servicio" />
+            </ion-avatar>
+            <ion-icon class="image-icon" *ngIf="!localImage" name="image-outline"></ion-icon>
+            <ion-button class="custom-button" size="small" (click)="selectPhoto()">
+              Subir Imagen
+            </ion-button>
+          </div>
+        </div>
+      </ion-col>
+    </ion-row>
 
-    <ion-grid>
-      <ion-row>
-        <ion-col size="6">
-          <ion-item>
-            <ion-label position="stacked">Hora de Apertura</ion-label>
-            <ion-input type="time" formControlName="startTime"></ion-input>
-          </ion-item>
-        </ion-col>
-        <ion-col size="6">
-          <ion-item>
-            <ion-label position="stacked">Hora de Cierre</ion-label>
-            <ion-input type="time" formControlName="endTime"></ion-input>
-          </ion-item>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+    <!-- Sección Horario de Atención -->
+    <ion-row>
+      <ion-col size="12">
+        <div class="section">
+          <h2 class="section-title">Horario de Atención</h2>
+          <form [formGroup]="form" class="form-container">
+            <ion-item>
+              <ion-icon slot="start" name="calendar-outline"></ion-icon>
+              <ion-label position="stacked">Días de Atención</ion-label>
+              <ion-select formControlName="availableDays" multiple="true">
+                <ion-select-option *ngFor="let day of allDays" [value]="day.value">
+                  {{ day.label }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
 
-    <!-- Bloqueos de Horarios -->
-    <!-- <ion-item>
-      <ion-label position="stacked">Días para Bloqueo</ion-label>
-      <ion-select formControlName="blockDays" multiple="true">
-        <ion-select-option *ngFor="let day of allDays" [value]="day.value">
-          {{ day.label }}
-        </ion-select-option>
-      </ion-select>
-    </ion-item>
+            <ion-grid>
+              <ion-row>
+                <ion-col size="6">
+                  <ion-item>
+                    <ion-icon slot="start" name="time-outline"></ion-icon>
+                    <ion-label position="stacked">Horario de Apertura</ion-label>
+                    <ion-input type="time" formControlName="startTime"></ion-input>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="6">
+                  <ion-item>
+                    <ion-icon slot="start" name="time-outline"></ion-icon>
+                    <ion-label position="stacked">Horario de Cierre</ion-label>
+                    <ion-input type="time" formControlName="endTime"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </form>
+        </div>
+      </ion-col>
+    </ion-row>
 
-    <ion-grid>
-      <ion-row>
-        <ion-col size="6">
-          <ion-item>
-            <ion-label position="stacked">Hora de Inicio</ion-label>
-            <ion-input type="time" formControlName="blockStartTime"></ion-input>
-          </ion-item>
-        </ion-col>
-        <ion-col size="6">
-          <ion-item>
-            <ion-label position="stacked">Hora de Fin</ion-label>
-            <ion-input type="time" formControlName="blockEndTime"></ion-input>
-          </ion-item>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-
-    <ion-item>
-      <ion-label position="stacked">Motivo</ion-label>
-      <ion-textarea formControlName="reason"></ion-textarea>
-    </ion-item>
-
-    <ion-button expand="block" (click)="addBlockedTimeSlot()" [disabled]="isAddBlockDisabled">
-      Añadir Bloqueo
-    </ion-button>
-
-    <ion-list>
-      <ion-item *ngFor="let block of blockedTimeSlots; let i = index">
-        <ion-label>
-          {{ block.days.join(', ') }}: {{ block.startTime }} - {{ block.endTime }}
-          <br />
-          <small>Motivo: {{ block.reason }}</small>
-        </ion-label>
-        <ion-button fill="clear" color="danger" (click)="removeBlockedTimeSlot(i)">
-          <ion-icon name="trash-outline"></ion-icon>
+    <!-- Botón Guardar -->
+    <ion-row>
+      <ion-col size="12">
+        <ion-button expand="block" type="submit" class="save-button" (click)="submit()" [disabled]="isFormInvalid">
+          Guardar Servicio
         </ion-button>
-      </ion-item>
-    </ion-list> -->
-
-    <ion-button expand="block" type="submit" [disabled]="isFormInvalid">
-      Guardar Servicio
-    </ion-button>
-  </form>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
 
-
-<!-- BOTTOM BAR -->
+<!-- Barra inferior -->
 <app-bottom-nav></app-bottom-nav>

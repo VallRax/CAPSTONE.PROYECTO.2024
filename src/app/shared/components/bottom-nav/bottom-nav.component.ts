@@ -40,24 +40,22 @@ export class BottomNavComponent implements OnInit {
     }
   }
 
-  async navigateTo(tab: string) {
+  async navigateTo(tab: string, event: Event) {
+    event.stopPropagation(); // Detener propagación
     try {
-      // Cierra el menú lateral si está abierto
       if (await this.menuCtrl.isOpen()) {
         await this.menuCtrl.close();
       }
-  
-      // Cierra cualquier modal que esté abierto
       await this.modalController.dismiss().catch(() => {
         console.warn('No modals to close');
       });
-  
-      // Navega a la nueva página y reinicia el historial
+      console.log('Navegando a:', tab);
       await this.router.navigate([`/${tab}`], { replaceUrl: true });
     } catch (error) {
       console.error('Error during navigation:', error);
     }
   }
+  
   
 
   private syncActiveTab(url: string) {

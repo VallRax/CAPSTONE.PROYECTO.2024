@@ -1,4 +1,13 @@
-<app-header [title]="'Perfil'" [showBackButton]="true"></app-header>
+<ion-header>
+  <ion-toolbar class="header">
+    <ion-title>Perfil</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content [fullscreen]="true">
   <div class="info-container">

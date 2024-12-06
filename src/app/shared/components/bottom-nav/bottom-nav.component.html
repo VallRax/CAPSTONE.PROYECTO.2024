@@ -4,7 +4,7 @@
     <ion-tab-button
       *ngIf="isClient"
       tab="home"
-      (click)="navigateTo('home')"
+      (click)="navigateTo('home', $event)"
       [class.active]="activeTab === 'home'">
       <ion-icon name="home-outline"></ion-icon>
       <ion-label>Inicio</ion-label>
@@ -14,7 +14,7 @@
     <ion-tab-button
       *ngIf="isClient"
       tab="favorites"
-      (click)="navigateTo('home/favorites')"
+      (click)="navigateTo('home/favorites', $event)"
       [class.active]="activeTab === 'favorites'">
       <ion-icon name="heart-outline"></ion-icon>
       <ion-label>Favoritos</ion-label>
@@ -24,7 +24,7 @@
     <ion-tab-button
       *ngIf="isClient"
       tab="scheduled-services"
-      (click)="navigateTo('home/scheduled-services')"
+      (click)="navigateTo('home/scheduled-services', $event)"
       [class.active]="activeTab === 'scheduled-services'">
       <ion-icon name="calendar-outline"></ion-icon>
       <ion-label>Mis Citas</ion-label>
@@ -34,7 +34,7 @@
     <ion-tab-button
       *ngIf="!isClient"
       tab="service-home"
-      (click)="navigateTo('service-home')"
+      (click)="navigateTo('service-home', $event)"
       [class.active]="activeTab === 'service-home'">
       <ion-icon name="briefcase-outline"></ion-icon>
       <ion-label>Servicios</ion-label>
@@ -43,7 +43,7 @@
     <!-- Perfil -->
     <ion-tab-button
       tab="profile"
-      (click)="navigateTo('profile')"
+      (click)="navigateTo('profile', $event)"
       [class.active]="activeTab === 'profile'">
       <ion-icon name="person-outline"></ion-icon>
       <ion-label>Perfil</ion-label>
