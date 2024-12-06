@@ -420,45 +420,66 @@ export class EditServicePage implements OnInit {
   }
 
   async changeImage() {
+    let loading;
     try {
-      // Captura de la imagen
+      // Mostrar spinner de carga
+      loading = await this.loadingCtrl.create({
+        message: 'Subiendo imagen...',
+        spinner: 'crescent',
+      });
+      await loading.present();
+  
+      // Seleccionar imagen
       const picture = await this.utilsSvc.takePictureFromGallery();
+  
+      // Si el usuario no selecciona una imagen, salir del proceso sin error
+      if (!picture?.dataUrl) {
+        console.log('Selección de imagen cancelada por el usuario.');
+        return;
+      }
+  
       const response = await fetch(picture.dataUrl);
       const blob = await response.blob();
       this.imageFile = new File([blob], `service-${this.serviceId}.jpg`, { type: blob.type });
       this.localImage = picture.dataUrl;
   
-      // Obtén el UID del usuario autenticado
+      // Obtener UID del usuario
       const userId = this.firebaseSvc.getAuth().currentUser?.uid;
       if (!userId) {
         throw new Error('Usuario no autenticado.');
       }
   
       // Subir imagen a Firebase Storage
-      if (this.imageFile && this.serviceId) {
-        const imagePath = `service-images/${userId}/service-${this.serviceId}.jpg`; // Ruta corregida
-        const imageUrl = await this.firebaseSvc.uploadImage(imagePath, this.imageFile);
+      const imagePath = `service-images/${userId}/service-${this.serviceId}.jpg`; // Ruta correcta
+      const imageUrl = await this.firebaseSvc.uploadImage(imagePath, this.imageFile);
   
-        // Actualizar Firestore con la URL de la imagen
-        if (this.service) {
-          this.service.imageUrl = imageUrl;
-          await this.saveChanges();
-        }
+      // Actualizar Firestore
+      if (this.service) {
+        this.service.imageUrl = imageUrl;
+        await this.saveChanges();
       }
   
-      // Mostrar éxito
+      // Mostrar mensaje de éxito
       this.utilsSvc.presentToast({
         message: 'Imagen del servicio actualizada correctamente.',
         color: 'success',
       });
     } catch (error) {
+      // Mostrar mensaje solo si es un error real
       console.error('Error al cambiar la imagen:', error);
       this.utilsSvc.presentToast({
         message: 'No se pudo cambiar la imagen. Verifica tu conexión o permisos.',
         color: 'danger',
       });
+    } finally {
+      if (loading) {
+        await loading.dismiss();
+      }
     }
   }
+  
+  
+  
   
   
   

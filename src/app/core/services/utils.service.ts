@@ -61,6 +61,7 @@ export class UtilsService {
     const toast = await this.toastCtrl.create({
       duration: opts?.duration || 2000, // Duración predeterminada: 2 segundos
       ...opts, // Conserva otras propiedades pasadas
+      position: 'middle',
     });
     await toast.present();
   }
