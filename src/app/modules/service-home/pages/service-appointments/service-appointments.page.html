@@ -1,4 +1,3 @@
-Mejor separa las cards por agendado, no las agrupes por nombre del servicio y ordena por fecha y hora, de la más próxima a la más lejana.
 <ion-header>
   <ion-toolbar class="header-toolbar">
     <ion-buttons slot="start">
@@ -29,18 +28,18 @@ Mejor separa las cards por agendado, no las agrupes por nombre del servicio y or
               <p><strong>Nombre del Cliente:</strong> {{ booking['clientName'] }} {{ booking['clientLastName'] }}</p>
               <p><strong>RUT Cliente:</strong> {{ booking['clientRut'] }}</p>
             </div>
-          
+
             <!-- Fecha y Horario -->
             <div class="date-time">
               <p><strong>Fecha:</strong> {{ formatDate(booking.date) }}</p>
               <p><strong>Horario:</strong> {{ booking.startTime }} - {{ booking.endTime }}</p>
             </div>
-          
+
             <!-- Estado -->
             <p [class]="getStatusClass(booking.status)">
               <strong>Estado:</strong> {{ translateStatus(booking.status) }}
             </p>
-          
+
             <!-- Cambiar Estado -->
             <ion-select
               *ngIf="canModifyStatus(booking)"
@@ -48,14 +47,18 @@ Mejor separa las cards por agendado, no las agrupes por nombre del servicio y or
               class="status-select"
               (ionChange)="updateBookingStatus(service.id, booking, $event)"
             >
-              <ion-select-option value="confirmed">Confirmar</ion-select-option>
-              <ion-select-option value="cancelled" *ngIf="canCancelBooking(booking)">Cancelar</ion-select-option>
-              <ion-select-option value="finalized" *ngIf="canFinalizeBooking(booking)">Finalizar</ion-select-option>
+              <ion-select-option value="confirmed" [disabled]="booking.status === 'confirmed'">
+                Confirmar
+              </ion-select-option>
+              <ion-select-option value="cancelled" [disabled]="!canCancelBooking(booking)">
+                Cancelar
+              </ion-select-option>
+              <ion-select-option value="finalized" [disabled]="!canFinalizeBooking(booking)">
+                Finalizar
+              </ion-select-option>
             </ion-select>
           </div>
-          
         </ion-card-content>
-          
       </ion-card>
     </ion-list>
 

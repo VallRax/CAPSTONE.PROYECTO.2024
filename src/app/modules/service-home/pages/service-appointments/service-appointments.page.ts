@@ -18,7 +18,11 @@ export class ServiceAppointmentsPage implements OnInit {
     bookings: Booking[];
   }[] = [];
 
-  constructor(private firebaseSvc: FirebaseService, private utilsSvc: UtilsService, private navCtrl: NavController) {}
+  constructor(
+    private firebaseSvc: FirebaseService,
+    private utilsSvc: UtilsService,
+    private navCtrl: NavController
+  ) {}
 
   async ngOnInit() {
     await this.loadServicesWithBookings();
@@ -28,16 +32,14 @@ export class ServiceAppointmentsPage implements OnInit {
     try {
       const localUser = this.utilsSvc.getFromLocalStorage('user');
       if (!localUser?.uid) throw new Error('Usuario no autenticado.');
-  
-      // Obtener servicios del proveedor
+
       const services = await this.firebaseSvc.getCollectionWithFilter<Service>(
         'services',
         'ownerId',
         '==',
         localUser.uid
       );
-  
-      // Obtener reservas asociadas a cada servicio y enriquecerlas con datos del cliente
+
       const servicesWithBookings = await Promise.all(
         services.map(async (service) => {
           const bookings = await this.firebaseSvc.getCollectionWithFilter<Booking>(
@@ -46,8 +48,7 @@ export class ServiceAppointmentsPage implements OnInit {
             '==',
             service.id
           );
-  
-          // Enriquecer las reservas con información del cliente
+
           const enrichedBookings = await Promise.all(
             bookings.map(async (booking) => {
               const client = await this.firebaseSvc.getDocument(`users/${booking.clientId}`);
@@ -59,12 +60,11 @@ export class ServiceAppointmentsPage implements OnInit {
               };
             })
           );
-  
+
           return { ...service, bookings: enrichedBookings };
         })
       );
-  
-      // Filtrar solo servicios con reservas
+
       this.servicesWithBookings = servicesWithBookings.filter(
         (service) => service.bookings.length > 0
       );
@@ -76,7 +76,6 @@ export class ServiceAppointmentsPage implements OnInit {
       });
     }
   }
-  
 
   canModifyStatus(booking: Booking): boolean {
     return booking.status !== 'cancelled';
@@ -151,10 +150,8 @@ export class ServiceAppointmentsPage implements OnInit {
         return '';
     }
   }
-  
 
   goBack() {
     this.navCtrl.back();
   }
-  
 }
