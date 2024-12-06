@@ -143,11 +143,16 @@ ion-content {
   }
   
   .photo-button {
-    --background: #FF7043; /* Botón naranja */
-    --background-hover: #e66139; /* Hover */
-    --background-activated: #ff9170; /* Activado */
-    --color: white;
+    --background: #FF7043; /* Color principal */
+    --background-hover: #e66139; /* Hover más oscuro */
+    --background-activated: #ff9170; /* Color activado */
+    --color: white; /* Texto blanco */
   }
+  
+  .loading-spinner {
+    --spinner-color: #FF7043; /* Color del spinner */
+  }
+  
   
   .editable-list ion-item {
     --background: #f9f9f9; /* Fondo claro */

@@ -30,7 +30,8 @@
     <div class="service-details" *ngIf="service">
       <!-- Imagen del servicio con botón para editar -->
       <img [src]="localImage || service.imageUrl || defaultImageUrl" alt="Imagen del servicio" class="service-image" />
-      <ion-button class="photo-button" expand="block" (click)="selectPhoto()">Cambiar Imagen</ion-button>
+      <ion-button class="photo-button" expand="block" (click)="changeImage()">Cambiar Imagen</ion-button>
+
   
       <ion-list class="editable-list">
         <!-- Nombre del servicio editable -->
